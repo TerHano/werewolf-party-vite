@@ -1,0 +1,11 @@
+@font-face {
+    font-family: "Poor Story";
+    src: local("Poor Story"),
+        url(/src/assets/fonts/Poor_Story/PoorStory-Regular.woff2) format("woff2");
+    font-display: swap;
+}
+
+.accent-font {
+    font-family: "Poor Story";
+    font-weight: 600 !important;
+}

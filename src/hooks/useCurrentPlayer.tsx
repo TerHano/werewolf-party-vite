@@ -1,11 +1,11 @@
 import { PlayerDto } from "@/dto/PlayerDto";
 import { useApiQuery } from "./useApiQuery";
 
-export const useModerator = (roomId: string) => {
+export const useCurrentPlayer = (roomId: string) => {
   return useApiQuery<PlayerDto>({
-    queryKey: ["moderator"],
+    queryKey: ["current-player"],
     query: {
-      endpoint: `room/${roomId}/get-moderator`,
+      endpoint: `player/${roomId}/player`,
     },
   });
 };

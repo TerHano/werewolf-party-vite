@@ -1,4 +1,12 @@
-export function getCookie(cname: string) {
+export function getSessionCookie() {
+  return getCookie("session");
+}
+
+export function setSessionCookie(token: string) {
+  document.cookie = "session=" + token + ";max-age=2147483647;path=/;";
+}
+
+function getCookie(cname: string) {
   let name = cname + "=";
   let decodedCookie = decodeURIComponent(document.cookie);
   let ca = decodedCookie.split(";");

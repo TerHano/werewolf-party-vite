@@ -1,6 +1,6 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
-export const useAvatars = () => {
+export const usePlayerAvatar = () => {
   const data = useMemo(
     () => [
       "farmer-1",
@@ -41,5 +41,18 @@ export const useAvatars = () => {
     []
   );
 
-  return { data };
+  const getAvatarImageSrcForIndex = useCallback((avatarIndex?: number) => {
+    if (!avatarIndex || avatarIndex > data.length) {
+      avatarIndex = 0;
+    }
+    const avatarName = data[avatarIndex];
+    const path = `/src/assets/icons/avatars/${avatarName}.png`;
+    const modules = import.meta.glob("/src/assets/icons/avatars/*", {
+      eager: true,
+    });
+    const mod = modules[path] as { default: string };
+    return mod.default;
+  }, []);
+
+  return { avatarNames: data, getAvatarImageSrcForIndex };
 };

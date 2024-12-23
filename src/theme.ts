@@ -1,6 +1,7 @@
 import {
   createSystem,
   defaultConfig,
+  defineConfig,
   defineTextStyles,
 } from "@chakra-ui/react";
 

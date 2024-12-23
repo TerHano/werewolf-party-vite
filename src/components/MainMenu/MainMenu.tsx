@@ -14,7 +14,6 @@ import { IconArrowRight, IconUsersGroup } from "@tabler/icons-react";
 import campIcon from "../../assets/icons/lobby-icon.png";
 import { useCreateRoom } from "@/hooks/useCreateRoom";
 import { useCheckRoom } from "@/hooks/useCheckRoom";
-import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toaster } from "../ui/toaster";
 import { useNavigate } from "@tanstack/react-router";
@@ -27,11 +26,23 @@ type CheckRoomForm = {
 export const MainMenu = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { mutate: createNewRoom, isPending: isCreatingRoomPending } =
-    useCreateRoom({
-      onSuccess: async (newRoomId) => {
-        navigate({ to: `/room/$roomId`, params: { roomId: newRoomId } });
-      },
+  const {
+    mutate: createNewRoom,
+    isPending: isCreatingRoomPending,
+    isSuccess: isCreatingRoomSuccess,
+  } = useCreateRoom({
+    onSuccess: async (newRoomId) => {
+      navigate({ to: `/room/$roomId`, params: { roomId: newRoomId } });
+    },
+  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CheckRoomForm>();
+  const onSubmit: SubmitHandler<CheckRoomForm> = (data) =>
+    checkRoom({
+      roomId: data.roomId,
     });
   const { mutate: checkRoom, isPending: isCheckingRoomPending } = useCheckRoom({
     onSuccess: async (doesExist, { roomId }) => {
@@ -54,26 +65,13 @@ export const MainMenu = () => {
       }
     },
   });
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<CheckRoomForm>();
-  const onSubmit: SubmitHandler<CheckRoomForm> = (data) =>
-    checkRoom({
-      roomId: data.roomId,
-    });
-
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
 
   return (
     <Card.Root md={{ width: "50%" }} width="full" padding={3}>
       <Stack alignItems="center" gap={3}>
         <Stack alignItems="center" gap={0}>
           <Image width={150} src={campIcon} />
-          <Text className="accent-font" textStyle="4xl">
+          <Text textStyle="accent" fontSize="2.5rem" fontWeight="bold">
             Werewolf Party
           </Text>
           <Text textStyle="accent" fontSize="medium" color="gray.300">
@@ -89,20 +87,26 @@ export const MainMenu = () => {
             maxWidth={250}
             label="Join Room"
             helperText={
-              <Text fontSize="x-small">Enter your 5 character Room ID</Text>
+              <Text fontSize="x-small">
+                {t("Enter your 5 character Room ID")}
+              </Text>
             }
             errorText={<Text fontSize="x-small">{errors.roomId?.message}</Text>}
           >
             <Group attached>
               <Input
                 {...register("roomId", {
-                  required: true,
+                  required: {
+                    value: true,
+                    message: t("Please enter a Room ID"),
+                  },
                   minLength: {
                     value: 5,
-                    message: "Room ID must be 5 characters",
+                    message: t("Room ID must be 5 characters"),
                   },
                   maxLength: 5,
                 })}
+                style={{ textTransform: "uppercase" }}
                 maxLength={5}
                 placeholder="(Ex: 38VF5)"
               />
@@ -120,16 +124,16 @@ export const MainMenu = () => {
           <Separator variant="dashed" />
         </HStack>
         <Button
-          loading={isCreatingRoomPending}
+          loading={isCreatingRoomPending || isCreatingRoomSuccess}
           onClick={() => {
             createNewRoom();
           }}
           size="sm"
         >
-          Create New Room <IconUsersGroup />
+          {t("Create New Room")} <IconUsersGroup />
         </Button>
         <Text color="gray.500" textStyle="accent">
-          Developed By Terry Hanoman
+          {t("Developed By Terry Hanoman")}
         </Text>
       </Stack>
     </Card.Root>

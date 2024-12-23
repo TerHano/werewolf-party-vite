@@ -3,6 +3,7 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { ColorModeProvider, type ColorModeProviderProps } from "./color-mode";
 import { system } from "../../theme";
+import { SocketProvider } from "@/context/SocketProvider";
 
 export function Provider(props: ColorModeProviderProps) {
   return (

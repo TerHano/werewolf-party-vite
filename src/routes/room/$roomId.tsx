@@ -1,49 +1,89 @@
 import { AddEditPlayerModal } from "@/components/Lobby/AddEditPlayerModal";
-import { APIResponse } from "@/dto/APIResponse";
+import { Lobby } from "@/components/Lobby/Lobby";
+import { RoomContext } from "@/context/RoomProvider";
+import { AddEditPlayerDetailsDto } from "@/dto/AddEditPlayerDetailsDto";
 import { useIsPlayerInRoom } from "@/hooks/useIsPlayerInRoom";
-import { useModerator } from "@/hooks/useModerator";
-import { getCookie } from "@/util/cookie";
-import { createFileRoute } from "@tanstack/react-router";
+import { useSocketConnection } from "@/hooks/useSocketConnection";
+import { getApi } from "@/util/api";
+import { useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { useCallback, useEffect } from "react";
 
 export const Route = createFileRoute("/room/$roomId")({
   component: RouteComponent,
   loader: async ({ params: { roomId } }) => {
-    const token = getCookie("session");
-    return await fetch(
-      `${import.meta.env.WEREWOLF_SERVER_URL}/api/room/${roomId}/is-player-in-room`,
-      {
-        method: "GET",
-        headers: new Headers({
-          Authorization: "Bearer " + token,
-        }),
+    const doesRoomExistQuery = getApi<boolean>({
+      url: `${import.meta.env.WEREWOLF_SERVER_URL}/api/room/check-room`,
+      method: "POST",
+      body: JSON.stringify({
+        roomId: roomId,
+      }),
+    });
+    const isPlayerInRoomQuery = getApi<boolean>({
+      url: `${import.meta.env.WEREWOLF_SERVER_URL}/api/room/${roomId}/is-player-in-room`,
+      method: "GET",
+    });
+    return await doesRoomExistQuery.then((exists) => {
+      if (!exists) {
+        throw redirect({
+          to: "/",
+        });
       }
-    )
-      .then((res) => res.json())
-      .then((response: APIResponse<boolean>) => {
-        if (response.success && response.data !== undefined) {
-          return response.data;
-        }
-        throw new Error("Error checking player");
-      });
+      return isPlayerInRoomQuery;
+    });
   },
 });
 
 function RouteComponent() {
   const { roomId } = Route.useParams();
   const _isPlayerAlreadyInRoomInitialData = Route.useLoaderData();
-  const { data: isPlayerAlreadyInRoom } = useIsPlayerInRoom({
+  const { data: isPlayerAlreadyInRoom, refetch } = useIsPlayerInRoom({
     roomId,
     options: {
-      initialData: true,
+      initialData: _isPlayerAlreadyInRoomInitialData,
     },
   });
+
+  useEffect(() => {
+    if (isPlayerAlreadyInRoom) {
+      joinRoom(roomId);
+    }
+  }, []);
+
+  const queryClient = useQueryClient();
+
+  // const onLobbyUpdated = useCallback(() => {
+  //   queryClient.invalidateQueries({ queryKey: ["players"] });
+
+  //   console.log("thig");
+  // }, []);
+
+  const { joinRoom } = useSocketConnection({
+    onLobbyUpdated: () => {
+      queryClient.invalidateQueries({ queryKey: ["players"] });
+      console.log("thig");
+    },
+    onReconnect: () => {
+      if (isPlayerAlreadyInRoom) {
+        joinRoom(roomId);
+      }
+    },
+  });
+
+  const joinRoomCb = useCallback((playerDetails: AddEditPlayerDetailsDto) => {
+    joinRoom(roomId, playerDetails).then((resp) => {
+      console.log("joined");
+      void refetch();
+    });
+  }, []);
+
   return (
-    <>
+    <RoomContext.Provider value={{ roomId }}>
       {isPlayerAlreadyInRoom ? (
-        <div>Hello in room {roomId}</div>
+        <Lobby roomId={roomId} />
       ) : (
-        <AddEditPlayerModal />
+        <AddEditPlayerModal submitCallback={joinRoomCb} />
       )}
-    </>
+    </RoomContext.Provider>
   );
 }

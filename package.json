@@ -7,14 +7,17 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev-host": "vite --host",
   },
   "dependencies": {
     "@chakra-ui/react": "^3.2.3",
     "@emotion/react": "^11.14.0",
+    "@microsoft/signalr": "^8.0.7",
     "@tabler/icons-react": "^3.24.0",
     "@tanstack/react-query": "^5.62.7",
     "@tanstack/react-router": "^1.87.3",
+    "@uidotdev/usehooks": "^2.4.1",
     "i18next": "^24.1.0",
     "next-themes": "^0.4.4",
     "react": "^18.3.1",

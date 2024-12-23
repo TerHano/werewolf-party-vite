@@ -1,5 +1,6 @@
 import { APIResponse } from "@/dto/APIResponse";
-import { getCookie } from "@/util/cookie";
+import { getApi } from "@/util/api";
+import { getSessionCookie } from "@/util/cookie";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export interface mutationOptions<T, K> {
@@ -16,33 +17,21 @@ export interface useApiMutationProps<T, K> extends mutationOptions<T, K> {
   };
 }
 
-export const useApiMutation = <T, K>({
+export const useApiMutation = <ReturnType, Body>({
   mutation: { endpoint, method = "POST", queryKeysToInvalidate },
   onSuccess,
   onError,
-}: useApiMutationProps<T, K>) => {
-  const token = getCookie("session");
+}: useApiMutationProps<ReturnType, Body>) => {
   const queryClient = useQueryClient();
+  const url = `${import.meta.env.WEREWOLF_SERVER_URL}/api/${endpoint}`;
   return useMutation({
     //mutationKey:,
-    mutationFn: (body: K) =>
-      fetch(`${import.meta.env.WEREWOLF_SERVER_URL}/api/${endpoint}`, {
-        method: method,
+    mutationFn: (body: Body) =>
+      getApi<ReturnType>({
+        url,
+        method,
         body: JSON.stringify(body),
-        headers: new Headers({
-          Authorization: "Bearer " + token,
-          "Content-Type": "application/json",
-        }),
-      })
-        .then((res) => res.json())
-        .then((res: APIResponse<T>) => {
-          if (!res.success) {
-            if (res.errorMessages && res.errorMessages.length > 0) {
-              throw new Error(res.errorMessages[0]);
-            } else throw new Error("Server Error");
-          }
-          return res.data!;
-        }),
+      }),
     onSuccess: (data, variables) => {
       if (onSuccess) {
         onSuccess(data, variables);

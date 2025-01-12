@@ -1,8 +1,10 @@
 import {
+  Card,
+  CardBody,
   createSystem,
   defaultConfig,
-  defineConfig,
   defineTextStyles,
+  defineTokens,
 } from "@chakra-ui/react";
 
 const textStyles = defineTextStyles({
@@ -14,8 +16,33 @@ const textStyles = defineTextStyles({
   },
 });
 
+const tokens = defineTokens({
+  fonts: {
+    body: {
+      value: "'Poppins'",
+    },
+    heading: {
+      value: `'Poppins'`,
+    },
+  },
+});
+
 export const system = createSystem(defaultConfig, {
+  globalCss: {
+    body: {
+      //   bg: "bg.subtle",
+    },
+  },
   theme: {
     textStyles: textStyles,
+    breakpoints: {
+      xs: "22em",
+    },
+    tokens: tokens,
+    // recipes: {
+    //   Card: {
+    //     base: { backgroundColor: "red" },
+    //   },
+    // },
   },
 });

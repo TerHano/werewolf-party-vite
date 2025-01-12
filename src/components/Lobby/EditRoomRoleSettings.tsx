@@ -1,4 +1,3 @@
-import { Role } from "@/enum/Role";
 import {
   CheckboxGroup,
   Float,
@@ -6,6 +5,7 @@ import {
   RadioCardItemIndicator,
   Separator,
   SimpleGrid,
+  Skeleton,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -14,9 +14,9 @@ import werewolfImg from "@/assets/icons/roles/werewolf-color.png";
 import { CheckboxCard, CheckboxCardIndicator } from "../ui/checkbox-card";
 import { useRoles } from "@/hooks/useRoles";
 import { RoleType } from "@/enum/RoleType";
-import { set, SubmitHandler, useController, useForm } from "react-hook-form";
+import { SubmitHandler, useController, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useRoomRoleSettings } from "@/hooks/useRoomRoleSettings";
 import { useRoomId } from "@/hooks/useRoomId";
 import { RoomRoleSettingsDto } from "@/dto/RoomRoleSettingsDto";
@@ -31,26 +31,27 @@ interface EditRoomRoleSettingsForm {
 }
 
 export const EditRoomRoleSettings = ({
+  roomRoleSettingsQuery,
   closeDrawerCallback,
 }: {
+  roomRoleSettingsQuery: ReturnType<typeof useRoomRoleSettings>;
   closeDrawerCallback: () => void;
 }) => {
   const { t } = useTranslation();
   const roomId = useRoomId();
   const { mutate, isPending: isUpdatingSettings } = useUpdateRoomRoleSettings();
   const { data, isRoleType } = useRoles();
-  const { data: savedRoleSettings, isLoading } = useRoomRoleSettings(roomId);
-  const {
-    register,
-    control,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<EditRoomRoleSettingsForm>();
+  const { data: savedRoleSettings, isLoading: isRoomRoleSettingsLoading } =
+    roomRoleSettingsQuery;
+  const { control, handleSubmit, setValue } =
+    useForm<EditRoomRoleSettingsForm>();
   const onSubmit: SubmitHandler<EditRoomRoleSettingsForm> = useCallback(
     (data) => {
+      if (!savedRoleSettings) {
+        throw new Error("error");
+      }
       const request: RoomRoleSettingsDto = {
-        id: savedRoleSettings?.id!,
+        id: savedRoleSettings.id,
         roomId: roomId,
         werewolves: parseInt(data.werewolves),
         selectedRoles: [
@@ -58,14 +59,13 @@ export const EditRoomRoleSettings = ({
           ...data.specialRoles.map((val) => parseInt(val)),
         ],
       };
-      console.log(request);
       void mutate(request, {
         onSuccess: () => {
           closeDrawerCallback();
         },
       });
     },
-    [savedRoleSettings]
+    [closeDrawerCallback, mutate, roomId, savedRoleSettings]
   );
 
   const traditonalRoles = data?.filter(
@@ -111,71 +111,85 @@ export const EditRoomRoleSettings = ({
         savedSpecialRoles.map((role) => role.toString())
       );
     }
-  }, [savedRoleSettings]);
+  }, [isRoleType, savedRoleSettings, setValue]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack w="full" mb={2} gap={3}>
+      <Stack w="full" gap={3}>
         <RadioCardRoot
+          variant="surface"
           name={werewolvesController.field.name}
           value={werewolvesController.field.value}
           onChange={werewolvesController.field.onChange}
           orientation="vertical"
           align="center"
         >
-          <Text textStyle="accent" fontSize="lg">
+          <Text textStyle="accent" fontWeight={600} fontSize="lg">
             Number of Werewolves
           </Text>
-          <HStack align="stretch">
-            <RadioCardItem
-              icon={
-                <img src={werewolfImg} alt="werewolf" width="46" height="46" />
-              }
-              indicator={
-                <Float placement="top-end" offset="6">
-                  <RadioCardItemIndicator w="1rem" h="1rem" />
-                </Float>
-              }
-              key="werewolves-1"
-              value={"1"}
-              label={
-                <Text fontSize="lg" fontWeight="bold" textStyle="accent">
-                  {t("One Werewolf")}
-                </Text>
-              }
-            />
-            <RadioCardItem
-              icon={
-                <HStack gap={-6}>
+          <Skeleton
+            w="full"
+            loading={isRoomRoleSettingsLoading}
+            minH={isRoomRoleSettingsLoading ? "100px" : undefined}
+          >
+            <HStack align="stretch">
+              <RadioCardItem
+                icon={
                   <img
                     src={werewolfImg}
                     alt="werewolf"
                     width="46"
                     height="46"
                   />
-                  <img
-                    src={werewolfImg}
-                    alt="werewolf"
-                    width="46"
-                    height="46"
-                  />
-                </HStack>
-              }
-              indicator={
-                <Float placement="top-end" offset="6">
-                  <RadioCardItemIndicator w="1rem" h="1rem" />
-                </Float>
-              }
-              key="werewolves-2"
-              value={"2"}
-              label={
-                <Text fontSize="lg" fontWeight="bold" textStyle="accent">
-                  {t("Two Werewolves")}
-                </Text>
-              }
-            />
-          </HStack>
+                }
+                indicator={
+                  <Float placement="top-end" offset="1em">
+                    <RadioCardItemIndicator w="1rem" h="1rem" />
+                  </Float>
+                }
+                key="werewolves-1"
+                value={"1"}
+                label={
+                  <Text fontSize="lg" fontWeight="bold" textStyle="accent">
+                    {t("One Werewolf")}
+                  </Text>
+                }
+              />
+
+              <RadioCardItem
+                icon={
+                  <HStack gap={-6}>
+                    <img
+                      src={werewolfImg}
+                      alt="werewolf"
+                      width="46"
+                      height="46"
+                    />
+                    <img
+                      src={werewolfImg}
+                      alt="werewolf"
+                      width="46"
+                      height="46"
+                    />
+                  </HStack>
+                }
+                indicator={
+                  <Float placement="top-end" offset="1em">
+                    <RadioCardItemIndicator w="1rem" h="1rem" />
+                  </Float>
+                }
+                key="werewolves-2"
+                value={"2"}
+                label={
+                  <Text fontSize="lg" fontWeight="bold" textStyle="accent">
+                    {t("Two Werewolves")}
+                  </Text>
+                }
+              />
+            </HStack>
+          </Skeleton>
         </RadioCardRoot>
+
         <Separator />
 
         <CheckboxGroup
@@ -183,38 +197,43 @@ export const EditRoomRoleSettings = ({
           value={traditonalRolesController.field.value}
           onValueChange={traditonalRolesController.field.onChange}
         >
-          <Text textStyle="accent" fontSize="lg">
+          <Text textStyle="accent" fontWeight={600} fontSize="lg">
             Traditional Roles
           </Text>
-
-          <SimpleGrid columns={{ base: 2, sm: 3, md: 5, lg: 8 }} gap="2">
-            {traditonalRoles.map((role) => (
-              <CheckboxCard
-                variant="surface"
-                align="center"
-                key={role.label}
-                icon={
-                  <img
-                    src={role.imgSrc}
-                    alt={role.label}
-                    width="46"
-                    height="46"
-                  />
-                }
-                label={
-                  <Text fontSize="lg" fontWeight="bold" textStyle="accent">
-                    {role.label}
-                  </Text>
-                }
-                indicator={
-                  <Float placement="top-end" offset="6">
-                    <CheckboxCardIndicator w="1rem" h="1rem" />
-                  </Float>
-                }
-                value={role.roleName.toString()}
-              />
-            ))}
-          </SimpleGrid>
+          <Skeleton
+            w="full"
+            loading={isRoomRoleSettingsLoading}
+            minH={isRoomRoleSettingsLoading ? "100px" : undefined}
+          >
+            <SimpleGrid columns={{ base: 2, sm: 3, md: 5, lg: 8 }} gap="2">
+              {traditonalRoles.map((role) => (
+                <CheckboxCard
+                  variant="surface"
+                  align="center"
+                  key={role.label}
+                  icon={
+                    <img
+                      src={role.imgSrc}
+                      alt={role.label}
+                      width="46"
+                      height="46"
+                    />
+                  }
+                  label={
+                    <Text fontSize="lg" fontWeight="bold" textStyle="accent">
+                      {role.label}
+                    </Text>
+                  }
+                  indicator={
+                    <Float placement="top-end" offset="1em">
+                      <CheckboxCardIndicator w="1rem" h="1rem" />
+                    </Float>
+                  }
+                  value={role.roleName.toString()}
+                />
+              ))}
+            </SimpleGrid>
+          </Skeleton>
         </CheckboxGroup>
 
         <Separator />
@@ -223,39 +242,48 @@ export const EditRoomRoleSettings = ({
           value={specialRolesController.field.value}
           onValueChange={specialRolesController.field.onChange}
         >
-          <Text textStyle="accent" fontSize="lg">
+          <Text textStyle="accent" fontWeight={600} fontSize="lg">
             Special Roles
           </Text>
-          <SimpleGrid columns={{ base: 2, sm: 3, md: 5, lg: 8 }} gap="2">
-            {specialRoles.map((role) => (
-              <CheckboxCard
-                variant="surface"
-                align="center"
-                key={role.label}
-                icon={
-                  <img
-                    src={role.imgSrc}
-                    alt={role.label}
-                    width="46"
-                    height="46"
-                  />
-                }
-                indicator={
-                  <Float placement="top-end" offset="6">
-                    <CheckboxCardIndicator w="1rem" h="1rem" />
-                  </Float>
-                }
-                label={
-                  <Text fontSize="lg" fontWeight="bold" textStyle="accent">
-                    {role.label}
-                  </Text>
-                }
-                value={role.roleName.toString()}
-              />
-            ))}
-          </SimpleGrid>
+          <Skeleton
+            w="full"
+            loading={isRoomRoleSettingsLoading}
+            minH={isRoomRoleSettingsLoading ? "100px" : undefined}
+          >
+            <SimpleGrid
+              columns={{ base: 2, xs: 3, sm: 4, md: 5, lg: 8 }}
+              gap="2"
+            >
+              {specialRoles.map((role) => (
+                <CheckboxCard
+                  variant="surface"
+                  align="center"
+                  key={role.label}
+                  icon={
+                    <img
+                      src={role.imgSrc}
+                      alt={role.label}
+                      width="46"
+                      height="46"
+                    />
+                  }
+                  indicator={
+                    <Float placement="top-end" offset="1em">
+                      <CheckboxCardIndicator w="1rem" h="1rem" />
+                    </Float>
+                  }
+                  label={
+                    <Text fontSize="lg" fontWeight="bold" textStyle="accent">
+                      {role.label}
+                    </Text>
+                  }
+                  value={role.roleName.toString()}
+                />
+              ))}
+            </SimpleGrid>
+          </Skeleton>
         </CheckboxGroup>
-        <Button loading={isUpdatingSettings} type="submit">
+        <Button mb={6} mt={3} loading={isUpdatingSettings} type="submit">
           {t("Update Settings")}
         </Button>
       </Stack>

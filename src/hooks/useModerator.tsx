@@ -3,7 +3,7 @@ import { useApiQuery } from "./useApiQuery";
 
 export const useModerator = (roomId: string) => {
   return useApiQuery<PlayerDto>({
-    queryKey: ["moderator"],
+    queryKey: ["moderator", roomId],
     query: {
       endpoint: `room/${roomId}/get-moderator`,
     },

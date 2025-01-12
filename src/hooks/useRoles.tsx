@@ -22,7 +22,7 @@ export interface RoleInfo {
   roleCallPriority: number;
 }
 
-const data = [
+const data: RoleInfo[] = [
   {
     label: "Moderator",
     shortDescription: "Game Master",
@@ -64,7 +64,6 @@ const data = [
     roleName: Role.Seer,
     roleType: RoleType.Traditional,
     imgSrc: detectiveImg,
-
     showInModeratorRoleCall: true,
     roleCallPriority: 3,
   },
@@ -106,11 +105,10 @@ const data = [
     label: "Villager",
     shortDescription: "Defend The Village",
     description:
-      "The most commonplace role, a simple Villager, spends the game trying to root out who they believe the werewolves (and other villagers) are.",
+      "The most commonplace role, a simple villager, spends the game trying to root out who they believe the werewolves (and other villagers) are.",
     roleName: Role.Villager,
     roleType: RoleType.Villager,
     imgSrc: villagerImg,
-
     showInModeratorRoleCall: false,
     roleCallPriority: 6,
   },
@@ -122,7 +120,6 @@ const data = [
     roleName: Role.Vigilante,
     roleType: RoleType.Special,
     imgSrc: vigilanteImg,
-
     showInModeratorRoleCall: true,
     roleCallPriority: 7,
   },
@@ -144,29 +141,46 @@ interface UseRoleProps {
 }
 
 export const useRoles = ({ roles }: UseRoleProps = {}) => {
-  const isRoleType = useCallback(
-    (role: number, type: RoleType) => {
-      return data
-        .filter((x) => x.roleType === type)
-        .some((x) => x.roleName == role);
-    },
-    [data]
-  );
-
-  function getIconPath(role: Role) {
-    let roleImgName = data.find((x) => x.roleName === role);
-    const path = `/src/assets/icons/roles/${roleImgName?.imgSrc}-color.png`;
-    const modules = import.meta.glob("/src/assets/icons/roles/*", {
-      eager: true,
-    });
-    const mod = modules[path] as { default: string };
-    return mod.default;
-  }
+  const isRoleType = useCallback((role: number, type: RoleType) => {
+    return data
+      .filter((x) => x.roleType === type)
+      .some((x) => x.roleName == role);
+  }, []);
 
   const filteredRoles = useMemo(() => {
     if (!roles) return data;
-    return data.filter((role) => roles?.includes(role.roleName));
+    return data
+      .sort((a, b) => a.roleCallPriority - b.roleCallPriority)
+      .filter((role) => roles?.includes(role.roleName));
   }, [roles]);
 
   return { data: filteredRoles, isRoleType };
+};
+
+export const useRole = (roleId: number | undefined) => {
+  if (roleId === undefined) {
+    return undefined;
+  }
+  return data.find((x) => x.roleName === roleId);
+};
+
+export const getColorForRoleType = (roleType: RoleType) => {
+  switch (roleType) {
+    case RoleType.Enemy:
+      return "red";
+    case RoleType.Special:
+      return "green";
+    case RoleType.Traditional:
+      return "blue";
+    default:
+      return "lightgray";
+  }
+};
+
+export const getRoleForRoleId = (roleId: number) => {
+  const role = data.find((x) => x.roleName === roleId);
+  if (role === undefined) {
+    throw new Error(`No Role For Id: ${roleId}`);
+  }
+  return role;
 };

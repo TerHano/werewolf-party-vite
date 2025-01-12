@@ -3,7 +3,7 @@ import { useApiQuery } from "./useApiQuery";
 
 export const usePlayers = (roomId: string) => {
   return useApiQuery<PlayerDto[]>({
-    queryKey: ["players"],
+    queryKey: ["players", roomId],
     query: {
       endpoint: `room/${roomId}/players`,
     },

@@ -1,20 +1,23 @@
-import { useCallback, useContext, useEffect, useMemo } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { AddEditPlayerDetailsDto } from "@/dto/AddEditPlayerDetailsDto";
 import { APIResponse } from "@/dto/APIResponse";
 import { SocketContext } from "@/context/SocketProvider";
-
-type OnHubMethod = (...args: any[]) => any;
+import { HubConnectionState } from "@microsoft/signalr";
 
 interface UseSocketConnection {
-  onLobbyUpdated?: OnHubMethod;
-  onModeratorUpdated?: OnHubMethod;
-  onReconnect?: OnHubMethod;
-  onRoomRoleSettingsUpdated?: OnHubMethod;
+  onLobbyUpdated?: () => void;
+  onGameStateChanged?: () => void;
+  onModeratorUpdated?: (moderatorId: string) => void;
+  onPlayerKicked?: (kickedPlayerId: string) => void;
+  onReconnect?: () => void;
+  onRoomRoleSettingsUpdated?: () => void;
 }
 
 export const useSocketConnection = ({
   onLobbyUpdated,
   onModeratorUpdated,
+  onGameStateChanged,
+  onPlayerKicked,
   onReconnect,
   onRoomRoleSettingsUpdated,
 }: UseSocketConnection) => {
@@ -24,11 +27,15 @@ export const useSocketConnection = ({
   }
 
   useEffect(() => {
+    // if (connection.state === HubConnectionState.Connected) {
     if (onLobbyUpdated) {
       connection.on("PlayersInLobbyUpdated", onLobbyUpdated);
     }
     if (onModeratorUpdated) {
       connection.on("ModeratorUpdated", onModeratorUpdated);
+    }
+    if (onPlayerKicked) {
+      connection.on("PlayerKicked", onPlayerKicked);
     }
     if (onReconnect) {
       connection.onreconnected(onReconnect);
@@ -36,6 +43,23 @@ export const useSocketConnection = ({
     if (onRoomRoleSettingsUpdated) {
       connection.on("RoomRoleSettingsUpdated", onRoomRoleSettingsUpdated);
     }
+    if (onGameStateChanged) {
+      connection.on("GameState", onGameStateChanged);
+    }
+    // } else {
+    //   if (onLobbyUpdated) {
+    //     connection.off("PlayersInLobbyUpdated", onLobbyUpdated);
+    //   }
+    //   if (onModeratorUpdated) {
+    //     connection.off("ModeratorUpdated", onModeratorUpdated);
+    //   }
+    //   if (onRoomRoleSettingsUpdated) {
+    //     connection.off("RoomRoleSettingsUpdated", onRoomRoleSettingsUpdated);
+    //   }
+    //   if (onPlayerKicked) {
+    //     connection.off("PlayerKicked", onPlayerKicked);
+    //   }
+    // }
 
     return () => {
       if (onLobbyUpdated) {
@@ -44,8 +68,26 @@ export const useSocketConnection = ({
       if (onModeratorUpdated) {
         connection.off("ModeratorUpdated", onModeratorUpdated);
       }
+      if (onRoomRoleSettingsUpdated) {
+        connection.off("RoomRoleSettingsUpdated", onRoomRoleSettingsUpdated);
+      }
+      if (onPlayerKicked) {
+        connection.off("PlayerKicked", onPlayerKicked);
+      }
+      if (onGameStateChanged) {
+        connection.off("GameState", onGameStateChanged);
+      }
     };
-  }, []);
+  }, [
+    connection,
+    connection.state,
+    onGameStateChanged,
+    onLobbyUpdated,
+    onModeratorUpdated,
+    onPlayerKicked,
+    onReconnect,
+    onRoomRoleSettingsUpdated,
+  ]);
 
   connection.onclose(() => {
     console.log("closing");
@@ -58,6 +100,12 @@ export const useSocketConnection = ({
     [connection]
   );
 
+  const attemptReconnection = useCallback(() => {
+    if (connection.state === HubConnectionState.Disconnected) {
+      connection.start();
+    }
+  }, [connection]);
+
   // if (connection.state === signalR.HubConnectionState.Disconnected) {
   //   connection.start();
   // }
@@ -65,5 +113,7 @@ export const useSocketConnection = ({
   return {
     //onConnected: connection.invoke,
     joinRoom,
+    attemptReconnection,
+    connectionState: connection.state,
   };
 };

@@ -54,5 +54,5 @@ export const usePlayerAvatar = () => {
     return mod.default;
   }, []);
 
-  return { avatarNames: data, getAvatarImageSrcForIndex };
+  return { data, getAvatarImageSrcForIndex };
 };

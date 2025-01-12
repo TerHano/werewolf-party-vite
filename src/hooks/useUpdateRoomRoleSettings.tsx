@@ -1,5 +1,4 @@
 import { useApiMutation } from "./useApiMutation";
-import { useApiQuery } from "./useApiQuery";
 import { RoomRoleSettingsDto } from "@/dto/RoomRoleSettingsDto";
 
 export const useUpdateRoomRoleSettings = () => {

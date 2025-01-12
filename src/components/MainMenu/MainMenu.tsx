@@ -61,7 +61,10 @@ export const MainMenu = () => {
           ),
         });
       } else {
-        navigate({ to: `/room/$roomId`, params: { roomId } });
+        navigate({
+          to: `/room/$roomId`,
+          params: { roomId: roomId.toUpperCase() },
+        });
       }
     },
   });

@@ -1,14 +1,13 @@
-import { APIResponse } from "@/dto/APIResponse";
 import { getApi } from "@/util/api";
-import { getSessionCookie } from "@/util/cookie";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export interface mutationOptions<T, K> {
-  onSuccess?: (data: T, variables: K) => Promise<unknown>;
-  onError?: (error: Error, variables: K) => Promise<unknown>;
+export interface mutationOptions<ReturnType, Body> {
+  onSuccess?: (data: ReturnType, variables: Body) => Promise<void>;
+  onError?: (error: Error, variables: Body) => Promise<void>;
 }
 
-export interface useApiMutationProps<T, K> extends mutationOptions<T, K> {
+export interface useApiMutationProps<ReturnType, Body>
+  extends mutationOptions<ReturnType, Body> {
   // mutationKey?: string[];
   mutation: {
     endpoint: string;
@@ -24,7 +23,7 @@ export const useApiMutation = <ReturnType, Body>({
 }: useApiMutationProps<ReturnType, Body>) => {
   const queryClient = useQueryClient();
   const url = `${import.meta.env.WEREWOLF_SERVER_URL}/api/${endpoint}`;
-  return useMutation({
+  return useMutation<ReturnType, Error, Body>({
     //mutationKey:,
     mutationFn: (body: Body) =>
       getApi<ReturnType>({

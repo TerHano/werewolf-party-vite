@@ -7,7 +7,7 @@ interface apiOptions {
   body?: string;
 }
 
-export function getApi<T>({ url, method, body }: apiOptions) {
+export function getApi<T>({ url, method, body }: apiOptions): Promise<T> {
   const token = getSessionCookie();
   return fetch(url, {
     method: method,

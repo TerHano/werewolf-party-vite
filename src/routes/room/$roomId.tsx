@@ -1,12 +1,16 @@
+import { GameRoom } from "@/components/GameRoom/GameRoom";
 import { AddEditPlayerModal } from "@/components/Lobby/AddEditPlayerModal";
 import { Lobby } from "@/components/Lobby/Lobby";
 import { RoomContext } from "@/context/RoomProvider";
 import { AddEditPlayerDetailsDto } from "@/dto/AddEditPlayerDetailsDto";
+import { GameState } from "@/enum/GameState";
+import { useCheckRoom } from "@/hooks/useCheckRoom";
+import { useGameState } from "@/hooks/useGameState";
 import { useIsPlayerInRoom } from "@/hooks/useIsPlayerInRoom";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { getApi } from "@/util/api";
-import { useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { Skeleton } from "@chakra-ui/react";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect } from "react";
 
 export const Route = createFileRoute("/room/$roomId")({
@@ -37,10 +41,29 @@ export const Route = createFileRoute("/room/$roomId")({
 function RouteComponent() {
   const { roomId } = Route.useParams();
   const _isPlayerAlreadyInRoomInitialData = Route.useLoaderData();
-  const { data: isPlayerAlreadyInRoom, refetch } = useIsPlayerInRoom({
-    roomId,
-    options: {
-      initialData: _isPlayerAlreadyInRoomInitialData,
+  const navigate = useNavigate();
+  const { mutate: checkRoomMutate } = useCheckRoom({
+    onSuccess: async (data) => {
+      if (!data) {
+        navigate({ to: "/" });
+      } else {
+        joinRoom(roomId).then(() => {
+          void refetchIsPlayerInRoom();
+        });
+      }
+    },
+  });
+  const { data: isPlayerAlreadyInRoom, refetch: refetchIsPlayerInRoom } =
+    useIsPlayerInRoom({
+      roomId,
+      options: {
+        initialData: _isPlayerAlreadyInRoomInitialData,
+      },
+    });
+
+  const { joinRoom } = useSocketConnection({
+    onReconnect: () => {
+      checkRoomMutate({ roomId });
     },
   });
 
@@ -48,42 +71,48 @@ function RouteComponent() {
     if (isPlayerAlreadyInRoom) {
       joinRoom(roomId);
     }
-  }, []);
+  }, [isPlayerAlreadyInRoom, joinRoom, roomId]);
 
-  const queryClient = useQueryClient();
-
-  // const onLobbyUpdated = useCallback(() => {
-  //   queryClient.invalidateQueries({ queryKey: ["players"] });
-
-  //   console.log("thig");
-  // }, []);
-
-  const { joinRoom } = useSocketConnection({
-    onLobbyUpdated: () => {
-      queryClient.invalidateQueries({ queryKey: ["players"] });
-      console.log("thig");
+  const joinRoomCb = useCallback(
+    (playerDetails: AddEditPlayerDetailsDto) => {
+      joinRoom(roomId, playerDetails).then(() => {
+        console.log("joined");
+        void refetchIsPlayerInRoom();
+      });
     },
-    onReconnect: () => {
-      if (isPlayerAlreadyInRoom) {
-        joinRoom(roomId);
-      }
-    },
-  });
-
-  const joinRoomCb = useCallback((playerDetails: AddEditPlayerDetailsDto) => {
-    joinRoom(roomId, playerDetails).then((resp) => {
-      console.log("joined");
-      void refetch();
-    });
-  }, []);
+    [joinRoom, refetchIsPlayerInRoom, roomId]
+  );
 
   return (
     <RoomContext.Provider value={{ roomId }}>
       {isPlayerAlreadyInRoom ? (
-        <Lobby roomId={roomId} />
+        <Room roomId={roomId} />
       ) : (
         <AddEditPlayerModal submitCallback={joinRoomCb} />
       )}
     </RoomContext.Provider>
   );
 }
+
+const Room = ({ roomId }: { roomId: string }) => {
+  const {
+    data: currentGameState,
+    refetch: refetchGameState,
+    isLoading: isGameStateLoading,
+  } = useGameState(roomId);
+  useSocketConnection({
+    onGameStateChanged: () => {
+      refetchGameState();
+    },
+  });
+
+  if (isGameStateLoading) {
+    return <Skeleton loading height={100} />;
+  }
+
+  if (currentGameState === GameState.Lobby) {
+    return <Lobby />;
+  } else {
+    return <GameRoom />;
+  }
+};

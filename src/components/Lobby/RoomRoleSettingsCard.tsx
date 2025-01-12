@@ -1,15 +1,18 @@
 import { useRoomId } from "@/hooks/useRoomId";
 import { useRoomRoleSettings } from "@/hooks/useRoomRoleSettings";
 import {
+  Badge,
+  Box,
   Card,
   DrawerBackdrop,
   DrawerHeader,
+  Float,
   HStack,
-  SimpleGrid,
+  Skeleton,
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { IconArrowRight, IconCards, IconSword } from "@tabler/icons-react";
+import { IconArrowRight, IconCards } from "@tabler/icons-react";
 import werewolfImg from "@/assets/icons/roles/werewolf-color.png";
 import { useRoles } from "@/hooks/useRoles";
 import {
@@ -26,11 +29,16 @@ import { useCurrentPlayer } from "@/hooks/useCurrentPlayer";
 import { RoomRoleSettingsInfo } from "./RoomRoleSettingsInfo";
 
 export const RoomRoleSettingsCard = () => {
-  const roomId = useRoomId();
-  const { data: settings, refetch: refetchRoomRoleSettings } =
-    useRoomRoleSettings(roomId);
-  const { data: roleInfos } = useRoles();
   const [isOpen, setIsOpen] = React.useState(false);
+
+  const roomId = useRoomId();
+  const roomRoleSettingsQuery = useRoomRoleSettings(roomId);
+  const {
+    data: settings,
+    isLoading: isRoomRoleSettingsLoading,
+    refetch: refetchRoomRoleSettings,
+  } = roomRoleSettingsQuery;
+  const { data: roleInfos } = useRoles();
 
   const { data: currentModerator } = useModerator(roomId);
   const { data: currentPlayer } = useCurrentPlayer(roomId);
@@ -40,25 +48,25 @@ export const RoomRoleSettingsCard = () => {
     return currentModerator.id === currentPlayer.id;
   }, [currentModerator, currentPlayer]);
 
+  const onRoomRoleSettingsUpdated = useCallback(() => {
+    void refetchRoomRoleSettings();
+  }, [refetchRoomRoleSettings]);
+
   useSocketConnection({
-    onRoomRoleSettingsUpdated: () => {
-      void refetchRoomRoleSettings();
-    },
+    onRoomRoleSettingsUpdated,
   });
 
   const closeDrawerCallback = useCallback(() => {
     setIsOpen(false);
   }, []);
 
-  const numberOfWerewolves = settings?.werewolves as number | undefined;
-
-  if (!settings) {
-    return null;
-  }
+  const numberOfWerewolves = (settings?.werewolves as number | undefined) ?? 0;
 
   return (
     <>
       <Card.Root
+        zIndex={1}
+        variant="outline"
         onClick={() => {
           setIsOpen(true);
         }}
@@ -74,35 +82,45 @@ export const RoomRoleSettingsCard = () => {
                 </HStack>
               </Card.Title>
               <Card.Description mt={2}>
-                <HStack>
-                  {Array.from(Array(numberOfWerewolves)).map((_val, index) => {
-                    return (
+                <Skeleton
+                  minW={isRoomRoleSettingsLoading ? "25%" : undefined}
+                  loading={isRoomRoleSettingsLoading}
+                >
+                  <HStack>
+                    <Box position="relative" w="32px" h="32px">
                       <img
-                        key={index}
                         src={werewolfImg}
                         alt="werewolf"
                         width="32"
                         height="32"
                       />
-                    );
-                  })}
-                  {settings?.selectedRoles.map((role, index) => {
-                    const roleInfo = roleInfos?.find(
-                      (r) => r.roleName === role
-                    );
-                    if (!roleInfo) return null;
+                      {numberOfWerewolves > 1 ? (
+                        <Float placement="top-end">
+                          <Badge variant="surface" size="xs">
+                            x{numberOfWerewolves}
+                          </Badge>
+                        </Float>
+                      ) : null}
+                    </Box>
 
-                    return (
-                      <img
-                        key={`${roleInfo.roleName}-${index}`}
-                        src={roleInfo.imgSrc}
-                        alt={roleInfo.label}
-                        width="32"
-                        height="32"
-                      />
-                    );
-                  })}
-                </HStack>
+                    {settings?.selectedRoles.map((role, index) => {
+                      const roleInfo = roleInfos?.find(
+                        (r) => r.roleName === role
+                      );
+                      if (!roleInfo) return null;
+
+                      return (
+                        <img
+                          key={`${roleInfo.roleName}-${index}`}
+                          src={roleInfo.imgSrc}
+                          alt={roleInfo.label}
+                          width="32"
+                          height="32"
+                        />
+                      );
+                    })}
+                  </HStack>
+                </Skeleton>
               </Card.Description>
             </VStack>
             <IconArrowRight />
@@ -120,13 +138,25 @@ export const RoomRoleSettingsCard = () => {
       >
         <DrawerBackdrop />
 
-        <DrawerContent>
-          <DrawerHeader>Settings</DrawerHeader>
+        <DrawerContent borderRadius="sm">
+          <DrawerHeader>
+            <HStack gap={1}>
+              <IconCards size={18} />
+              <Text fontWeight={500} fontSize="lg">
+                Role Settings
+              </Text>
+            </HStack>
+          </DrawerHeader>
           <DrawerBody>
             {isModerator ? (
-              <EditRoomRoleSettings closeDrawerCallback={closeDrawerCallback} />
+              <EditRoomRoleSettings
+                roomRoleSettingsQuery={roomRoleSettingsQuery}
+                closeDrawerCallback={closeDrawerCallback}
+              />
             ) : (
-              <RoomRoleSettingsInfo activeRoles={settings.selectedRoles} />
+              <RoomRoleSettingsInfo
+                activeRoles={settings?.selectedRoles ?? []}
+              />
             )}
           </DrawerBody>
           <DrawerCloseTrigger />

@@ -1,20 +1,27 @@
-import { APIResponse } from "@/dto/APIResponse";
 import { getApi } from "@/util/api";
-import { getSessionCookie } from "@/util/cookie";
 import { useQuery } from "@tanstack/react-query";
+
+export interface QueryOptions<T> {
+  initialData?: T;
+  enabled?: boolean;
+  staleTime?: number;
+}
 
 export interface useApiQueryProps<T> {
   queryKey: string[];
   query: {
     endpoint: string;
     params?: URLSearchParams;
-    initialData?: T;
   };
+  options?: QueryOptions<T>;
 }
 
 export const useApiQuery = <T,>({
   queryKey,
-  query: { endpoint, params, initialData },
+  query: { endpoint, params },
+  options: { initialData, enabled, staleTime = 0 } = {
+    enabled: true,
+  },
 }: useApiQueryProps<T>) => {
   let queryParams = "";
   if (params) {
@@ -29,5 +36,7 @@ export const useApiQuery = <T,>({
         url,
         method: "GET",
       }),
+    staleTime,
+    enabled,
   });
 };

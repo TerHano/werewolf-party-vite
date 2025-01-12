@@ -1,21 +1,30 @@
 import { getApi } from "@/util/api";
 import { getSessionCookie, setSessionCookie } from "@/util/cookie";
 import * as signalR from "@microsoft/signalr";
-import React, { PropsWithChildren, useEffect, useMemo } from "react";
-import { DialogBackdrop, DialogBody, Text, VStack } from "@chakra-ui/react";
+import React, { PropsWithChildren, useEffect, useMemo, useState } from "react";
+import {
+  Button,
+  DialogBackdrop,
+  DialogBody,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { DialogContent, DialogRoot } from "@/components/ui/dialog";
 import { IconPlugConnectedX } from "@tabler/icons-react";
-import { useDebounce } from "@uidotdev/usehooks";
+import { useDebounce, useIsFirstRender } from "@uidotdev/usehooks";
+import { useTranslation } from "react-i18next";
 
 export const SocketContext = React.createContext<signalR.HubConnection | null>(
   null
 );
 
 export const SocketProvider = ({ children }: PropsWithChildren) => {
-  const [_isConnected, setIsConnected] = React.useState<boolean | undefined>(
-    undefined
+  const { t } = useTranslation();
+  const isFirstRender = useIsFirstRender();
+  const [connectionState, setConnectionState] = useState(
+    signalR.HubConnectionState.Connecting
   );
-  const isConnected = useDebounce(_isConnected, 50);
+
   const connection = useMemo(() => {
     return new signalR.HubConnectionBuilder()
       .withUrl(`${import.meta.env.WEREWOLF_SERVER_URL}/Events`, {
@@ -36,26 +45,41 @@ export const SocketProvider = ({ children }: PropsWithChildren) => {
       .withAutomaticReconnect()
       .build();
   }, []);
-  if (connection.state === signalR.HubConnectionState.Disconnected) {
-    setIsConnected(false);
-    connection.start().then(() => {
-      setIsConnected(true);
-    });
-  }
+  const dialogMessage = useMemo(() => {
+    switch (connectionState) {
+      case signalR.HubConnectionState.Connecting:
+        return t("Connecting to Server");
+      case signalR.HubConnectionState.Reconnecting:
+        return t("Reconnecting to Server");
+      case signalR.HubConnectionState.Disconnected:
+        return t("Disconnected from Server");
+    }
+  }, [connectionState, t]);
 
-  connection.onreconnecting(() => {
-    setIsConnected(false);
-  });
+  useEffect(() => {
+    console.log("do thing", connection.state);
+    setConnectionState(connection.state);
 
-  connection.onreconnected(() => {
-    setIsConnected(true);
-  });
+    if (
+      isFirstRender &&
+      connection.state === signalR.HubConnectionState.Disconnected
+    ) {
+      connection.start().then(() => {
+        setConnectionState(connection.state);
+      });
+    }
+  }, [connection, connection.state, isFirstRender]);
+
+  const isConnected = useDebounce(
+    connectionState === signalR.HubConnectionState.Connected,
+    200
+  );
 
   return (
     <SocketContext.Provider value={connection}>
       <DialogRoot
         //  size=""
-        open={isConnected === false}
+        open={connection.state !== signalR.HubConnectionState.Connected}
         motionPreset="slide-in-bottom"
       >
         <DialogBackdrop />
@@ -63,7 +87,16 @@ export const SocketProvider = ({ children }: PropsWithChildren) => {
           <DialogBody>
             <VStack>
               <IconPlugConnectedX size="8rem" />
-              <Text fontSize="1rem">Connecting to server...</Text>
+              <Text fontSize="1rem">{dialogMessage}</Text>
+              {connectionState === signalR.HubConnectionState.Disconnected ? (
+                <Button
+                  onClick={() => {
+                    connection.start();
+                  }}
+                >
+                  Reconnect
+                </Button>
+              ) : null}
             </VStack>
           </DialogBody>
         </DialogContent>

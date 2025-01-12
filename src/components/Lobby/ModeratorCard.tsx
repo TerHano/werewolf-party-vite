@@ -5,7 +5,6 @@ import {
   Text,
   Image,
   Badge,
-  VStack,
   Float,
   Box,
   Group,
@@ -28,9 +27,9 @@ export const ModeratorCard = ({
   player,
   isModerator = false,
   isCurrentPlayer = false,
-  isLoading = false,
-  css,
-  className,
+  // isLoading = false,
+  // css,
+  // className,
 }: ModeratorCardProps) => {
   const { getAvatarImageSrcForIndex } = usePlayerAvatar();
 

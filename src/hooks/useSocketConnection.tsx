@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect } from "react";
 import { AddEditPlayerDetailsDto } from "@/dto/AddEditPlayerDetailsDto";
 import { APIResponse } from "@/dto/APIResponse";
-import { SocketContext } from "@/context/SocketProvider";
+import { SocketContext } from "@/context/SocketContext";
 import { HubConnectionState } from "@microsoft/signalr";
 
 interface UseSocketConnection {

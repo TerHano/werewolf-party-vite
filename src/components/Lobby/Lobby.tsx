@@ -199,6 +199,7 @@ export const PlayersSection = ({
             // />
 
             <PlayerAvatar
+              key={player.id}
               player={player}
               className="animate-fade-in-from-bottom"
               css={{ animationDelay: `${index * 50}ms` }}

@@ -78,10 +78,12 @@ export const RoomRoleSettingsCard = () => {
               <Card.Title>
                 <HStack gap={1}>
                   <IconCards size={16} />
-                  <Text fontSize="sm">Role Settings</Text>
+                  <Text fontWeight="semibold" fontSize="sm">
+                    Role Settings
+                  </Text>
                 </HStack>
               </Card.Title>
-              <Card.Description mt={2}>
+              <Card.Body p={0} mt={2}>
                 <Skeleton
                   minW={isRoomRoleSettingsLoading ? "25%" : undefined}
                   loading={isRoomRoleSettingsLoading}
@@ -121,7 +123,7 @@ export const RoomRoleSettingsCard = () => {
                     })}
                   </HStack>
                 </Skeleton>
-              </Card.Description>
+              </Card.Body>
             </VStack>
             <IconArrowRight />
           </HStack>

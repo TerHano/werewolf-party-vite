@@ -41,18 +41,21 @@ export const usePlayerAvatar = () => {
     []
   );
 
-  const getAvatarImageSrcForIndex = useCallback((avatarIndex?: number) => {
-    if (!avatarIndex || avatarIndex > data.length) {
-      avatarIndex = 0;
-    }
-    const avatarName = data[avatarIndex];
-    const path = `/src/assets/icons/avatars/${avatarName}.png`;
-    const modules = import.meta.glob("/src/assets/icons/avatars/*", {
-      eager: true,
-    });
-    const mod = modules[path] as { default: string };
-    return mod.default;
-  }, []);
+  const getAvatarImageSrcForIndex = useCallback(
+    (avatarIndex?: number) => {
+      if (!avatarIndex || avatarIndex > data.length) {
+        avatarIndex = 0;
+      }
+      const avatarName = data[avatarIndex];
+      const path = `/src/assets/icons/avatars/${avatarName}.png`;
+      const modules = import.meta.glob("/src/assets/icons/avatars/*", {
+        eager: true,
+      });
+      const mod = modules[path] as { default: string };
+      return mod.default;
+    },
+    [data]
+  );
 
   return { data, getAvatarImageSrcForIndex };
 };

@@ -91,7 +91,7 @@ export const ManagePlayersButton = () => {
         <DrawerBody>
           <Stack gap={2}>
             {players?.map((player: PlayerDto) => (
-              <Card.Root w="full">
+              <Card.Root key={player.id} w="full">
                 <Card.Body>
                   <HStack justifyContent="space-between" gap={2}>
                     <HStack gap={2}>

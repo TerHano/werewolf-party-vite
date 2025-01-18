@@ -6,7 +6,7 @@ export const useUpdateRoomRoleSettings = () => {
     mutation: {
       endpoint: `room/role-settings`,
       method: "POST",
-      queryKeysToInvalidate: [`room-role-settings`],
+      queryKeysToInvalidate: [[`room-role-settings`]],
     },
   });
 };

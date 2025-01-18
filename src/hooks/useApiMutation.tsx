@@ -12,7 +12,7 @@ export interface useApiMutationProps<ReturnType, Body>
   mutation: {
     endpoint: string;
     method?: "PUT" | "POST" | "DELETE";
-    queryKeysToInvalidate?: string[];
+    queryKeysToInvalidate?: string[][];
   };
 }
 
@@ -22,21 +22,32 @@ export const useApiMutation = <ReturnType, Body>({
   onError,
 }: useApiMutationProps<ReturnType, Body>) => {
   const queryClient = useQueryClient();
-  const url = `${import.meta.env.WEREWOLF_SERVER_URL}/api/${endpoint}`;
+  let url = `${import.meta.env.WEREWOLF_SERVER_URL}/api/${endpoint}`;
   return useMutation<ReturnType, Error, Body>({
     //mutationKey:,
-    mutationFn: (body: Body) =>
-      getApi<ReturnType>({
+    mutationFn: (body: Body) => {
+      let isValidDelete = false;
+      if (method === "DELETE") {
+        if (typeof body === "number") {
+          console.log(body);
+          url = url.replace("{id}", body.toString());
+          isValidDelete = true;
+        }
+      }
+      return getApi<ReturnType>({
         url,
         method,
-        body: JSON.stringify(body),
-      }),
+        body: isValidDelete ? undefined : JSON.stringify(body),
+      });
+    },
     onSuccess: (data, variables) => {
       if (onSuccess) {
         onSuccess(data, variables);
       }
       if (queryKeysToInvalidate) {
-        queryClient.invalidateQueries({ queryKey: queryKeysToInvalidate });
+        queryKeysToInvalidate.forEach((queryKey) => {
+          queryClient.invalidateQueries({ queryKey: queryKey });
+        });
       }
     },
     onError: onError,

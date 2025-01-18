@@ -61,7 +61,7 @@ const data: RoleInfo[] = [
     shortDescription: "Find the Werewolves",
     description:
       "When called awake by the Moderator, the Detective can point to any of their fellow players and the Moderator must nod yes or no as to whether or not they are indeed a Werewolf.",
-    roleName: Role.Seer,
+    roleName: Role.Detective,
     roleType: RoleType.Traditional,
     imgSrc: detectiveImg,
     showInModeratorRoleCall: true,
@@ -128,7 +128,7 @@ const data: RoleInfo[] = [
     shortDescription: "Prove Your Innocence!",
     description:
       "The Cursed think they are regular villagers, but they were cursed with the mark of the wolf at birth and are seen as members of the wolfpack by the detective.",
-    roleName: Role.Lycan,
+    roleName: Role.Cursed,
     roleType: RoleType.Special,
     showInModeratorRoleCall: false,
     roleCallPriority: 8,
@@ -158,10 +158,15 @@ export const useRoles = ({ roles }: UseRoleProps = {}) => {
 };
 
 export const useRole = (roleId: number | undefined) => {
+  let role;
   if (roleId === undefined) {
-    return undefined;
+    role = undefined;
   }
-  return data.find((x) => x.roleName === roleId);
+  role = data.find((x) => x.roleName === roleId);
+  if (role === undefined) {
+    throw new Error(`No Role For Id: ${roleId}`);
+  }
+  return { data: role };
 };
 
 export const getColorForRoleType = (roleType: RoleType) => {

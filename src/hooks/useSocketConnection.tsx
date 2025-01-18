@@ -11,6 +11,7 @@ interface UseSocketConnection {
   onPlayerKicked?: (kickedPlayerId: string) => void;
   onReconnect?: () => void;
   onRoomRoleSettingsUpdated?: () => void;
+  onDayOrTimeUpdated?: () => void;
 }
 
 export const useSocketConnection = ({
@@ -20,6 +21,7 @@ export const useSocketConnection = ({
   onPlayerKicked,
   onReconnect,
   onRoomRoleSettingsUpdated,
+  onDayOrTimeUpdated,
 }: UseSocketConnection) => {
   const connection = useContext(SocketContext);
   if (connection == null) {
@@ -46,20 +48,9 @@ export const useSocketConnection = ({
     if (onGameStateChanged) {
       connection.on("GameState", onGameStateChanged);
     }
-    // } else {
-    //   if (onLobbyUpdated) {
-    //     connection.off("PlayersInLobbyUpdated", onLobbyUpdated);
-    //   }
-    //   if (onModeratorUpdated) {
-    //     connection.off("ModeratorUpdated", onModeratorUpdated);
-    //   }
-    //   if (onRoomRoleSettingsUpdated) {
-    //     connection.off("RoomRoleSettingsUpdated", onRoomRoleSettingsUpdated);
-    //   }
-    //   if (onPlayerKicked) {
-    //     connection.off("PlayerKicked", onPlayerKicked);
-    //   }
-    // }
+    if (onDayOrTimeUpdated) {
+      connection.on("DayTimeUpdated", onDayOrTimeUpdated);
+    }
 
     return () => {
       if (onLobbyUpdated) {
@@ -77,10 +68,14 @@ export const useSocketConnection = ({
       if (onGameStateChanged) {
         connection.off("GameState", onGameStateChanged);
       }
+      if (onDayOrTimeUpdated) {
+        connection.off("DayTimeUpdated", onDayOrTimeUpdated);
+      }
     };
   }, [
     connection,
     connection.state,
+    onDayOrTimeUpdated,
     onGameStateChanged,
     onLobbyUpdated,
     onModeratorUpdated,

@@ -8,7 +8,7 @@ export const PlayerView = () => {
   const { data: assignedRole, isLoading: isAssignedRoleLoading } =
     useAssignedRole(roomId);
 
-  const roleInfo = useRole(assignedRole);
+  const { data: roleInfo } = useRole(assignedRole);
 
   if (isAssignedRoleLoading) {
     return null;

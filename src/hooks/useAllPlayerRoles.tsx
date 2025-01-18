@@ -3,7 +3,7 @@ import { PlayerRoleActionDto } from "@/dto/PlayerRoleActionDto";
 
 export const useAllPlayerRoles = (roomId: string) => {
   return useApiQuery<PlayerRoleActionDto[]>({
-    queryKey: ["assigned-role", roomId],
+    queryKey: ["assigned-roles", roomId],
     query: {
       endpoint: `game/${roomId}/all-player-roles`,
     },

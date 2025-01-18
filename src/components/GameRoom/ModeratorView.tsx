@@ -1,52 +1,81 @@
 import { useEndGame } from "@/hooks/useEndGame";
-import { Group, Image, Stack, Text } from "@chakra-ui/react";
+import { Badge, Separator, Stack } from "@chakra-ui/react";
 import { Button } from "../ui/button";
 import { useRoomId } from "@/hooks/useRoomId";
-import {
-  StepsCompletedContent,
-  StepsContent,
-  StepsItem,
-  StepsList,
-  StepsNextTrigger,
-  StepsPrevTrigger,
-  StepsRoot,
-} from "../ui/steps";
-import { getRoleForRoleId, RoleInfo, useRoles } from "@/hooks/useRoles";
-import { useMemo } from "react";
+import { RoleInfo, useRoles } from "@/hooks/useRoles";
+import { useCallback, useMemo, useState } from "react";
+import { useAllPlayerRoles } from "@/hooks/useAllPlayerRoles";
+import { ActionType } from "@/enum/ActionType";
+import { useAllQueuedActions } from "@/hooks/useAllQueuedActions";
+import { useDayDetails } from "@/hooks/useDayDetails";
+import { useSocketConnection } from "@/hooks/useSocketConnection";
+import { NightCall } from "./NightCall";
+import { ChoppingBlock } from "./ChoppingBlock";
 import { useTranslation } from "react-i18next";
-import { PlayerRoleActionDto } from "@/dto/PlayerRoleActionDto";
-import { useAllPlayerRoles } from "@/hooks/useAllAssignedRoles";
 
-interface PlayerRoleWithDetails extends PlayerRoleActionDto {
-  roleInfo: RoleInfo;
+interface ActionModalDetails {
+  playerId: string;
+  actionType: ActionType;
 }
 
 export const ModeratorView = () => {
-  const roomId = useRoomId();
   const { t } = useTranslation();
+  const roomId = useRoomId();
+
   const { data: allPlayerRoles } = useAllPlayerRoles(roomId);
   const roles = allPlayerRoles?.map((playerRole) => playerRole.role);
   const { data: roleDetails } = useRoles({ roles: roles });
-  const playerRolesWithDetails = useMemo<PlayerRoleWithDetails[]>(() => {
-    if (!allPlayerRoles || !roleDetails) {
-      return [];
-    }
-    return allPlayerRoles
-      .map<PlayerRoleWithDetails>((assignedRole) => {
-        return {
-          ...assignedRole,
-          roleInfo: getRoleForRoleId(assignedRole.role),
-        };
-      })
-      .filter((assignedRole) => assignedRole.roleInfo.showInModeratorRoleCall)
-      .sort(
-        (a, b) => a.roleInfo.roleCallPriority - b.roleInfo.roleCallPriority
-      );
-  }, [allPlayerRoles, roleDetails]);
+  const { data: allQueuedActions } = useAllQueuedActions(roomId);
+  const { data: dayDetails, refetch: refetchDayDetails } =
+    useDayDetails(roomId);
+  // const playerRolesWithDetails = useMemo<PlayerRoleWithDetails[]>(() => {
+  //   if (!allPlayerRoles || !roleDetails) {
+  //     return [];
+  //   }
+  //   return (
+  //     allPlayerRoles
+  //       .map<PlayerRoleWithDetails>((assignedRole) => {
+  //         return {
+  //           ...assignedRole,
+  //           roleInfo: getRoleForRoleId(assignedRole.role),
+  //         };
+  //       })
+  //       //.filter((assignedRole) => assignedRole.roleInfo.showInModeratorRoleCall)
+  //       .sort(
+  //         (a, b) => a.roleInfo.roleCallPriority - b.roleInfo.roleCallPriority
+  //       )
+  //   );
+  // }, [allPlayerRoles, roleDetails]);
+
   const { mutate: endGameMutation } = useEndGame();
 
+  useSocketConnection({
+    onDayOrTimeUpdated: () => {
+      refetchDayDetails();
+    },
+  });
+
+  const isDay = dayDetails?.isDay ?? false;
+
+  const timeText = useMemo(() => {
+    if (dayDetails?.currentNight === 0) {
+      if (dayDetails.isDay) {
+        return t("First Day");
+      } else {
+        return t("First Night");
+      }
+    } else {
+      if (dayDetails?.isDay) {
+        return t(`Day ${dayDetails?.currentNight}`);
+      } else {
+        return t(`Night ${dayDetails?.currentNight}`);
+      }
+    }
+    return "Unknown";
+  }, [dayDetails?.currentNight, dayDetails?.isDay, t]);
+
   return (
-    <>
+    <Stack width="100%">
       <Button
         onClick={() => {
           endGameMutation({ roomId });
@@ -54,60 +83,9 @@ export const ModeratorView = () => {
       >
         End Game
       </Button>
-      <StepsRoot
-        orientation="vertical"
-        size="lg"
-        width="100%"
-        defaultValue={0}
-        count={playerRolesWithDetails.length}
-      >
-        <StepsList
-          minHeight="50vh"
-          height={`${70 * playerRolesWithDetails.length}px`}
-          maxHeight="80vh"
-        >
-          {playerRolesWithDetails.map((playerRole, index) => {
-            return (
-              <StepsItem
-                icon={<Image width="24px" src={playerRole.roleInfo.imgSrc} />}
-                key={`item-${playerRole.id}`}
-                index={index}
-                // title={playerRole.roleInfo.label}
-              />
-            );
-          })}
-        </StepsList>
-        <Stack
-          height="80vh"
-          width="100%"
-          alignItems="center"
-          justifyContent="center"
-        >
-          {playerRolesWithDetails.map((playerRole, index) => {
-            return (
-              <StepsContent key={`content-${playerRole.id}`} index={index}>
-                <Text fontSize="xl" textStyle="accent">
-                  {t(`Wake Up, ${playerRole.roleInfo.label}!`)}
-                </Text>
-              </StepsContent>
-            );
-          })}
-          <StepsCompletedContent>All steps are complete!</StepsCompletedContent>
-
-          <Group>
-            <StepsPrevTrigger asChild>
-              <Button variant="outline" size="sm">
-                Prev
-              </Button>
-            </StepsPrevTrigger>
-            <StepsNextTrigger asChild>
-              <Button variant="outline" size="sm">
-                Next
-              </Button>
-            </StepsNextTrigger>
-          </Group>
-        </Stack>
-      </StepsRoot>
-    </>
+      <Separator />
+      <Badge colorPalette={isDay ? "yellow" : "purple"}>{timeText}</Badge>
+      {isDay ? <ChoppingBlock /> : <NightCall />}
+    </Stack>
   );
 };

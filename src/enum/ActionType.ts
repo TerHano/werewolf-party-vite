@@ -1,6 +1,9 @@
 export enum ActionType {
   Kill = 1,
-  Revive = 2,
-  Investigate = 3,
-  VotedOut = 4,
+  WerewolfKill = 2,
+  VigilanteKill = 3,
+  Revive = 4,
+  Investigate = 5,
+  VotedOut = 6,
+  Suicide = 7,
 }

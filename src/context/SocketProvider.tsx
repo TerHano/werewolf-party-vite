@@ -1,6 +1,10 @@
 import { getApi } from "@/util/api";
 import { getSessionCookie, setSessionCookie } from "@/util/cookie";
-import * as signalR from "@microsoft/signalr";
+import {
+  HubConnectionState,
+  HubConnectionBuilder,
+  LogLevel,
+} from "@microsoft/signalr";
 import React, {
   PropsWithChildren,
   useCallback,
@@ -12,9 +16,10 @@ import {
   Button,
   DialogBackdrop,
   DialogBody,
+  Stack,
   Text,
-  VStack,
 } from "@chakra-ui/react";
+import { ProgressRoot, ProgressBar } from "@/components/ui/progress";
 import { DialogContent, DialogRoot } from "@/components/ui/dialog";
 import { IconPlugConnectedX } from "@tabler/icons-react";
 import { useDebounce, useIsFirstRender } from "@uidotdev/usehooks";
@@ -23,13 +28,16 @@ import { SocketContext } from "./SocketContext";
 
 export const SocketProvider = ({ children }: PropsWithChildren) => {
   const { t } = useTranslation();
+  const [isReconnectDisabled, setReconnectDisabled] = useState(false);
   const isFirstRender = useIsFirstRender();
-  const [connectionState, setConnectionState] = useState(
-    signalR.HubConnectionState.Disconnected
-  );
+  const [_connectionState, setConnectionState] = useState<
+    HubConnectionState | undefined
+  >(undefined);
+
+  const connectionState = useDebounce(_connectionState, 300);
 
   const connection = useMemo(() => {
-    return new signalR.HubConnectionBuilder()
+    return new HubConnectionBuilder()
       .withUrl(`${import.meta.env.WEREWOLF_SERVER_URL}/Events`, {
         accessTokenFactory: async () => {
           const token = getSessionCookie();
@@ -44,78 +52,104 @@ export const SocketProvider = ({ children }: PropsWithChildren) => {
           return token;
         },
       })
-      .configureLogging(signalR.LogLevel.Information)
+      .configureLogging(LogLevel.Information)
       .withAutomaticReconnect()
       .build();
   }, []);
   const dialogMessage = useMemo(() => {
     switch (connectionState) {
-      case signalR.HubConnectionState.Connecting:
+      case HubConnectionState.Connecting:
         return t("Connecting to Server");
-      case signalR.HubConnectionState.Reconnecting:
+      case HubConnectionState.Reconnecting:
         return t("Reconnecting to Server");
-      case signalR.HubConnectionState.Disconnected:
+      case HubConnectionState.Disconnected:
         return t("Disconnected from Server");
     }
   }, [connectionState, t]);
 
   const startConnection = useCallback(
     () =>
-      connection.start().then(() => {
-        setConnectionState(connection.state);
-      }),
+      connection
+        .start()
+        .then(() => {
+          setConnectionState(connection.state);
+        })
+        .catch(() => {
+          setConnectionState(connection.state);
+        }),
     [connection]
   );
   useEffect(() => {
     console.log("do thing", connection.state);
-    setConnectionState(connection.state);
-    if (isFirstRender) {
-      connection.onreconnected(() => {
-        console.log("reconnected");
-        setConnectionState(connection.state);
-      });
 
-      connection.onreconnecting(() => {
-        console.log("doin somethin");
-      });
-      if (connection.state === signalR.HubConnectionState.Disconnected) {
+    connection.onreconnected(() => {
+      setConnectionState(connection.state);
+    });
+
+    connection.onreconnecting(() => {
+      setConnectionState(connection.state);
+    });
+
+    connection.onclose(() => {
+      setConnectionState(connection.state);
+    });
+    if (isFirstRender) {
+      if (connection.state === HubConnectionState.Disconnected) {
         startConnection();
       }
     }
   }, [connection, connection.state, isFirstRender, startConnection]);
 
-  const isConnected = useDebounce(
-    connectionState === signalR.HubConnectionState.Connected,
-    200
-  );
+  //const isConnected =
 
   return (
     <SocketContext.Provider value={connection}>
       <DialogRoot
         //  size=""
-        open={!isConnected}
+        open={
+          connectionState !== undefined &&
+          connectionState !== HubConnectionState.Connected
+        }
         motionPreset="slide-in-bottom"
       >
         <DialogBackdrop />
         <DialogContent>
           <DialogBody>
-            <VStack>
-              <IconPlugConnectedX size="8rem" />
-              <Text fontSize="1rem">{dialogMessage}</Text>
-              {connectionState === signalR.HubConnectionState.Disconnected ? (
-                <Button
-                  onClick={() => {
-                    startConnection();
-                  }}
-                >
-                  Reconnect
-                </Button>
+            <Stack gap={4}>
+              <Stack alignItems="center">
+                <IconPlugConnectedX size="8rem" />
+                <Text fontSize="1rem">{dialogMessage}</Text>
+                {connectionState === HubConnectionState.Disconnected ||
+                connectionState == HubConnectionState.Connecting ? (
+                  <Button
+                    disabled={
+                      isReconnectDisabled ||
+                      connectionState === HubConnectionState.Connecting
+                    }
+                    onClick={() => {
+                      setConnectionState(HubConnectionState.Connecting);
+                      setReconnectDisabled(true);
+                      setTimeout(() => {
+                        setReconnectDisabled(false);
+                      }, 2000);
+                      startConnection();
+                    }}
+                  >
+                    Reconnect
+                  </Button>
+                ) : null}
+              </Stack>
+              {isReconnectDisabled ||
+              connectionState !== HubConnectionState.Disconnected ? (
+                <ProgressRoot size="lg" value={null}>
+                  <ProgressBar />
+                </ProgressRoot>
               ) : null}
-            </VStack>
+            </Stack>
           </DialogBody>
         </DialogContent>
       </DialogRoot>
-      {isConnected ? children : null}
+      {connectionState === HubConnectionState.Connected ? children : null}
     </SocketContext.Provider>
   );
 };

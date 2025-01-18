@@ -5,4 +5,5 @@ import { PlayerDto } from "./PlayerDto";
 export interface PlayerRoleActionDto extends PlayerDto {
   role: Role;
   actions: RoleActionDto[];
+  isAlive: boolean;
 }

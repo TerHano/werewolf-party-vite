@@ -12,6 +12,8 @@ interface UseSocketConnection {
   onReconnect?: () => void;
   onRoomRoleSettingsUpdated?: () => void;
   onDayOrTimeUpdated?: () => void;
+  onWinConditionMet?: () => void;
+  onGameRestart?: () => void;
 }
 
 export const useSocketConnection = ({
@@ -22,6 +24,8 @@ export const useSocketConnection = ({
   onReconnect,
   onRoomRoleSettingsUpdated,
   onDayOrTimeUpdated,
+  onWinConditionMet,
+  onGameRestart,
 }: UseSocketConnection) => {
   const connection = useContext(SocketContext);
   if (connection == null) {
@@ -51,6 +55,12 @@ export const useSocketConnection = ({
     if (onDayOrTimeUpdated) {
       connection.on("DayTimeUpdated", onDayOrTimeUpdated);
     }
+    if (onWinConditionMet) {
+      connection.on("WinConditionMet", onWinConditionMet);
+    }
+    if (onGameRestart) {
+      connection.on("GameRestart", onGameRestart);
+    }
 
     return () => {
       if (onLobbyUpdated) {
@@ -71,17 +81,25 @@ export const useSocketConnection = ({
       if (onDayOrTimeUpdated) {
         connection.off("DayTimeUpdated", onDayOrTimeUpdated);
       }
+      if (onWinConditionMet) {
+        connection.off("WinConditionMet", onWinConditionMet);
+      }
+      if (onGameRestart) {
+        connection.off("GameRestart", onGameRestart);
+      }
     };
   }, [
     connection,
     connection.state,
     onDayOrTimeUpdated,
+    onGameRestart,
     onGameStateChanged,
     onLobbyUpdated,
     onModeratorUpdated,
     onPlayerKicked,
     onReconnect,
     onRoomRoleSettingsUpdated,
+    onWinConditionMet,
   ]);
 
   connection.onclose(() => {

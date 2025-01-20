@@ -53,45 +53,14 @@ export const ModeratorCard = ({
       marginTop="52px"
     >
       <RoomRoleSettingsCard />
-      {/* <Card.Root zIndex={1} w="full" style={css} className={className}>
-        <Card.Body>
-          <HStack gap={2}>
-            <SkeletonCircle loading={isLoading} h="36px">
-              <Image
-                h="36px"
-                src={getAvatarImageSrcForIndex(player?.avatarIndex)}
-              />
-            </SkeletonCircle>
 
-            <VStack gap={1} alignItems="start">
-              {isCurrentPlayer || isModerator ? (
-                <HStack gap={1}>
-                  {isModerator && (
-                    <Badge variant="subtle" colorPalette="yellow">
-                      Moderator
-                    </Badge>
-                  )}
-                  {isCurrentPlayer && (
-                    <Badge variant="subtle" colorPalette="blue">
-                      You
-                    </Badge>
-                  )}
-                </HStack>
-              ) : null}
-
-              <Skeleton loading={isLoading}>
-                <Text>{player?.nickname}</Text>
-              </Skeleton>
-            </VStack>
-          </HStack>
-        </Card.Body>
-      </Card.Root> */}
       <Float w="full" offset={-4} placement="top-center">
         <Card.Root
+          bg="colorPalette.900"
           //  bgColor="red"
-          className="animate-fade-in-from-bottom "
+          className="animate-slide-in-from-bottom"
           animation={animation}
-          variant="subtle"
+          variant="outline"
           w="full"
         >
           <Card.Body mb={2} p={2}>

@@ -66,7 +66,7 @@ export const RoomRoleSettingsCard = () => {
     <>
       <Card.Root
         zIndex={1}
-        variant="outline"
+        variant="elevated"
         onClick={() => {
           setIsOpen(true);
         }}

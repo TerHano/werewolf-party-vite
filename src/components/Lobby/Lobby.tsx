@@ -23,7 +23,7 @@ import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { toaster } from "../ui/toaster";
 import { useNavigate } from "@tanstack/react-router";
 import { PlayerAvatar } from "./PlayerAvatar";
-import campfireImg from "@/assets/icons/lobby/campfire.png";
+import emptyLobby from "@/assets/icons/lobby/lobby-empty.png";
 import { Button } from "../ui/button";
 import { useStartGame } from "@/hooks/useStartGame";
 
@@ -77,7 +77,8 @@ export const Lobby = () => {
   }, [currentModerator, currentPlayer]);
 
   return (
-    <Stack w="full" gap={2}>
+    // <Box>
+    <Stack w="full" p={3} gap={2}>
       <HStack justifyContent="center">
         <Text>{t("Room ID")}:</Text>
         <ClipboardButton
@@ -111,6 +112,7 @@ export const Lobby = () => {
       <Separator my={3} />
       <PlayersSection currentPlayer={currentPlayer} />
     </Stack>
+    // </Box>
   );
 };
 
@@ -156,10 +158,10 @@ export const PlayersSection = ({
 
   if (players?.length === 0) {
     return (
-      <Card.Root w="full">
+      <Card.Root w="full" className="animate-fade-in-from-bottom">
         <VStack paddingY={3} gap={3}>
-          <Image src={campfireImg} height={32} width={32} />
           <VStack gap={0}>
+            <Image src={emptyLobby} height={32} width={32} />
             <Text lineHeight="shorter" fontSize="xl" textStyle="accent">
               {t("Invite Some Friends")}
             </Text>
@@ -179,7 +181,7 @@ export const PlayersSection = ({
   }
 
   return (
-    <Card.Root p={2} w="full">
+    <Card.Root p={2} w="full" className="animate-fade-in-from-bottom">
       <Skeleton
         minH={isPlayersLoading ? "100px" : undefined}
         loading={isPlayersLoading}
@@ -199,6 +201,7 @@ export const PlayersSection = ({
             // />
 
             <PlayerAvatar
+              currentPlayer={currentPlayer}
               key={player.id}
               player={player}
               className="animate-fade-in-from-bottom"

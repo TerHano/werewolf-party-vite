@@ -24,7 +24,7 @@ export const ActionButtonList = ({
         </Text>
         <DisabledActionsTooltip actions={actions} />
       </Group>
-      <Group>
+      <Group justifyContent="center">
         {actions?.map((action) => {
           const props = getActionButtonProps(action.type);
           return (

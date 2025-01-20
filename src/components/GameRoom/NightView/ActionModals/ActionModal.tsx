@@ -5,6 +5,7 @@ import { DialogBackdrop, DialogRoot } from "@/components/ui/dialog";
 import { KillModalContent } from "./KillModalContent";
 import { HealModalContent } from "./HealModalContent";
 import { PlayerRoleWithDetails } from "../NightCall";
+import { ActionModalOptionsContext } from "@/context/ActionModalOptionsContext";
 
 export interface ActionModalProps {
   isOpen: boolean;
@@ -12,13 +13,7 @@ export interface ActionModalProps {
   allPlayers: PlayerRoleWithDetails[];
   playerId?: string;
   actionType: ActionType;
-}
-
-export interface BaseActionModalContentProps {
-  allPlayers: PlayerRoleWithDetails[];
-  playerId?: string;
-  actionType: ActionType;
-  close: () => void;
+  goToNextStepCb: () => void;
 }
 
 export const ActionModal = ({
@@ -27,52 +22,43 @@ export const ActionModal = ({
   playerId,
   onOpenChange,
   actionType,
+  goToNextStepCb,
 }: ActionModalProps) => {
   const close = useCallback(() => onOpenChange(false), [onOpenChange]);
   const ModalContent = useMemo(() => {
     switch (actionType) {
       case ActionType.WerewolfKill:
-        return (
-          <WerewolfKillModalContent
-            allPlayers={allPlayers}
-            actionType={actionType}
-            close={close}
-          />
-        );
+        return <WerewolfKillModalContent />;
       case ActionType.Revive:
-        return (
-          <HealModalContent
-            allPlayers={allPlayers}
-            playerId={playerId}
-            actionType={actionType}
-            close={close}
-          />
-        );
+        return <HealModalContent />;
       default:
-        return (
-          <KillModalContent
-            allPlayers={allPlayers}
-            playerId={playerId}
-            actionType={actionType}
-            close={close}
-          />
-        );
+        return <KillModalContent />;
     }
-  }, [actionType, allPlayers, close, playerId]);
+  }, [actionType]);
 
   return (
-    <DialogRoot
-      placement="center"
-      lazyMount
-      open={isOpen}
-      onOpenChange={(x) => onOpenChange(x.open)}
+    <ActionModalOptionsContext.Provider
+      value={{
+        actionType,
+        allPlayers,
+        close,
+        playerId,
+        goToNextStepCb,
+      }}
     >
-      <DialogBackdrop />
-      {ModalContent}
-      {/* <DialogContent>
+      <DialogRoot
+        placement="center"
+        lazyMount
+        open={isOpen}
+        onOpenChange={(x) => onOpenChange(x.open)}
+      >
+        <DialogBackdrop />
+        {ModalContent}
+        {/* <DialogContent>
         <DialogCloseTrigger onClick={() => onOpenChange(false)} />
         {ModalContent}
       </DialogContent> */}
-    </DialogRoot>
+      </DialogRoot>
+    </ActionModalOptionsContext.Provider>
   );
 };

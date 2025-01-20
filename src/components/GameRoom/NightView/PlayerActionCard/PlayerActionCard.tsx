@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
 import { QueuedActionDto } from "@/dto/QueuedActionDto";
 import { Role } from "@/enum/Role";
-import { IconSkull } from "@tabler/icons-react";
+import { IconSkull, IconUser } from "@tabler/icons-react";
 import { PlayerRoleWithDetails } from "../NightCall";
 import { ActionButtonList } from "./ActionButtonList";
 import { QueuedActionCard } from "./QueuedActionCard";
@@ -52,13 +52,18 @@ export const PlayerActionCard = ({
       <Card.Body>
         <VStack gap={1}>
           <Image width="8rem" src={playerDetails.roleInfo.imgSrc} />
-          <Badge colorPalette="current">{playerDetails.nickname}</Badge>
+
           {!playerDetails.isAlive ? (
             <Badge colorPalette="red">
               <IconSkull size={12} />
-              Dead
+              {playerDetails.nickname}
             </Badge>
-          ) : null}
+          ) : (
+            <Badge colorPalette="current">
+              <IconUser size={12} />
+              {playerDetails.nickname}
+            </Badge>
+          )}
         </VStack>
       </Card.Body>
       <Card.Footer>

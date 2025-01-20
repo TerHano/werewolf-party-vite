@@ -1,7 +1,7 @@
-import { Flex, Group, Image, SimpleGrid, Stack } from "@chakra-ui/react";
-import { Button } from "../ui/button";
+import { Flex, Group, Image, Stack } from "@chakra-ui/react";
+import { Button } from "../../ui/button";
 import { useRoomId } from "@/hooks/useRoomId";
-import { StepsContent, StepsItem, StepsList, StepsRoot } from "../ui/steps";
+import { StepsContent, StepsItem, StepsList, StepsRoot } from "../../ui/steps";
 import { getRoleForRoleId, RoleInfo, useRoles } from "@/hooks/useRoles";
 import { useCallback, useMemo, useState } from "react";
 import { PlayerRoleActionDto } from "@/dto/PlayerRoleActionDto";
@@ -83,6 +83,9 @@ export const NightCall = () => {
           onOpenChange={(isOpen) => {
             setActionModalOpen(isOpen);
           }}
+          goToNextStepCb={() => {
+            setCurrentStep(currentStep + 1);
+          }}
           allPlayers={playerRolesWithDetails}
           playerId={actionModalProps?.playerId}
           actionType={actionModalProps?.actionType}
@@ -100,10 +103,11 @@ export const NightCall = () => {
           gap={2}
         >
           <StepsList
-          //minHeight="30vh"
-          // height={`${120 * nightCallLength}px`}
-          // maxHeight="80vh"
-          //   maxWidth="90vw"
+            justifyContent="center"
+            //minHeight="30vh"
+            // height={`${120 * nightCallLength}px`}
+            // maxHeight="80vh"
+            //   maxWidth="90vw"
           >
             <Flex wrap="wrap" gapY={2}>
               <StepsItem

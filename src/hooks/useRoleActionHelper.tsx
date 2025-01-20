@@ -1,7 +1,6 @@
 import { ActionType } from "@/enum/ActionType";
 import { IconFirstAidKit, IconSword, IconZoom } from "@tabler/icons-react";
 import { useCallback } from "react";
-import { usePlayerAvatar } from "./usePlayerAvatar";
 
 interface ActionButton {
   label: string;

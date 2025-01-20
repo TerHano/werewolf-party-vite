@@ -1,22 +1,39 @@
-import { useCurrentPlayer } from "@/hooks/useCurrentPlayer";
-import { useModerator } from "@/hooks/useModerator";
 import { useRoomId } from "@/hooks/useRoomId";
 import { Skeleton } from "../ui/skeleton";
 import { ModeratorView } from "./ModeratorView";
 import { PlayerView } from "./PlayerView";
+import { WinConditionDialog } from "./WinConditionDialog";
+import { useIsModerator } from "@/hooks/useIsModerator";
+import { useSocketConnection } from "@/hooks/useSocketConnection";
+import { useQueryClient } from "@tanstack/react-query";
+import { querysToInvalidateOnNewGame } from "@/hooks/useStartGame";
 
 export const GameRoom = () => {
   const roomId = useRoomId();
-  const { data: moderator, isFetching: isModeratorLoading } =
-    useModerator(roomId);
-  const { data: currentPlayer, isFetching: isCurrentPlayerLoading } =
-    useCurrentPlayer(roomId);
+  // const { data: moderator, isFetching: isModeratorLoading } =
+  //   useModerator(roomId);
+  // const { data: currentPlayer, isFetching: isCurrentPlayerLoading } =
+  //   useCurrentPlayer(roomId);
 
-  if (isModeratorLoading || isCurrentPlayerLoading) {
+  const { data: isModerator, isLoading } = useIsModerator(roomId);
+  const queryClient = useQueryClient();
+
+  useSocketConnection({
+    onGameRestart: () => {
+      querysToInvalidateOnNewGame.forEach((q) => {
+        queryClient.invalidateQueries({ queryKey: q });
+      });
+    },
+  });
+
+  if (isLoading) {
     return <Skeleton loading height={100} />;
   }
 
-  const isModerator = currentPlayer?.id === moderator?.id;
-
-  return isModerator ? <ModeratorView /> : <PlayerView />;
+  return (
+    <>
+      <WinConditionDialog isModerator={isModerator} />
+      {isModerator ? <ModeratorView /> : <PlayerView />}
+    </>
+  );
 };

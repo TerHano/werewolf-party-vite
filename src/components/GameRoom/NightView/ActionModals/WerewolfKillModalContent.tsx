@@ -1,35 +1,34 @@
-import { Button, Text } from "@chakra-ui/react";
-import { BaseActionModalContentProps } from "./ActionModal";
 import {
+  Button,
   DialogBody,
-  DialogCloseTrigger,
-  DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+  Text,
+} from "@chakra-ui/react";
+import { Role } from "@/enum/Role";
+import { DialogCloseTrigger, DialogContent } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
 import { useCreateUpdateQueuedAction } from "@/hooks/useCreateUpdateQueuedAction";
-import { useCallback, useState } from "react";
 import { useRoomId } from "@/hooks/useRoomId";
+import { useState, useCallback } from "react";
 import { PlayerList } from "./PlayerList";
+import { useActionModalOptionsContext } from "@/hooks/useActionModalOptionsContext";
 
-export const KillModalContent = ({
-  allPlayers,
-  playerId,
-  actionType,
-  close,
-}: BaseActionModalContentProps) => {
+export const WerewolfKillModalContent = () => {
   const roomId = useRoomId();
-  const { t } = useTranslation();
+  const { allPlayers, actionType, close, goToNextStepCb } =
+    useActionModalOptionsContext();
   const playersToSelect = allPlayers.filter(
-    (player) => player.isAlive && player.id !== playerId
+    (player) => player.role !== Role.WereWolf && player.isAlive
   );
+  const { t } = useTranslation();
   const [selectedPlayerId, setSelectedPlayerId] = useState<string>();
 
   const { mutate: createUpdateQueuedAction } = useCreateUpdateQueuedAction({
     onSuccess: async () => {
       close();
+      goToNextStepCb();
     },
   });
 
@@ -37,24 +36,18 @@ export const KillModalContent = ({
     if (selectedPlayerId) {
       createUpdateQueuedAction({
         roomId,
-        playerId: playerId,
+        playerId: undefined,
         affectedPlayerId: selectedPlayerId,
         action: actionType,
       });
     }
-  }, [
-    actionType,
-    createUpdateQueuedAction,
-    playerId,
-    roomId,
-    selectedPlayerId,
-  ]);
+  }, [actionType, createUpdateQueuedAction, roomId, selectedPlayerId]);
   return (
     <DialogContent>
       <DialogCloseTrigger />
       <DialogHeader>
         <DialogTitle>
-          <Text textStyle="accent">{t("Who do you choose to attack?")}</Text>
+          <Text textStyle="accent">{t("Werewolves, who do we attack?")}</Text>
         </DialogTitle>
       </DialogHeader>
       <DialogBody>
@@ -66,12 +59,10 @@ export const KillModalContent = ({
       </DialogBody>
       <DialogFooter>
         <Button
-          disabled={selectedPlayerId === undefined}
-          form="player-details-form"
-          type="submit"
           onClick={onKillPlayer}
+          disabled={selectedPlayerId === undefined}
         >
-          {t("Kill Player")}
+          {t("Attack Player")}
         </Button>
       </DialogFooter>
     </DialogContent>

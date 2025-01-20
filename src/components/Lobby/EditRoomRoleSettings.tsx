@@ -22,6 +22,7 @@ import { useRoomId } from "@/hooks/useRoomId";
 import { RoomRoleSettingsDto } from "@/dto/RoomRoleSettingsDto";
 import { useUpdateRoomRoleSettings } from "@/hooks/useUpdateRoomRoleSettings";
 import { Button } from "../ui/button";
+import { toaster } from "../ui/toaster";
 
 interface EditRoomRoleSettingsForm {
   //roomId: string;
@@ -39,7 +40,16 @@ export const EditRoomRoleSettings = ({
 }) => {
   const { t } = useTranslation();
   const roomId = useRoomId();
-  const { mutate, isPending: isUpdatingSettings } = useUpdateRoomRoleSettings();
+  const { mutate, isPending: isUpdatingSettings } = useUpdateRoomRoleSettings({
+    onSuccess: async () => {
+      toaster.create({
+        title: t("Role Settings Updated"),
+        //description: t("You are now the moderator!"),
+        type: "success",
+        duration: 2000,
+      });
+    },
+  });
   const { data, isRoleType } = useRoles();
   const { data: savedRoleSettings, isLoading: isRoomRoleSettingsLoading } =
     roomRoleSettingsQuery;

@@ -1,5 +1,4 @@
 import { Button, Text } from "@chakra-ui/react";
-import { BaseActionModalContentProps } from "./ActionModal";
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -13,20 +12,19 @@ import { useCreateUpdateQueuedAction } from "@/hooks/useCreateUpdateQueuedAction
 import { useCallback, useState } from "react";
 import { useRoomId } from "@/hooks/useRoomId";
 import { PlayerList } from "./PlayerList";
+import { useActionModalOptionsContext } from "@/hooks/useActionModalOptionsContext";
 
-export const HealModalContent = ({
-  allPlayers,
-  playerId,
-  actionType,
-  close,
-}: BaseActionModalContentProps) => {
+export const HealModalContent = () => {
   const roomId = useRoomId();
+  const { allPlayers, actionType, close, playerId, goToNextStepCb } =
+    useActionModalOptionsContext();
   const { t } = useTranslation();
   const playersToSelect = allPlayers.filter((player) => player.isAlive);
   const [selectedPlayerId, setSelectedPlayerId] = useState<string>();
 
   const { mutate: createUpdateQueuedAction } = useCreateUpdateQueuedAction({
     onSuccess: async () => {
+      goToNextStepCb();
       close();
     },
   });

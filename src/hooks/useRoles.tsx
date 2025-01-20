@@ -163,13 +163,11 @@ export const useRole = (roleId: number | undefined) => {
     role = undefined;
   }
   role = data.find((x) => x.roleName === roleId);
-  if (role === undefined) {
-    throw new Error(`No Role For Id: ${roleId}`);
-  }
+
   return { data: role };
 };
 
-export const getColorForRoleType = (roleType: RoleType) => {
+export const getColorForRoleType = (roleType?: RoleType) => {
   switch (roleType) {
     case RoleType.Enemy:
       return "red";

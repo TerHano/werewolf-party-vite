@@ -1,6 +1,6 @@
 import { Card, Text, Button, Image } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import nightToDayImg from "@/assets/icons/game-room/night-to-day.png";
+import nightToDayImg from "@/assets/icons/game-room/to-day.png";
 import { useEndNight } from "@/hooks/useEndNight";
 import { useRoomId } from "@/hooks/useRoomId";
 
@@ -16,7 +16,7 @@ export const NightCompletedCard = () => {
         </Text>
       </Card.Header>
       <Card.Body>
-        <Image width="8rem" src={nightToDayImg} />
+        <Image width="10rem" src={nightToDayImg} />
       </Card.Body>
       <Card.Footer>
         <Button
@@ -24,7 +24,7 @@ export const NightCompletedCard = () => {
           onClick={() => {
             mutate({ roomId });
           }}
-          size="xs"
+          size="sm"
         >
           {t("Wake Up")}
         </Button>

@@ -1,18 +1,11 @@
-import {
-  Card,
-  Text,
-  Image,
-  Badge,
-  VStack,
-  Group,
-} from "@chakra-ui/react";
+import { Card, Text, Image, Badge, VStack, Group } from "@chakra-ui/react";
 import { ActionType } from "@/enum/ActionType";
 import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
 import { useRole } from "@/hooks/useRoles";
 import { QueuedActionDto } from "@/dto/QueuedActionDto";
 import { Role } from "@/enum/Role";
-import { IconGrave2 } from "@tabler/icons-react";
+import { IconGrave2, IconUser } from "@tabler/icons-react";
 import { PlayerRoleWithDetails } from "../NightCall";
 import { ActionButtonList } from "./ActionButtonList";
 import { QueuedActionCard } from "./QueuedActionCard";
@@ -48,11 +41,14 @@ export const WerewolfPlayersActionCard = ({
       </Card.Header>
       <Card.Body>
         <VStack gap={1}>
-          <Image width="8rem" src={werewolfRole.imgSrc} />
+          <Image width="8rem" src={werewolfRole!.imgSrc} />
           <Group>
             {werewolfPlayers.map((player) =>
               player.isAlive ? (
-                <Badge colorPalette="current">{player.nickname}</Badge>
+                <Badge colorPalette="current">
+                  <IconUser size={12} />
+                  {player.nickname}
+                </Badge>
               ) : (
                 <Badge colorPalette="red">
                   <IconGrave2 size={16} />

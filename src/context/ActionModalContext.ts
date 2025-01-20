@@ -3,6 +3,5 @@ import React from "react";
 
 type ActionModalCallback = (actionType: ActionType, playerId?: string) => void;
 
-export const ActionModalContext = React.createContext<
-  ActionModalCallback | undefined
->(undefined);
+export const ActionModalContext =
+  React.createContext<ActionModalCallback | null>(null);

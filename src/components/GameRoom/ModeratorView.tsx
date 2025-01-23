@@ -44,7 +44,6 @@ export const ModeratorView = () => {
     <Skeleton width="100%" loading={isDayDetailsLoading}>
       <Stack>
         <Stack direction="row" justifyContent="space-between">
-          <DayNightVisual />
           <DrawerRoot placement="bottom">
             <DrawerBackdrop />
             <DrawerTrigger asChild>
@@ -69,7 +68,8 @@ export const ModeratorView = () => {
                 </Button>
               </DrawerBody>
             </DrawerContent>
-          </DrawerRoot>
+          </DrawerRoot>{" "}
+          <DayNightVisual />
         </Stack>
         {isDay ? <ChoppingBlock /> : <NightCall />}
       </Stack>

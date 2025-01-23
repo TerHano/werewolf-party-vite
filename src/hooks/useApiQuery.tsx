@@ -5,6 +5,7 @@ export interface QueryOptions<T> {
   initialData?: T;
   enabled?: boolean;
   staleTime?: number;
+  cacheTime?: number;
 }
 
 export interface useApiQueryProps<T> {
@@ -19,7 +20,7 @@ export interface useApiQueryProps<T> {
 export const useApiQuery = <T,>({
   queryKey,
   query: { endpoint, params },
-  options: { initialData, enabled, staleTime = 0 } = {
+  options: { initialData, enabled, staleTime = 0, cacheTime } = {
     enabled: true,
   },
 }: useApiQueryProps<T>) => {
@@ -38,5 +39,6 @@ export const useApiQuery = <T,>({
       }),
     staleTime,
     enabled,
+    gcTime: cacheTime,
   });
 };

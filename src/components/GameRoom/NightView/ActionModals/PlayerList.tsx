@@ -2,8 +2,8 @@ import {
   Avatar,
   Badge,
   defineStyle,
-  Float,
   SimpleGrid,
+  Stack,
 } from "@chakra-ui/react";
 import { PlayerRoleWithDetails } from "../NightCall";
 
@@ -28,19 +28,24 @@ export const PlayerList = ({
     <SimpleGrid columns={{ base: 2, xs: 3, sm: 5, md: 5 }} gap={5}>
       {players.map((player) => {
         return (
-          <Avatar.Root
-            variant="subtle"
-            size="2xl"
-            onClick={() => onPlayerSelect(player.id)}
-            key={player.id}
-            style={{ cursor: "pointer" }}
-            css={selectedPlayer === player.id ? ringCss : undefined}
-          >
-            <Avatar.Image marginTop={1} src={player.roleInfo.imgSrc} />
-            <Float>
-              <Badge>{player.nickname}</Badge>
-            </Float>
-          </Avatar.Root>
+          <Stack align="center" gap={1}>
+            <Avatar.Root
+              variant="subtle"
+              borderRadius="xl"
+              size="2xl"
+              onClick={() => onPlayerSelect(player.id)}
+              key={player.id}
+              style={{ cursor: "pointer" }}
+              css={selectedPlayer === player.id ? ringCss : undefined}
+            >
+              <Avatar.Image marginTop={1} src={player.roleInfo.imgSrc} />
+            </Avatar.Root>
+            <Badge
+              colorPalette={selectedPlayer === player.id ? "blue" : undefined}
+            >
+              {player.nickname}
+            </Badge>
+          </Stack>
         );
       })}
     </SimpleGrid>

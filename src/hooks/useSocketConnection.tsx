@@ -107,8 +107,8 @@ export const useSocketConnection = ({
   });
 
   const joinRoom = useCallback(
-    (roomId: string, playerDetails?: AddEditPlayerDetailsDto) => {
-      return connection.invoke<APIResponse>("JoinRoom", roomId, playerDetails);
+    (addEditPlayerDetails: AddEditPlayerDetailsDto) => {
+      return connection.invoke<APIResponse>("JoinRoom", addEditPlayerDetails);
     },
     [connection]
   );

@@ -7,5 +7,6 @@ export const useWinCondition = (roomId: string) => {
     query: {
       endpoint: `game/${roomId}/check-win-condition`,
     },
+    options: { cacheTime: 0 },
   });
 };

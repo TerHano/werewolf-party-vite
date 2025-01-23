@@ -9,22 +9,24 @@ import {
   DialogRoot,
   DialogTitle,
 } from "../ui/dialog";
-
-import { Stack, Text } from "@chakra-ui/react";
+import { Badge, Image, Stack, Text } from "@chakra-ui/react";
 import { Button } from "../ui/button";
 import { useTranslation } from "react-i18next";
 import { useRoomId } from "@/hooks/useRoomId";
 import { useWinCondition } from "@/hooks/useWinCondition";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { WinCondition } from "@/enum/WinCondition";
-import { useIsModerator } from "@/hooks/useIsModerator";
 import { useEndGame } from "@/hooks/useEndGame";
 import { useStartGame } from "@/hooks/useStartGame";
+import werewolfImg from "@/assets/icons/roles/werewolf-color.png";
+import villagerImg from "@/assets/icons/roles/villager-color.png";
 
 export const WinConditionDialog = ({
   isModerator,
+  children,
 }: {
   isModerator: boolean;
+  children: React.ReactNode;
 }) => {
   const { t } = useTranslation();
   const roomId = useRoomId();
@@ -49,38 +51,67 @@ export const WinConditionDialog = ({
     }
   }, [winCondition]);
 
+  const werewolvesWin = winCondition === WinCondition.Werewolves;
+
   const [open, setIsOpen] = useState(false);
   return (
-    <DialogRoot size="cover" open={open}>
-      <DialogBackdrop />
-      <DialogContent>
-        {isModerator ? (
-          <DialogCloseTrigger onClick={() => setIsOpen(false)} />
-        ) : null}
+    <>
+      <DialogRoot size="full" open={open}>
+        <DialogBackdrop />
 
-        <DialogBody>Someone Won!</DialogBody>
-        {isModerator ? (
-          <DialogFooter>
-            <Stack direction="row">
-              <Button
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("Winners")}</DialogTitle>
+          </DialogHeader>
+          {isModerator ? (
+            <DialogCloseTrigger onClick={() => setIsOpen(false)} />
+          ) : null}
+
+          <DialogBody>
+            <Stack gap={0} align="center">
+              <Image
+                width="13rem"
+                src={werewolvesWin ? werewolfImg : villagerImg}
+              />
+              <Badge
+                size="lg"
                 variant="subtle"
-                onClick={() => {
-                  endGameMutate({ roomId });
-                }}
+                colorPalette={werewolvesWin ? "red" : "green"}
               >
-                {t("End Game")}
-              </Button>
-              <Button
-                onClick={() => {
-                  startGameMutate({ roomId });
-                }}
-              >
-                {t("Start New Game")}
-              </Button>
+                <Text textStyle="accent" fontSize="3xl">
+                  {werewolvesWin ? t("Werewolves") : t("Villagers")}
+                </Text>
+              </Badge>
             </Stack>
-          </DialogFooter>
-        ) : null}
-      </DialogContent>
-    </DialogRoot>
+          </DialogBody>
+          {isModerator ? (
+            <DialogFooter>
+              <Stack wrap="wrap" gap={3} direction="row">
+                <Button
+                  w="full"
+                  onClick={() => {
+                    setIsOpen(false);
+                    startGameMutate({ roomId });
+                  }}
+                >
+                  {t("Start New Game")}
+                </Button>
+                <Button
+                  w="full"
+                  variant="subtle"
+                  onClick={() => {
+                    setIsOpen(false);
+                    endGameMutate({ roomId });
+                  }}
+                >
+                  {t("End Game")}
+                </Button>
+              </Stack>
+            </DialogFooter>
+          ) : null}
+        </DialogContent>
+      </DialogRoot>
+      {open ? null : children}
+    </>
   );
 };

@@ -30,7 +30,7 @@
 
 @keyframes slide-in-from-bottom {
     from {
-        transform: translateY(40px);
+        transform: translateY(60px);
 
     }
 
@@ -41,5 +41,5 @@
 }
 
 .animate-slide-in-from-bottom {
-    animation: slide-in-from-bottom 0.5s ease-out forwards;
+    animation: slide-in-from-bottom 1s ease-out forwards;
 }

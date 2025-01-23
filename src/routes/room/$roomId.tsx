@@ -47,7 +47,7 @@ function RouteComponent() {
       if (!data) {
         navigate({ to: "/" });
       } else {
-        joinRoom(roomId).then(() => {
+        joinRoom({ roomId }).then(() => {
           void refetchIsPlayerInRoom();
         });
       }
@@ -69,18 +69,18 @@ function RouteComponent() {
 
   useEffect(() => {
     if (isPlayerAlreadyInRoom) {
-      joinRoom(roomId);
+      joinRoom({ roomId });
     }
   }, [isPlayerAlreadyInRoom, joinRoom, roomId]);
 
   const joinRoomCb = useCallback(
     (playerDetails: AddEditPlayerDetailsDto) => {
-      joinRoom(roomId, playerDetails).then(() => {
+      joinRoom(playerDetails).then(() => {
         console.log("joined");
         void refetchIsPlayerInRoom();
       });
     },
-    [joinRoom, refetchIsPlayerInRoom, roomId]
+    [joinRoom, refetchIsPlayerInRoom]
   );
 
   return (

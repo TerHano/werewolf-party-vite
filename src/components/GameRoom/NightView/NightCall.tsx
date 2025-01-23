@@ -16,6 +16,7 @@ import { Role } from "@/enum/Role";
 import werewolfImg from "@/assets/icons/roles/werewolf-color.png";
 import { WerewolfPlayersActionCard } from "./PlayerActionCard/WerewolfPlayersActionCard";
 import { ActionModalContext } from "@/context/ActionModalContext";
+import { useTranslation } from "react-i18next";
 
 export interface PlayerRoleWithDetails extends PlayerRoleActionDto {
   roleInfo: RoleInfo;
@@ -33,7 +34,7 @@ export const NightCall = () => {
     ActionModalDetails | undefined
   >();
   const [currentStep, setCurrentStep] = useState<number>(0);
-  //const { t } = useTranslation();
+  const { t } = useTranslation();
 
   const openActionModalCb = useCallback(
     (actionType: ActionType, playerId?: string) => {
@@ -83,9 +84,6 @@ export const NightCall = () => {
           onOpenChange={(isOpen) => {
             setActionModalOpen(isOpen);
           }}
-          goToNextStepCb={() => {
-            setCurrentStep(currentStep + 1);
-          }}
           allPlayers={playerRolesWithDetails}
           playerId={actionModalProps?.playerId}
           actionType={actionModalProps?.actionType}
@@ -102,13 +100,7 @@ export const NightCall = () => {
           count={nightCallLength}
           gap={2}
         >
-          <StepsList
-            justifyContent="center"
-            //minHeight="30vh"
-            // height={`${120 * nightCallLength}px`}
-            // maxHeight="80vh"
-            //   maxWidth="90vw"
-          >
+          <StepsList justifyContent="center">
             <Flex wrap="wrap" gapY={2}>
               <StepsItem
                 maxW="10rem"
@@ -189,7 +181,7 @@ export const NightCall = () => {
                 variant="outline"
                 size="sm"
               >
-                Prev
+                {t("Previous")}
               </Button>
               <Button
                 disabled={currentStep === nightCallLength}
@@ -197,7 +189,7 @@ export const NightCall = () => {
                 variant="outline"
                 size="sm"
               >
-                Next
+                {t("Next")}
               </Button>
             </Group>
           </Stack>

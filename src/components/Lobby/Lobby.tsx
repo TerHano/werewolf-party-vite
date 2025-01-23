@@ -1,4 +1,3 @@
-import { useModerator } from "@/hooks/useModerator";
 import { usePlayers } from "@/hooks/usePlayers";
 import { ModeratorCard } from "./ModeratorCard";
 import {
@@ -18,7 +17,7 @@ import { Skeleton } from "../ui/skeleton";
 import { useRoomId } from "@/hooks/useRoomId";
 import { ClipboardButton } from "../ui-addons/clipboard-button";
 import { ManagePlayersButton } from "./ManagePlayersButton";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { toaster } from "../ui/toaster";
 import { useNavigate } from "@tanstack/react-router";
@@ -26,15 +25,14 @@ import { PlayerAvatar } from "./PlayerAvatar";
 import emptyLobby from "@/assets/icons/lobby/lobby-empty.png";
 import { Button } from "../ui/button";
 import { useStartGame } from "@/hooks/useStartGame";
+import { useIsModerator } from "@/hooks/useIsModerator";
+import { PlayerSettingsDrawer } from "./PlayerSettingsDrawer";
 
 export const Lobby = () => {
   const roomId = useRoomId();
   const { t } = useTranslation();
-  const {
-    data: currentModerator,
-    isFetching: isModeratorLoading,
-    refetch: refetchModerator,
-  } = useModerator(roomId);
+
+  const { data: isModerator } = useIsModerator(roomId);
   const { data: currentPlayer } = useCurrentPlayer(roomId);
 
   const { mutate: startGameMutate, isPending: isStartGamePending } =
@@ -46,56 +44,33 @@ export const Lobby = () => {
           type: "error",
           title: "Can't Start Game",
           description: e.message,
+          duration: 1500,
         });
       },
     });
-  const onModeratorUpdated = useCallback(
-    (newModeratorId: string) => {
-      if (newModeratorId === currentPlayer?.id) {
-        toaster.create({
-          title: t("He-yo!"),
-          description: t("You are now the moderator!"),
-          duration: 2000,
-        });
-      }
-      refetchModerator();
-    },
-    [currentPlayer?.id, refetchModerator, t]
-  );
 
   const onStartGame = useCallback(async () => {
     startGameMutate({ roomId });
   }, [roomId, startGameMutate]);
 
-  useSocketConnection({
-    onModeratorUpdated,
-  });
-
-  const isModerator = useMemo(() => {
-    if (!currentModerator || !currentPlayer) return false;
-    return currentModerator.id === currentPlayer.id;
-  }, [currentModerator, currentPlayer]);
-
   return (
     // <Box>
     <Stack w="full" p={3} gap={2}>
-      <HStack justifyContent="center">
-        <Text>{t("Room ID")}:</Text>
-        <ClipboardButton
-          label={roomId}
-          iconButton={{
-            colorPalette: "blue",
-            size: "sm",
-            variant: "subtle",
-          }}
-        />
+      <HStack justify="space-between">
+        <HStack justifyContent="center">
+          <Text>{t("Room ID")}:</Text>
+          <ClipboardButton
+            label={roomId}
+            iconButton={{
+              colorPalette: "blue",
+              size: "sm",
+              variant: "subtle",
+            }}
+          />
+        </HStack>
+        <PlayerSettingsDrawer />
       </HStack>
-      <ModeratorCard
-        player={currentModerator}
-        isModerator
-        isCurrentPlayer={currentModerator?.id === currentPlayer?.id}
-        isLoading={isModeratorLoading}
-      />
+      <ModeratorCard />
       {isModerator ? (
         <SimpleGrid gap={2} columns={2}>
           <ManagePlayersButton />
@@ -134,9 +109,9 @@ export const PlayersSection = ({
     (kickedPlayerId: string) => {
       if (currentPlayer?.id === kickedPlayerId) {
         toaster.create({
-          title: t("Kicked!"),
-          description: t("You have been kicked from the room!"),
-          duration: 2000,
+          title: t("You Were Kicked!"),
+          description: t("Next time be nice!"),
+          duration: 1500,
         });
         navigate({ to: "/" });
       } else {

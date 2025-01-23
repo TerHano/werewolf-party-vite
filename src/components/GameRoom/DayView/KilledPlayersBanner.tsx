@@ -1,7 +1,7 @@
 import { useLatestPlayerDeaths } from "@/hooks/useLatestPlayerDeaths";
 import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
 import { useRoomId } from "@/hooks/useRoomId";
-import { Card, Group, Avatar, Float, Badge, Text } from "@chakra-ui/react";
+import { Card, Group, Avatar, Badge, Text, Stack } from "@chakra-ui/react";
 import { IconGrave2 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 
@@ -31,20 +31,21 @@ export const KilledPlayersBanner = () => {
       <Card.Body py={2}>
         <Group mt="1rem">
           {latestPlayerDeaths.map((death) => (
-            <Avatar.Root
-              variant="subtle"
-              size="2xl"
-              key={death.id}
-              style={{ cursor: "pointer" }}
-            >
-              <Avatar.Image
-                marginTop={1}
-                src={getAvatarImageSrcForIndex(death.avatarIndex)}
-              />
-              <Float>
-                <Badge>{death.nickname}</Badge>
-              </Float>
-            </Avatar.Root>
+            <Stack gap={1} align="center">
+              <Avatar.Root
+                borderRadius="xl"
+                variant="subtle"
+                size="xl"
+                key={death.id}
+                style={{ cursor: "pointer" }}
+              >
+                <Avatar.Image
+                  marginTop={1}
+                  src={getAvatarImageSrcForIndex(death.avatarIndex)}
+                />
+              </Avatar.Root>
+              <Badge size="sm">{death.nickname}</Badge>
+            </Stack>
           ))}
         </Group>
       </Card.Body>

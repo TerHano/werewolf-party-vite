@@ -1,4 +1,4 @@
-import { Card, Text, Button, Image } from "@chakra-ui/react";
+import { Card, Text, Button, Image, Stack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import nightToDayImg from "@/assets/icons/game-room/to-day.png";
 import { useEndNight } from "@/hooks/useEndNight";
@@ -12,22 +12,27 @@ export const NightCompletedCard = () => {
     <Card.Root alignItems="center" width="100%">
       <Card.Header>
         <Text fontSize="xl" textStyle="accent">
-          {t(`Ready to sleep until day?`)}
+          {t(`Everyone, close your eyes!`)}
         </Text>
       </Card.Header>
       <Card.Body>
         <Image width="10rem" src={nightToDayImg} />
       </Card.Body>
       <Card.Footer>
-        <Button
-          disabled={isLoading}
-          onClick={() => {
-            mutate({ roomId });
-          }}
-          size="sm"
-        >
-          {t("Wake Up")}
-        </Button>
+        <Stack direction="column" gap={0}>
+          <Text fontSize="xl" textStyle="accent">
+            {t(`Ready to sleep until day?`)}
+          </Text>
+          <Button
+            disabled={isLoading}
+            onClick={() => {
+              mutate({ roomId });
+            }}
+            size="sm"
+          >
+            {t("Wake Up")}
+          </Button>
+        </Stack>
       </Card.Footer>
     </Card.Root>
   );

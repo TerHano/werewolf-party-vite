@@ -32,8 +32,9 @@ export const GameRoom = () => {
 
   return (
     <>
-      <WinConditionDialog isModerator={isModerator} />
-      {isModerator ? <ModeratorView /> : <PlayerView />}
+      <WinConditionDialog isModerator={isModerator}>
+        {isModerator ? <ModeratorView /> : <PlayerView />}
+      </WinConditionDialog>
     </>
   );
 };

@@ -1,4 +1,5 @@
 export interface AddEditPlayerDetailsDto {
-  nickname: string;
-  avatarIndex: number;
+  roomId: string;
+  nickname?: string;
+  avatarIndex?: number;
 }

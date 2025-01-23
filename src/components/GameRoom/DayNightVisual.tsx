@@ -22,7 +22,6 @@ export const DayNightVisual = () => {
   const isDay = dayDetails?.isDay ?? false;
 
   const timeText = useMemo(() => {
-    console.log(dayDetails);
     if (!dayDetails) {
       return "Unknown";
     }
@@ -40,8 +39,6 @@ export const DayNightVisual = () => {
       }
     }
   }, [dayDetails, t]);
-
-  console.log(timeText);
 
   return (
     <Box mx={3} mb={5} position="relative" width="3rem">

@@ -70,75 +70,83 @@ export const MainMenu = () => {
   });
 
   return (
-    <Card.Root md={{ width: "50%" }} width="full" padding={3}>
-      <Stack alignItems="center" gap={3}>
-        <Stack alignItems="center" gap={0}>
-          <Image width={150} src={campIcon} />
-          <Text textStyle="accent" fontSize="2.5rem" fontWeight="bold">
-            Werewolf Party
-          </Text>
-          <Text textStyle="accent" fontSize="medium" color="gray.300">
-            {t("Cards for a party game full of lies, deceit, & accusations")}
-          </Text>
-          <Text textStyle="accent" fontSize="medium" color="gray.300">
-            {t("Are you devious enough?")}
+    <Stack align="center" w="100%">
+      <Card.Root w={{ base: "100%", md: "75%" }} padding={3}>
+        <Stack alignItems="center" gap={3}>
+          <Stack alignItems="center" gap={0}>
+            <Image width={150} src={campIcon} />
+            <Text textStyle="accent" fontSize="2.5rem" fontWeight="bold">
+              Werewolf Party
+            </Text>
+            <Text textStyle="accent" fontSize="medium" color="gray.300">
+              {t("Cards for a party game full of lies, deceit, & accusations")}
+            </Text>
+            <Text textStyle="accent" fontSize="medium" color="gray.300">
+              {t("Are you devious enough?")}
+            </Text>
+          </Stack>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Field
+              invalid={!!errors.roomId}
+              maxWidth={250}
+              label="Join Room"
+              helperText={
+                <Text fontSize="x-small">
+                  {t("Enter your 5 character Room ID")}
+                </Text>
+              }
+              errorText={
+                <Text fontSize="x-small">{errors.roomId?.message}</Text>
+              }
+            >
+              <Group attached>
+                <Input
+                  {...register("roomId", {
+                    required: {
+                      value: true,
+                      message: t("Please enter a Room ID"),
+                    },
+                    minLength: {
+                      value: 5,
+                      message: t("Room ID must be 5 characters"),
+                    },
+                    maxLength: 5,
+                  })}
+                  style={{ textTransform: "uppercase" }}
+                  maxLength={5}
+                  placeholder="(Ex: 38VF5)"
+                />
+                <Button
+                  loading={isCheckingRoomPending}
+                  type="submit"
+                  padding={0}
+                >
+                  <IconArrowRight />
+                </Button>
+              </Group>
+            </Field>
+          </form>
+          <HStack alignItems="center" w="full">
+            <Separator variant="dashed" />
+            <Text textStyle="accent" flexShrink="0">
+              OR
+            </Text>
+            <Separator variant="dashed" />
+          </HStack>
+          <Button
+            loading={isCreatingRoomPending || isCreatingRoomSuccess}
+            onClick={() => {
+              createNewRoom();
+            }}
+            size="sm"
+          >
+            {t("Create New Room")} <IconUsersGroup />
+          </Button>
+          <Text color="gray.500" textStyle="accent">
+            {t("Developed By Terry Hanoman")}
           </Text>
         </Stack>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Field
-            invalid={!!errors.roomId}
-            maxWidth={250}
-            label="Join Room"
-            helperText={
-              <Text fontSize="x-small">
-                {t("Enter your 5 character Room ID")}
-              </Text>
-            }
-            errorText={<Text fontSize="x-small">{errors.roomId?.message}</Text>}
-          >
-            <Group attached>
-              <Input
-                {...register("roomId", {
-                  required: {
-                    value: true,
-                    message: t("Please enter a Room ID"),
-                  },
-                  minLength: {
-                    value: 5,
-                    message: t("Room ID must be 5 characters"),
-                  },
-                  maxLength: 5,
-                })}
-                style={{ textTransform: "uppercase" }}
-                maxLength={5}
-                placeholder="(Ex: 38VF5)"
-              />
-              <Button loading={isCheckingRoomPending} type="submit" padding={0}>
-                <IconArrowRight />
-              </Button>
-            </Group>
-          </Field>
-        </form>
-        <HStack alignItems="center" w="full">
-          <Separator variant="dashed" />
-          <Text textStyle="accent" flexShrink="0">
-            OR
-          </Text>
-          <Separator variant="dashed" />
-        </HStack>
-        <Button
-          loading={isCreatingRoomPending || isCreatingRoomSuccess}
-          onClick={() => {
-            createNewRoom();
-          }}
-          size="sm"
-        >
-          {t("Create New Room")} <IconUsersGroup />
-        </Button>
-        <Text color="gray.500" textStyle="accent">
-          {t("Developed By Terry Hanoman")}
-        </Text>
-      </Stack>
-    </Card.Root>
+      </Card.Root>
+    </Stack>
   );
 };

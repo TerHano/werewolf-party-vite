@@ -1,4 +1,3 @@
-import { PlayerDto } from "@/dto/PlayerDto";
 import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
 import {
   HStack,
@@ -10,27 +9,26 @@ import {
   Group,
 } from "@chakra-ui/react";
 import { Card } from "@chakra-ui/react/card";
-import { CSSProperties, useCallback, useEffect } from "react";
-import { RoomRoleSettingsCard } from "./RoomRoleSettingsCard";
+import { useCallback } from "react";
+import { RoomRoleSettingsCard } from "./RoomRoleSettings/RoomRoleSettingsCard";
 import React from "react";
+import { useCurrentPlayer } from "@/hooks/useCurrentPlayer";
+import { useRoomId } from "@/hooks/useRoomId";
+import { toaster } from "../ui/toaster";
+import { useTranslation } from "react-i18next";
+import { useModerator } from "@/hooks/useModerator";
+import { useSocketConnection } from "@/hooks/useSocketConnection";
+import { Skeleton, SkeletonCircle } from "../ui/skeleton";
 
-interface ModeratorCardProps {
-  player?: PlayerDto;
-  isModerator?: boolean;
-  isCurrentPlayer?: boolean;
-  isLoading?: boolean;
-  css?: CSSProperties;
-  className?: string;
-}
-
-export const ModeratorCard = ({
-  player,
-  isModerator = false,
-  isCurrentPlayer = false,
-  // isLoading = false,
-  // css,
-  // className,
-}: ModeratorCardProps) => {
+export const ModeratorCard = () => {
+  const { t } = useTranslation();
+  const roomId = useRoomId();
+  const {
+    data: currentModerator,
+    isFetching: isModeratorLoading,
+    refetch: refetchModerator,
+  } = useModerator(roomId);
+  const { data: currentPlayer } = useCurrentPlayer(roomId);
   const { getAvatarImageSrcForIndex } = usePlayerAvatar();
 
   const resetAnimation = useCallback(() => {
@@ -40,9 +38,29 @@ export const ModeratorCard = ({
     }, 50);
   }, []);
 
-  useEffect(() => {
-    resetAnimation();
-  }, [player, resetAnimation]);
+  const onModeratorUpdated = useCallback(
+    (newModeratorId: string) => {
+      if (newModeratorId === currentPlayer?.id) {
+        toaster.create({
+          title: t("He-yo!"),
+          description: t("You are now the moderator!"),
+          duration: 1500,
+        });
+      }
+      resetAnimation();
+      refetchModerator();
+    },
+    [currentPlayer?.id, refetchModerator, resetAnimation, t]
+  );
+
+  useSocketConnection({
+    onModeratorUpdated,
+    onLobbyUpdated: useCallback(() => {
+      void refetchModerator();
+    }, [refetchModerator]),
+  });
+
+  const isModeratorCurrentPlayer = currentModerator?.id === currentPlayer?.id;
 
   const [animation, setAnimation] = React.useState<string | undefined>("");
 
@@ -66,19 +84,25 @@ export const ModeratorCard = ({
           <Card.Body mb={2} p={2}>
             <HStack justify="space-between">
               <Group>
-                <Image
-                  h="40px"
-                  src={getAvatarImageSrcForIndex(player?.avatarIndex)}
-                />
-                <Text fontWeight={500}>{player?.nickname}</Text>
+                <SkeletonCircle loading={isModeratorLoading}>
+                  <Image
+                    h="40px"
+                    src={getAvatarImageSrcForIndex(
+                      currentModerator?.avatarIndex
+                    )}
+                  />
+                </SkeletonCircle>
+                <Skeleton loading={isModeratorLoading}>
+                  <Text textStyle="accent" fontSize="xl" fontWeight={500}>
+                    {currentModerator?.nickname}
+                  </Text>
+                </Skeleton>
               </Group>
               <Group>
-                {isModerator && (
-                  <Badge variant="subtle" colorPalette="yellow">
-                    Moderator
-                  </Badge>
-                )}
-                {isCurrentPlayer && (
+                <Badge variant="subtle" colorPalette="yellow">
+                  Moderator
+                </Badge>
+                {isModeratorCurrentPlayer && (
                   <Badge variant="subtle" colorPalette="blue">
                     You
                   </Badge>

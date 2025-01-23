@@ -1,6 +1,6 @@
 import { PlayerDto } from "@/dto/PlayerDto";
 import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
-import { Badge, Box, Float, Image, Stack, Text } from "@chakra-ui/react";
+import { Badge, Box, Image, Stack, Text } from "@chakra-ui/react";
 import { CSSProperties } from "react";
 
 export const PlayerAvatar = ({
@@ -16,29 +16,21 @@ export const PlayerAvatar = ({
 }) => {
   const { getAvatarImageSrcForIndex } = usePlayerAvatar();
 
+  const isCurrentPlayer = currentPlayer?.id === player.id;
+
   return (
     <Box className={className} style={css}>
-      <Stack direction="column">
-        <Box position="relative">
-          <Image
-            width="3rem"
-            src={getAvatarImageSrcForIndex(player.avatarIndex)}
-            alt="thing"
-          />
-          {currentPlayer?.id === player.id ? (
-            <Float placement="top-end" offset={-2}>
-              <Badge
-                borderRadius="2xl"
-                variant="subtle"
-                colorPalette="blue"
-                size="md"
-              >
-                You
-              </Badge>
-            </Float>
-          ) : null}
-        </Box>
-        <Text>{player.nickname}</Text>
+      <Stack direction="column" align="center" gap={0}>
+        <Image
+          width="3rem"
+          src={getAvatarImageSrcForIndex(player.avatarIndex)}
+          alt="thing"
+        />
+        <Badge colorPalette={isCurrentPlayer ? "blue" : "white"} size="sm">
+          <Text fontSize="md" textStyle="accent">
+            {player.nickname}
+          </Text>
+        </Badge>
       </Stack>
     </Box>
   );

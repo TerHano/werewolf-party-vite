@@ -1,32 +1,28 @@
 import { useRoomId } from "@/hooks/useRoomId";
 import { useRoomRoleSettings } from "@/hooks/useRoomRoleSettings";
 import {
-  Badge,
-  Box,
   Card,
   DrawerBackdrop,
   DrawerHeader,
-  Float,
   HStack,
   Skeleton,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import { IconArrowRight, IconCards } from "@tabler/icons-react";
-import werewolfImg from "@/assets/icons/roles/werewolf-color.png";
-import { useRoles } from "@/hooks/useRoles";
 import {
   DrawerBody,
   DrawerCloseTrigger,
   DrawerContent,
   DrawerRoot,
-} from "../ui/drawer";
+} from "../../ui/drawer";
 import React, { useCallback, useMemo } from "react";
 import { EditRoomRoleSettings } from "./EditRoomRoleSettings";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { useModerator } from "@/hooks/useModerator";
 import { useCurrentPlayer } from "@/hooks/useCurrentPlayer";
 import { RoomRoleSettingsInfo } from "./RoomRoleSettingsInfo";
+import { ActiveRolesList } from "./ActiveRolesList";
 
 export const RoomRoleSettingsCard = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -38,7 +34,6 @@ export const RoomRoleSettingsCard = () => {
     isLoading: isRoomRoleSettingsLoading,
     refetch: refetchRoomRoleSettings,
   } = roomRoleSettingsQuery;
-  const { data: roleInfos } = useRoles();
 
   const { data: currentModerator } = useModerator(roomId);
   const { data: currentPlayer } = useCurrentPlayer(roomId);
@@ -60,7 +55,7 @@ export const RoomRoleSettingsCard = () => {
     setIsOpen(false);
   }, []);
 
-  const numberOfWerewolves = (settings?.werewolves as number | undefined) ?? 0;
+  const numberOfWerewolves = settings?.numberOfWerewolves ?? 1;
 
   return (
     <>
@@ -88,40 +83,10 @@ export const RoomRoleSettingsCard = () => {
                   minW={isRoomRoleSettingsLoading ? "25%" : undefined}
                   loading={isRoomRoleSettingsLoading}
                 >
-                  <HStack>
-                    <Box position="relative" w="32px" h="32px">
-                      <img
-                        src={werewolfImg}
-                        alt="werewolf"
-                        width="32"
-                        height="32"
-                      />
-                      {numberOfWerewolves > 1 ? (
-                        <Float placement="top-end">
-                          <Badge variant="surface" size="xs">
-                            x{numberOfWerewolves}
-                          </Badge>
-                        </Float>
-                      ) : null}
-                    </Box>
-
-                    {settings?.selectedRoles.map((role, index) => {
-                      const roleInfo = roleInfos?.find(
-                        (r) => r.roleName === role
-                      );
-                      if (!roleInfo) return null;
-
-                      return (
-                        <img
-                          key={`${roleInfo.roleName}-${index}`}
-                          src={roleInfo.imgSrc}
-                          alt={roleInfo.label}
-                          width="32"
-                          height="32"
-                        />
-                      );
-                    })}
-                  </HStack>
+                  <ActiveRolesList
+                    numberOfWerewolves={numberOfWerewolves}
+                    activeRoles={settings?.selectedRoles ?? []}
+                  />
                 </Skeleton>
               </Card.Body>
             </VStack>
@@ -130,8 +95,6 @@ export const RoomRoleSettingsCard = () => {
         </Card.Body>
       </Card.Root>
       <DrawerRoot
-        closeOnEscape={!isModerator}
-        closeOnInteractOutside={!isModerator}
         open={isOpen}
         onOpenChange={(e) => {
           setIsOpen(e.open);
@@ -157,6 +120,7 @@ export const RoomRoleSettingsCard = () => {
               />
             ) : (
               <RoomRoleSettingsInfo
+                numberOfWerewolves={numberOfWerewolves}
                 activeRoles={settings?.selectedRoles ?? []}
               />
             )}

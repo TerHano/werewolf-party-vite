@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   DialogBackdrop,
   DialogBody,
@@ -16,18 +16,22 @@ import { Field } from "../ui/field";
 import {
   Avatar,
   defineStyle,
+  DialogRootProvider,
   Float,
   HStack,
   IconButton,
   Input,
   SimpleGrid,
   Text,
+  useDialog,
   VStack,
 } from "@chakra-ui/react";
 import { AddEditPlayerDetailsDto } from "@/dto/AddEditPlayerDetailsDto";
 import { IconPencil, IconUser } from "@tabler/icons-react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
+import { useCurrentPlayer } from "@/hooks/useCurrentPlayer";
+import { useRoomId } from "@/hooks/useRoomId";
 
 interface AddEditPlayerModalProps {
   isEdit?: boolean;
@@ -43,11 +47,12 @@ export const AddEditPlayerModal = ({
   isEdit = false,
   submitCallback,
 }: AddEditPlayerModalProps) => {
+  const roomId = useRoomId();
   const { t } = useTranslation();
+  const { data: currentPlayer } = useCurrentPlayer(roomId, { enabled: isEdit });
 
   const { data: avatarNames, getAvatarImageSrcForIndex } = usePlayerAvatar();
 
-  const [isDialogOpen, setDialogOpen] = useState(true);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const {
     register,
@@ -62,10 +67,18 @@ export const AddEditPlayerModal = ({
     },
   });
 
+  const dialog = useDialog({
+    defaultOpen: !isEdit,
+    closeOnEscape: isEdit,
+    closeOnInteractOutside: isEdit,
+    initialFocusEl: () => focusRef.current,
+  });
   const watchAvatarIndex = watch("avatarIndex");
 
-  const onSubmit: SubmitHandler<AddEditPlayerModalForm> = (data) =>
-    submitCallback(data);
+  const onSubmit: SubmitHandler<AddEditPlayerModalForm> = (data) => {
+    dialog.setOpen(false);
+    submitCallback({ ...data, roomId });
+  };
   const focusRef = useRef<HTMLInputElement | null>(null);
   const { ref, ...nicknameField } = register("nickname", {
     required: { value: true, message: t("Nickname is required") },
@@ -86,24 +99,25 @@ export const AddEditPlayerModal = ({
     outlineStyle: "solid",
     backgroundColor: "blue.800/50",
   });
+
+  useEffect(() => {
+    if (currentPlayer) {
+      setValue("nickname", currentPlayer.nickname);
+      setValue("avatarIndex", currentPlayer.avatarIndex);
+    }
+  }, [currentPlayer, setValue]);
+
   return (
     <>
-      <DialogRoot
-        closeOnEscape={isEdit}
-        closeOnInteractOutside={isEdit}
-        initialFocusEl={() => focusRef.current}
-        open={isDialogOpen}
-      >
+      <DialogRootProvider size="xs" value={dialog}>
         <DialogBackdrop />
         {isEdit && (
           <DialogTrigger>
-            <Button>{t("Edit Details")}</Button>
+            <Button w="100%">{t("Change Nickname/Avatar")}</Button>
           </DialogTrigger>
         )}
         <DialogContent>
-          {isEdit ? (
-            <DialogCloseTrigger onClick={() => setDialogOpen(false)} />
-          ) : null}
+          {isEdit ? <DialogCloseTrigger /> : null}
           <DialogHeader>
             <DialogTitle>
               <Text textStyle="accent">
@@ -148,6 +162,7 @@ export const AddEditPlayerModal = ({
                     </IconButton>
                   </Float>
                 </Avatar.Root>
+
                 <Field
                   invalid={!!errors.nickname}
                   errorText={errors.nickname?.message}
@@ -156,6 +171,7 @@ export const AddEditPlayerModal = ({
                       {t("How others will see you!")}
                     </Text>
                   }
+                  defaultValue={currentPlayer?.nickname}
                   label={t("Nickname")}
                 >
                   <Input
@@ -171,11 +187,11 @@ export const AddEditPlayerModal = ({
           </DialogBody>
           <DialogFooter>
             <Button form="player-details-form" type="submit">
-              {t("Join Room")}
+              {isEdit ? t("Update Details") : t("Join Room")}
             </Button>
           </DialogFooter>
         </DialogContent>
-      </DialogRoot>
+      </DialogRootProvider>
       <DialogRoot
         scrollBehavior="inside"
         size="cover"
@@ -195,7 +211,11 @@ export const AddEditPlayerModal = ({
             </HStack>
           </DialogHeader>
           <DialogBody>
-            <SimpleGrid columns={{ base: 2, xs: 3, sm: 5, md: 5 }} gap={5}>
+            <SimpleGrid
+              justifyItems="center"
+              columns={{ base: 2, xs: 3, sm: 3, md: 5 }}
+              gap={5}
+            >
               {avatarNames.map((avatarName, index) => {
                 return (
                   <Avatar.Root

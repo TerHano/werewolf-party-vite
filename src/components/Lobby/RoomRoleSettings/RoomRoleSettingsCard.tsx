@@ -23,6 +23,7 @@ import { useModerator } from "@/hooks/useModerator";
 import { useCurrentPlayer } from "@/hooks/useCurrentPlayer";
 import { RoomRoleSettingsInfo } from "./RoomRoleSettingsInfo";
 import { ActiveRolesList } from "./ActiveRolesList";
+import { useMeasure } from "@uidotdev/usehooks";
 
 export const RoomRoleSettingsCard = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -34,7 +35,7 @@ export const RoomRoleSettingsCard = () => {
     isLoading: isRoomRoleSettingsLoading,
     refetch: refetchRoomRoleSettings,
   } = roomRoleSettingsQuery;
-
+  const [ref, { width }] = useMeasure();
   const { data: currentModerator } = useModerator(roomId);
   const { data: currentPlayer } = useCurrentPlayer(roomId);
 
@@ -69,7 +70,7 @@ export const RoomRoleSettingsCard = () => {
       >
         <Card.Body p="1rem">
           <HStack justifyContent="space-between">
-            <VStack alignItems="start">
+            <VStack w="100%" alignItems="start">
               <Card.Title>
                 <HStack gap={1}>
                   <IconCards size={16} />
@@ -78,12 +79,13 @@ export const RoomRoleSettingsCard = () => {
                   </Text>
                 </HStack>
               </Card.Title>
-              <Card.Body p={0} mt={2}>
+              <Card.Body ref={ref} w="100%" p={0} mt={2}>
                 <Skeleton
                   minW={isRoomRoleSettingsLoading ? "25%" : undefined}
                   loading={isRoomRoleSettingsLoading}
                 >
                   <ActiveRolesList
+                    widthOfContainer={width}
                     numberOfWerewolves={numberOfWerewolves}
                     activeRoles={settings?.selectedRoles ?? []}
                   />

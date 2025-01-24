@@ -39,7 +39,6 @@ export const NightCall = () => {
   const openActionModalCb = useCallback(
     (actionType: ActionType, playerId?: string) => {
       setActionModalProps({ playerId, actionType });
-      console.log(playerId, actionType);
       setActionModalOpen(true);
     },
     []

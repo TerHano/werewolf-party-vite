@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogRoot,
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
@@ -32,6 +31,14 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
 import { useCurrentPlayer } from "@/hooks/useCurrentPlayer";
 import { useRoomId } from "@/hooks/useRoomId";
+import {
+  DrawerBackdrop,
+  DrawerBody,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerRoot,
+} from "../ui/drawer";
 
 interface AddEditPlayerModalProps {
   isEdit?: boolean;
@@ -70,7 +77,7 @@ export const AddEditPlayerModal = ({
   const dialog = useDialog({
     defaultOpen: !isEdit,
     closeOnEscape: isEdit,
-    closeOnInteractOutside: isEdit,
+    closeOnInteractOutside: false,
     initialFocusEl: () => focusRef.current,
   });
   const watchAvatarIndex = watch("avatarIndex");
@@ -192,29 +199,30 @@ export const AddEditPlayerModal = ({
           </DialogFooter>
         </DialogContent>
       </DialogRootProvider>
-      <DialogRoot
-        scrollBehavior="inside"
-        size="cover"
+      <DrawerRoot
+        size="sm"
+        placement="bottom"
         open={isDrawerOpen}
         onOpenChange={(e) => {
           setDrawerOpen(e.open);
         }}
       >
-        <DialogBackdrop />
-        <DialogContent borderRadius="sm">
-          <DialogHeader>
+        <DrawerBackdrop />
+        <DrawerContent mb={3} borderRadius="sm">
+          <DrawerHeader>
             <HStack gap={1}>
               <IconUser size={18} />
               <Text fontWeight={500} fontSize="lg">
                 Pick A Avatar
               </Text>
             </HStack>
-          </DialogHeader>
-          <DialogBody>
+          </DrawerHeader>
+          <DrawerBody>
             <SimpleGrid
               justifyItems="center"
-              columns={{ base: 2, xs: 3, sm: 3, md: 5 }}
-              gap={5}
+              columns={{ base: 2, xs: 3, sm: 4, md: 5 }}
+              gapX={3}
+              gapY={5}
             >
               {avatarNames.map((avatarName, index) => {
                 return (
@@ -225,7 +233,6 @@ export const AddEditPlayerModal = ({
                     key={avatarName}
                     onClick={() => {
                       setValue("avatarIndex", index);
-                      setDrawerOpen(false);
                     }}
                     style={{ cursor: "pointer" }}
                   >
@@ -238,10 +245,15 @@ export const AddEditPlayerModal = ({
                 );
               })}
             </SimpleGrid>
-          </DialogBody>
-          <DialogCloseTrigger />
-        </DialogContent>
-      </DialogRoot>
+          </DrawerBody>
+          {/* <DrawerCloseTrigger /> */}
+          <DrawerFooter>
+            <Button w="full" onClick={() => setDrawerOpen(false)}>
+              Close
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </DrawerRoot>
     </>
   );
 };

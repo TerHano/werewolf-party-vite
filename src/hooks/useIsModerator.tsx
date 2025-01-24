@@ -7,7 +7,6 @@ export const useIsModerator = (roomId: string) => {
   const currentPlayerQuery = useCurrentPlayer(roomId);
 
   const isModerator = useMemo(() => {
-    console.log("rinn");
     if (!modQuery.data || !currentPlayerQuery.data) {
       return false;
     }
@@ -17,9 +16,5 @@ export const useIsModerator = (roomId: string) => {
   return {
     data: isModerator,
     isLoading: modQuery.isLoading || currentPlayerQuery.isLoading,
-    // refetch: () => {
-    //   modQuery.refetch();
-    //   currentPlayerQuery.refetch();
-    // },
   };
 };

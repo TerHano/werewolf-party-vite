@@ -39,7 +39,7 @@ export const WerewolfPlayersActionCard = ({
           {t(`Wake Up, Werewolves!`)}
         </Text>
       </Card.Header>
-      <Card.Body>
+      <Card.Body className="animate-fade-in-from-bottom">
         <VStack gap={1}>
           <Image width="8rem" src={werewolfRole!.imgSrc} />
           <Group>

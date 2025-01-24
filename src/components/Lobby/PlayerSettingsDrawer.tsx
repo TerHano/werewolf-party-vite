@@ -1,11 +1,16 @@
-import { Button, IconButton, Stack } from "@chakra-ui/react";
+import {
+  Button,
+  DrawerRootProvider,
+  IconButton,
+  Stack,
+  useDrawer,
+} from "@chakra-ui/react";
 import {
   DrawerBackdrop,
   DrawerBody,
   DrawerCloseTrigger,
   DrawerContent,
   DrawerHeader,
-  DrawerRoot,
   DrawerTitle,
   DrawerTrigger,
 } from "../ui/drawer";
@@ -29,8 +34,12 @@ export const PlayerSettingsDrawer = () => {
     },
   });
 
+  const playerSettingsDrawer = useDrawer({
+    closeOnInteractOutside: false,
+  });
+
   return (
-    <DrawerRoot>
+    <DrawerRootProvider value={playerSettingsDrawer}>
       <DrawerBackdrop />
       <DrawerTrigger asChild>
         <IconButton variant="ghost" size="md">
@@ -49,6 +58,7 @@ export const PlayerSettingsDrawer = () => {
               isEdit
               submitCallback={(playerDetails) => {
                 updatePlayerDetailsMutate(playerDetails);
+                playerSettingsDrawer.setOpen(false);
               }}
             />
             <Button
@@ -62,6 +72,6 @@ export const PlayerSettingsDrawer = () => {
           </Stack>
         </DrawerBody>
       </DrawerContent>
-    </DrawerRoot>
+    </DrawerRootProvider>
   );
 };

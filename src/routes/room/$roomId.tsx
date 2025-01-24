@@ -11,6 +11,7 @@ import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { getApi } from "@/util/api";
 import { Skeleton } from "@chakra-ui/react";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { useDocumentTitle } from "@uidotdev/usehooks";
 import { useCallback, useEffect } from "react";
 
 export const Route = createFileRoute("/room/$roomId")({
@@ -40,6 +41,7 @@ export const Route = createFileRoute("/room/$roomId")({
 
 function RouteComponent() {
   const { roomId } = Route.useParams();
+  useDocumentTitle(`Werewolf Party - Room ${roomId}`);
   const _isPlayerAlreadyInRoomInitialData = Route.useLoaderData();
   const navigate = useNavigate();
   const { mutate: checkRoomMutate } = useCheckRoom({
@@ -76,7 +78,6 @@ function RouteComponent() {
   const joinRoomCb = useCallback(
     (playerDetails: AddEditPlayerDetailsDto) => {
       joinRoom(playerDetails).then(() => {
-        console.log("joined");
         void refetchIsPlayerInRoom();
       });
     },

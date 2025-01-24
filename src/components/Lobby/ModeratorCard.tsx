@@ -25,7 +25,7 @@ export const ModeratorCard = () => {
   const roomId = useRoomId();
   const {
     data: currentModerator,
-    isFetching: isModeratorLoading,
+    isLoading: isModeratorLoading,
     refetch: refetchModerator,
   } = useModerator(roomId);
   const { data: currentPlayer } = useCurrentPlayer(roomId);
@@ -42,9 +42,9 @@ export const ModeratorCard = () => {
     (newModeratorId: string) => {
       if (newModeratorId === currentPlayer?.id) {
         toaster.create({
-          title: t("He-yo!"),
+          title: t("You're In Charge!"),
           description: t("You are now the moderator!"),
-          duration: 1500,
+          duration: 2500,
         });
       }
       resetAnimation();

@@ -71,7 +71,11 @@ export const MainMenu = () => {
 
   return (
     <Stack align="center" w="100%">
-      <Card.Root w={{ base: "100%", md: "75%" }} padding={3}>
+      <Card.Root
+        w={{ base: "100%", md: "75%" }}
+        padding={3}
+        className="animate-fade-in-from-bottom"
+      >
         <Stack alignItems="center" gap={3}>
           <Stack alignItems="center" gap={0}>
             <Image width={150} src={campIcon} />

@@ -80,9 +80,9 @@ export const ManagePlayersButton = () => {
           disabled={isDisabled}
           variant="subtle"
           colorPalette="blue"
-          size="md"
+          size="sm"
         >
-          <IconUserCog /> {t("Manage Players")}
+          <IconUserCog /> <Text fontSize="xs">{t("Manage Players")}</Text>
         </Button>
       </DrawerTrigger>
 

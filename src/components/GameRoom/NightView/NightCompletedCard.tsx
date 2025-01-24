@@ -15,7 +15,7 @@ export const NightCompletedCard = () => {
           {t(`Everyone, close your eyes!`)}
         </Text>
       </Card.Header>
-      <Card.Body>
+      <Card.Body className="animate-fade-in-from-bottom">
         <Image width="10rem" src={nightToDayImg} />
       </Card.Body>
       <Card.Footer>

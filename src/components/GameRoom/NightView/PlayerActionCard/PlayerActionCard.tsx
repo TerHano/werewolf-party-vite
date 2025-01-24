@@ -49,7 +49,7 @@ export const PlayerActionCard = ({
           {t(`Wake Up, ${playerDetails.roleInfo.label}!`)}
         </Text>
       </Card.Header>
-      <Card.Body>
+      <Card.Body className="animate-fade-in-from-bottom">
         <VStack gap={1}>
           <Image width="8rem" src={playerDetails.roleInfo.imgSrc} />
 

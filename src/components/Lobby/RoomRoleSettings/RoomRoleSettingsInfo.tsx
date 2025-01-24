@@ -3,6 +3,7 @@ import { useRole, useRoles } from "@/hooks/useRoles";
 import { HStack, Separator, Stack, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 import { ActiveRolesList } from "./ActiveRolesList";
+import { useMeasure } from "@uidotdev/usehooks";
 
 export const RoomRoleSettingsInfo = ({
   numberOfWerewolves,
@@ -13,13 +14,16 @@ export const RoomRoleSettingsInfo = ({
 }) => {
   const { data: werewolfRole } = useRole(Role.WereWolf);
   const { data } = useRoles({ roles: activeRoles });
+  const [ref, { width }] = useMeasure();
 
   if (!werewolfRole) {
     throw new Error("Problem getting werewolf");
   }
   return (
-    <Stack mb="1rem" gap={2}>
+    <Stack ref={ref} mb="1rem" gap={2}>
       <ActiveRolesList
+        justify="center"
+        widthOfContainer={width}
         numberOfWerewolves={numberOfWerewolves}
         activeRoles={activeRoles}
       />

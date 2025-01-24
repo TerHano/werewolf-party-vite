@@ -80,8 +80,6 @@ export const SocketProvider = ({ children }: PropsWithChildren) => {
     [connection]
   );
   useEffect(() => {
-    console.log("do thing", connection.state);
-
     connection.onreconnected(() => {
       setConnectionState(connection.state);
     });

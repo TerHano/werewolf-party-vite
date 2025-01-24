@@ -29,7 +29,6 @@ export const useApiMutation = <ReturnType, Body>({
       let isValidDelete = false;
       if (method === "DELETE") {
         if (typeof body === "number") {
-          console.log(body);
           url = url.replace("{id}", body.toString());
           isValidDelete = true;
         }

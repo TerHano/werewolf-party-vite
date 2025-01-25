@@ -12,7 +12,7 @@ export const NightCompletedCard = () => {
     <Card.Root alignItems="center" width="100%">
       <Card.Header>
         <Text fontSize="xl" textStyle="accent">
-          {t(`Everyone, close your eyes!`)}
+          {t(`Everyone, Close Your Eyes!`)}
         </Text>
       </Card.Header>
       <Card.Body className="animate-fade-in-from-bottom">

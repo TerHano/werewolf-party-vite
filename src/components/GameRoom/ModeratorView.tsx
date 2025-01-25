@@ -18,7 +18,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "../ui/drawer";
-import { IconSettings2 } from "@tabler/icons-react";
+import { IconSettings } from "@tabler/icons-react";
 
 export const ModeratorView = () => {
   const { t } = useTranslation();
@@ -47,9 +47,9 @@ export const ModeratorView = () => {
           <DrawerRoot placement="bottom">
             <DrawerBackdrop />
             <DrawerTrigger asChild>
-              <IconButton variant="subtle" colorPalette="blue">
-                <IconSettings2 />
-              </IconButton>
+              <Button size="sm" variant="subtle" colorPalette="blue">
+                <IconSettings /> {t("Settings")}
+              </Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerCloseTrigger />
@@ -68,7 +68,7 @@ export const ModeratorView = () => {
                 </Button>
               </DrawerBody>
             </DrawerContent>
-          </DrawerRoot>{" "}
+          </DrawerRoot>
           <DayNightVisual />
         </Stack>
         {isDay ? <ChoppingBlock /> : <NightCall />}

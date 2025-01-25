@@ -1,5 +1,4 @@
 import {
-  Button,
   DrawerRootProvider,
   IconButton,
   Stack,
@@ -21,6 +20,7 @@ import { useUpdateCurrentPlayerDetails } from "@/hooks/useUpdateCurrentPlayerDet
 import { useRoomId } from "@/hooks/useRoomId";
 import { useLeaveRoom } from "@/hooks/useLeaveRoom";
 import { useNavigate } from "@tanstack/react-router";
+import { Button } from "../ui/button";
 
 export const PlayerSettingsDrawer = () => {
   const { t } = useTranslation();
@@ -28,7 +28,7 @@ export const PlayerSettingsDrawer = () => {
   const navigate = useNavigate();
 
   const { mutate: updatePlayerDetailsMutate } = useUpdateCurrentPlayerDetails();
-  const { mutate: leaveRoomMutate } = useLeaveRoom({
+  const { mutate: leaveRoomMutate, isPending: isLeavingRoom } = useLeaveRoom({
     onSuccess: async () => {
       await navigate({ to: "/" });
     },
@@ -62,6 +62,8 @@ export const PlayerSettingsDrawer = () => {
               }}
             />
             <Button
+              loading={isLeavingRoom}
+              disabled={isLeavingRoom}
               onClick={() => {
                 leaveRoomMutate({ roomId });
               }}

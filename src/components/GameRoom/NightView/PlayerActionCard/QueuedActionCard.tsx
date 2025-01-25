@@ -38,7 +38,7 @@ export const QueuedActionCard = ({
       <Text fontSize="lg" textStyle="accent">
         {t("You decided to...")}
       </Text>
-      <Card.Root p={1}>
+      <Card.Root py={1} pl={3} pr={1}>
         <Stack direction="row" alignItems="center" gap={2}>
           <Group gap={1}>
             <Text fontSize="sm">{getUndoActionText(queuedAction.action)}</Text>

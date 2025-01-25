@@ -12,32 +12,45 @@ export const KilledPlayersBanner = () => {
   const { getAvatarImageSrcForIndex } = usePlayerAvatar();
 
   if (!latestPlayerDeaths || latestPlayerDeaths.length === 0) {
-    return <></>;
+    return (
+      <Card.Root className="animate-fade-in-from-bottom" variant="outline">
+        <Card.Body py={2}>
+          <Card.Title>
+            <Group gap={1} align="center">
+              <IconGrave2 size={16} />
+              <Text textStyle="accent">{t("Deaths From Previous Night")}</Text>
+            </Group>
+          </Card.Title>
+          <Card.Description>
+            {t("No players were killed last night...")}
+          </Card.Description>
+        </Card.Body>
+      </Card.Root>
+    );
   }
 
   return (
     <Card.Root variant="outline">
-      <Card.Header>
+      <Card.Body py={2}>
         <Card.Title>
           <Group gap={1} align="center">
             <IconGrave2 size={20} />
-            <Text> {t("Deaths")}</Text>
+            <Text fontSize="xl" textStyle="accent">
+              {t("Deaths From Previous Night")}
+            </Text>
           </Group>
         </Card.Title>
         <Card.Description>
-          {t("These are the players killed the previous night")}
+          {t("These are the players killed the previous night...")}
         </Card.Description>
-      </Card.Header>
-      <Card.Body py={2}>
         <Group mt="1rem">
           {latestPlayerDeaths.map((death) => (
             <Stack gap={1} align="center">
               <Avatar.Root
                 borderRadius="xl"
                 variant="subtle"
-                size="xl"
+                size="md"
                 key={death.id}
-                style={{ cursor: "pointer" }}
               >
                 <Avatar.Image
                   marginTop={1}

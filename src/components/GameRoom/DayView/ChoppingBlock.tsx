@@ -7,6 +7,8 @@ import { KilledPlayersBanner } from "./KilledPlayersBanner";
 import {
   Avatar,
   Badge,
+  Card,
+  Container,
   defineStyle,
   Separator,
   SimpleGrid,
@@ -15,6 +17,8 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
+import { InfoTip, ToggleTip } from "@/components/ui/toggle-tip";
+import { IconHelp } from "@tabler/icons-react";
 
 export const ChoppingBlock = () => {
   const roomId = useRoomId();
@@ -38,63 +42,92 @@ export const ChoppingBlock = () => {
     <Stack direction="column" gap={6}>
       <KilledPlayersBanner />
       <Separator />
-      <Text textStyle="accent" fontSize="2xl">
-        {t("Pick a player to lynch...")}
-      </Text>
-      <SimpleGrid columns={{ base: 2, xs: 3, sm: 5, md: 5 }} gap={5}>
-        {alivePlayers?.map((player) => {
-          return (
-            <Stack gap={0} align="center">
-              <Avatar.Root
+      <Card.Root
+        animationDelay="moderate"
+        className="animate-fade-in-from-bottom"
+      >
+        <Card.Body>
+          <Card.Title>
+            <Text textStyle="accent" fontSize="2xl">
+              {t("Who do we think it is?")}
+            </Text>
+            {/* <InfoTip
+              content={
+                <Text truncate>
+                  {t(
+                    "All the players should now be discussing who they think is the werewolf. Once an agreement is reached, the players will vote to lynch the player. If the players are unable to reach an agreement, the players can abstain from voting for the night."
+                  )}
+                </Text>
+              }
+            /> */}
+          </Card.Title>
+          <Card.Description>
+            <Text fontSize="xs">
+              {t(
+                "All the players should now be discussing who they think is the werewolf. Once an agreement is reached, the players will vote to lynch the player. If the players are unable to reach an agreement, the players can abstain from voting for the night."
+              )}
+            </Text>
+          </Card.Description>
+          <Stack mt={4} gap={3}>
+            <SimpleGrid columns={{ base: 2, xs: 3, sm: 5, md: 5 }} gap={5}>
+              {alivePlayers?.map((player) => {
+                return (
+                  <Stack gap={0} align="center">
+                    <Avatar.Root
+                      variant="subtle"
+                      size="2xl"
+                      borderRadius="xl"
+                      onClick={() => setSelectedPlayer(player.id)}
+                      key={player.id}
+                      style={{ cursor: "pointer" }}
+                      css={selectedPlayer === player.id ? ringCss : undefined}
+                    >
+                      <Avatar.Image
+                        marginTop={1}
+                        src={getAvatarImageSrcForIndex(player.avatarIndex)}
+                      />
+                    </Avatar.Root>{" "}
+                    <Badge
+                      colorPalette={
+                        selectedPlayer === player.id ? "blue" : undefined
+                      }
+                    >
+                      {player.nickname}
+                    </Badge>
+                  </Stack>
+                );
+              })}
+            </SimpleGrid>
+
+            <SimpleGrid columns={2} gap={4}>
+              <Button
+                w="100%"
                 variant="subtle"
-                size="2xl"
-                borderRadius="xl"
-                onClick={() => setSelectedPlayer(player.id)}
-                key={player.id}
-                style={{ cursor: "pointer" }}
-                css={selectedPlayer === player.id ? ringCss : undefined}
+                onClick={() => {
+                  votePlayerOutMutate({
+                    roomId,
+                    playerId: undefined,
+                  });
+                }}
               >
-                <Avatar.Image
-                  marginTop={1}
-                  src={getAvatarImageSrcForIndex(player.avatarIndex)}
-                />
-              </Avatar.Root>{" "}
-              <Badge
-                colorPalette={selectedPlayer === player.id ? "blue" : undefined}
+                {t("Abstain Vote")}
+              </Button>
+              <Button
+                w="100%"
+                disabled={!selectedPlayer}
+                onClick={() => {
+                  votePlayerOutMutate({
+                    roomId,
+                    playerId: selectedPlayer,
+                  });
+                }}
               >
-                {player.nickname}
-              </Badge>
-            </Stack>
-          );
-        })}
-      </SimpleGrid>
-      <Separator />
-      <SimpleGrid columns={2} gap={4}>
-        <Button
-          w="100%"
-          variant="subtle"
-          onClick={() => {
-            votePlayerOutMutate({
-              roomId,
-              playerId: undefined,
-            });
-          }}
-        >
-          {t("Abstain Vote")}
-        </Button>
-        <Button
-          w="100%"
-          disabled={!selectedPlayer}
-          onClick={() => {
-            votePlayerOutMutate({
-              roomId,
-              playerId: selectedPlayer,
-            });
-          }}
-        >
-          {t("Lynch Player")}
-        </Button>
-      </SimpleGrid>
+                {t("Lynch Player")}
+              </Button>
+            </SimpleGrid>
+          </Stack>
+        </Card.Body>
+      </Card.Root>
     </Stack>
   );
 };

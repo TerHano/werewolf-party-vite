@@ -39,7 +39,7 @@ export const PlayerAvatar = ({
                   <Text fontSize="sm">You</Text>
                 </Badge>
               ) : null}
-              <Text fontSize="md" textStyle="accent">
+              <Text fontSize="lg" textStyle="accent">
                 {player.nickname}
               </Text>
             </Stack>

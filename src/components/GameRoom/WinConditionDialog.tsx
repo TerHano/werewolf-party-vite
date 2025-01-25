@@ -86,7 +86,7 @@ export const WinConditionDialog = ({
           </DialogBody>
           {isModerator ? (
             <DialogFooter>
-              <Stack wrap="wrap" gap={3} direction="row">
+              <Stack w="full" wrap="wrap" gap={3} direction="row">
                 <Button
                   w="full"
                   onClick={() => {

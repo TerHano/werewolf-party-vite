@@ -1,7 +1,7 @@
 import { Card, Text, Image, Badge, VStack, Group } from "@chakra-ui/react";
 import { ActionType } from "@/enum/ActionType";
 import { useTranslation } from "react-i18next";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useRole } from "@/hooks/useRoles";
 import { QueuedActionDto } from "@/dto/QueuedActionDto";
 import { Role } from "@/enum/Role";
@@ -9,6 +9,7 @@ import { IconGrave2, IconUser } from "@tabler/icons-react";
 import { PlayerRoleWithDetails } from "../NightCall";
 import { ActionButtonList } from "./ActionButtonList";
 import { QueuedActionCard } from "./QueuedActionCard";
+import { useAnimationReset } from "@/hooks/useAnimationReset";
 
 export const WerewolfPlayersActionCard = ({
   allPlayerDetails,
@@ -18,6 +19,8 @@ export const WerewolfPlayersActionCard = ({
   allQueuedActions: QueuedActionDto[];
 }) => {
   const { t } = useTranslation();
+  const { animation, resetAnimation } = useAnimationReset();
+
   const { data: werewolfRole } = useRole(Role.WereWolf);
 
   const queuedAction = useMemo(() => {
@@ -32,11 +35,22 @@ export const WerewolfPlayersActionCard = ({
 
   const roleActions = werewolfPlayers[0]?.actions;
 
+  useEffect(() => {
+    resetAnimation();
+  }, [queuedAction, resetAnimation]);
+
   return (
     <Card.Root alignItems="center" width="100%">
       <Card.Header>
-        <Text fontSize="xl" textStyle="accent">
-          {t(`Wake Up, Werewolves!`)}
+        <Text
+          className="animate-fade-in-from-bottom"
+          fontSize="xl"
+          textStyle="accent"
+          animation={animation}
+        >
+          {queuedAction
+            ? t(`Werewolves, Close Your Eyes!`)
+            : t(`Wake Up, Werewolves!`)}
         </Text>
       </Card.Header>
       <Card.Body className="animate-fade-in-from-bottom">

@@ -89,11 +89,10 @@ export const NightCall = () => {
         />
       ) : null}
 
-      <Stack direction="column" width="100%" gap={4}>
+      <Stack height="auto" direction="column" width="100%" gap={4}>
         <StepsRoot
           step={currentStep}
           variant="subtle"
-          //   orientation="vertical"
           size="lg"
           defaultValue={0}
           count={nightCallLength}
@@ -169,9 +168,6 @@ export const NightCall = () => {
             >
               <NightCompletedCard />
             </StepsContent>
-            {/* <StepsCompletedContent width="100%">
-              <NightCompletedCard />
-            </StepsCompletedContent> */}
 
             <Group>
               <Button

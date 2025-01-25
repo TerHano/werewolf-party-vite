@@ -59,6 +59,7 @@ export const MainMenu = () => {
               not found. Please try again
             </Text>
           ),
+          duration: 2000,
         });
       } else {
         navigate({

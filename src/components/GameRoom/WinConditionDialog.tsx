@@ -5,9 +5,7 @@ import {
   DialogCloseTrigger,
   DialogContent,
   DialogFooter,
-  DialogHeader,
   DialogRoot,
-  DialogTitle,
 } from "../ui/dialog";
 import { Badge, Image, Stack, Text } from "@chakra-ui/react";
 import { Button } from "../ui/button";
@@ -33,6 +31,7 @@ export const WinConditionDialog = ({
   const { data: winCondition, refetch } = useWinCondition(roomId);
   const { mutate: startGameMutate } = useStartGame();
   const { mutate: endGameMutate } = useEndGame();
+
 
   useSocketConnection({
     onWinConditionMet: () => {
@@ -60,15 +59,12 @@ export const WinConditionDialog = ({
         <DialogBackdrop />
 
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t("Winners")}</DialogTitle>
-          </DialogHeader>
           {isModerator ? (
             <DialogCloseTrigger onClick={() => setIsOpen(false)} />
           ) : null}
 
           <DialogBody>
-            <Stack gap={0} align="center">
+            <Stack mt="3rem" gap={0} align="center">
               <Image
                 width="13rem"
                 src={werewolvesWin ? werewolfImg : villagerImg}
@@ -79,7 +75,7 @@ export const WinConditionDialog = ({
                 colorPalette={werewolvesWin ? "red" : "green"}
               >
                 <Text textStyle="accent" fontSize="3xl">
-                  {werewolvesWin ? t("Werewolves") : t("Villagers")}
+                  {werewolvesWin ? t("Werewolves Win") : t("Villagers Win")}
                 </Text>
               </Badge>
             </Stack>

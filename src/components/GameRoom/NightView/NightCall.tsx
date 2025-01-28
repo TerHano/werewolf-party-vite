@@ -1,4 +1,4 @@
-import { Flex, Group, Image, Stack } from "@chakra-ui/react";
+import { Flex, Image, SimpleGrid, Stack } from "@chakra-ui/react";
 import { Button } from "../../ui/button";
 import { useRoomId } from "@/hooks/useRoomId";
 import { StepsContent, StepsItem, StepsList, StepsRoot } from "../../ui/steps";
@@ -11,7 +11,11 @@ import { NightCompletedCard } from "./NightCompletedCard";
 import { ActionType } from "@/enum/ActionType";
 import { ActionModal } from "./ActionModals/ActionModal";
 import { useAllQueuedActions } from "@/hooks/useAllQueuedActions";
-import { IconSunFilled } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconArrowRight,
+  IconSunFilled,
+} from "@tabler/icons-react";
 import { Role } from "@/enum/Role";
 import werewolfImg from "@/assets/icons/roles/werewolf-color.png";
 import { WerewolfPlayersActionCard } from "./PlayerActionCard/WerewolfPlayersActionCard";
@@ -137,6 +141,7 @@ export const NightCall = () => {
             width="100%"
             alignItems="center"
             justifyContent="start"
+            gap={0}
           >
             <StepsContent width="100%" key={`content-werewolves`} index={0}>
               <WerewolfPlayersActionCard
@@ -169,24 +174,30 @@ export const NightCall = () => {
               <NightCompletedCard />
             </StepsContent>
 
-            <Group>
+            <SimpleGrid columns={2} w="full">
               <Button
+                borderTopRadius={0}
+                borderRightRadius={0}
                 disabled={currentStep === 0}
                 onClick={() => setCurrentStep(currentStep - 1)}
-                variant="outline"
-                size="sm"
+                variant="subtle"
+                size="md"
               >
+                <IconArrowLeft />
                 {t("Previous")}
               </Button>
               <Button
+                borderLeftRadius={0}
+                borderTopRadius={0}
                 disabled={currentStep === nightCallLength}
                 onClick={() => setCurrentStep(currentStep + 1)}
-                variant="outline"
-                size="sm"
+                variant="subtle"
+                size="md"
               >
                 {t("Next")}
+                <IconArrowRight />
               </Button>
-            </Group>
+            </SimpleGrid>
           </Stack>
         </StepsRoot>
       </Stack>

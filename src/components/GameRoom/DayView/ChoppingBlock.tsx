@@ -5,10 +5,8 @@ import { useVotePlayerOut } from "@/hooks/useVotePlayerOut";
 import { useTranslation } from "react-i18next";
 import { KilledPlayersBanner } from "./KilledPlayersBanner";
 import {
-  Avatar,
   Badge,
   Card,
-  Container,
   defineStyle,
   Separator,
   SimpleGrid,
@@ -17,8 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
-import { InfoTip, ToggleTip } from "@/components/ui/toggle-tip";
-import { IconHelp } from "@tabler/icons-react";
+import { Avatar } from "@/components/ui/avatar";
 
 export const ChoppingBlock = () => {
   const roomId = useRoomId();
@@ -72,21 +69,24 @@ export const ChoppingBlock = () => {
             <SimpleGrid columns={{ base: 2, xs: 3, sm: 5, md: 5 }} gap={5}>
               {alivePlayers?.map((player) => {
                 return (
-                  <Stack gap={0} align="center">
-                    <Avatar.Root
-                      variant="subtle"
+                  <Stack key={player.id} gap={0} align="center">
+                    <Avatar
                       size="2xl"
-                      borderRadius="xl"
-                      onClick={() => setSelectedPlayer(player.id)}
-                      key={player.id}
+                      shape="rounded"
+                      src={getAvatarImageSrcForIndex(player.avatarIndex)}
+                      colorPalette={
+                        selectedPlayer === player.id ? "blue" : undefined
+                      }
                       style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        if (selectedPlayer === player.id) {
+                          setSelectedPlayer(undefined);
+                          return;
+                        }
+                        setSelectedPlayer(player.id);
+                      }}
                       css={selectedPlayer === player.id ? ringCss : undefined}
-                    >
-                      <Avatar.Image
-                        marginTop={1}
-                        src={getAvatarImageSrcForIndex(player.avatarIndex)}
-                      />
-                    </Avatar.Root>{" "}
+                    />
                     <Badge
                       colorPalette={
                         selectedPlayer === player.id ? "blue" : undefined

@@ -9,7 +9,7 @@ export const NightCompletedCard = () => {
   const roomId = useRoomId();
   const { mutate, isPending: isLoading } = useEndNight();
   return (
-    <Card.Root alignItems="center" width="100%">
+    <Card.Root alignItems="center" width="100%" borderBottomRadius={0}>
       <Card.Header>
         <Text fontSize="xl" textStyle="accent">
           {t(`Everyone, Close Your Eyes!`)}

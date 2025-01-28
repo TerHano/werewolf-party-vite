@@ -6,6 +6,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { PlayerRoleWithDetails } from "../NightCall";
+import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
 
 export interface PlayerListProps {
   players: PlayerRoleWithDetails[];
@@ -18,6 +19,7 @@ export const PlayerList = ({
   selectedPlayer,
   onPlayerSelect,
 }: PlayerListProps) => {
+  const { getAvatarImageSrcForIndex } = usePlayerAvatar();
   const ringCss = defineStyle({
     outlineWidth: "2px",
     outlineColor: "blue.500",
@@ -38,7 +40,10 @@ export const PlayerList = ({
               style={{ cursor: "pointer" }}
               css={selectedPlayer === player.id ? ringCss : undefined}
             >
-              <Avatar.Image marginTop={1} src={player.roleInfo.imgSrc} />
+              <Avatar.Image
+                marginTop={1}
+                src={getAvatarImageSrcForIndex(player.avatarIndex)}
+              />
             </Avatar.Root>
             <Badge
               colorPalette={selectedPlayer === player.id ? "blue" : undefined}

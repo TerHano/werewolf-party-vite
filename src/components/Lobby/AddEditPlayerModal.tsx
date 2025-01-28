@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "../ui/button";
 import { Field } from "../ui/field";
 import {
+  Alert,
   Avatar,
   defineStyle,
   DialogRootProvider,
@@ -39,6 +40,8 @@ import {
   DrawerHeader,
   DrawerRoot,
 } from "../ui/drawer";
+import { useGameState } from "@/hooks/useGameState";
+import { GameState } from "@/enum/GameState";
 
 interface AddEditPlayerModalProps {
   isEdit?: boolean;
@@ -57,6 +60,7 @@ export const AddEditPlayerModal = ({
   const roomId = useRoomId();
   const { t } = useTranslation();
   const { data: currentPlayer } = useCurrentPlayer(roomId, { enabled: isEdit });
+  const { data: gameState } = useGameState(roomId);
 
   const { data: avatarNames, getAvatarImageSrcForIndex } = usePlayerAvatar();
 
@@ -120,7 +124,9 @@ export const AddEditPlayerModal = ({
         <DialogBackdrop />
         {isEdit && (
           <DialogTrigger>
-            <Button w="100%">{t("Change Nickname/Avatar")}</Button>
+            <IconButton size="sm" variant="ghost" colorScheme="blue">
+              <IconPencil />
+            </IconButton>
           </DialogTrigger>
         )}
         <DialogContent>
@@ -133,16 +139,24 @@ export const AddEditPlayerModal = ({
             </DialogTitle>
           </DialogHeader>
           <DialogBody>
+            {
+              //Warn player if they are joining a game in progress
+            }
+            {!isEdit && gameState === GameState.CardsDealt ? (
+              <Alert.Root mb={4} size="sm" status="info">
+                <Alert.Indicator />
+                <Alert.Content>
+                  <Alert.Title>{t("Game In Progress")}</Alert.Title>
+                  <Alert.Description>
+                    {t(
+                      "You will join the game in the waiting room until the current game ends. "
+                    )}
+                  </Alert.Description>
+                </Alert.Content>
+              </Alert.Root>
+            ) : null}
             <form id="player-details-form" onSubmit={handleSubmit(onSubmit)}>
               <VStack gap={2}>
-                {/* <EnhancedAvatar
-                
-                  shape="rounded"
-                  size="2xl"
-                  src={getAvatarImageSrcForIndex(selectedAvatarIndex)}
-                >
-                
-                </EnhancedAvatar> */}
                 <Avatar.Root
                   variant="subtle"
                   size="2xl"

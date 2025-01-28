@@ -5,6 +5,8 @@ import { CSSProperties } from "react";
 import { IconUserCog } from "@tabler/icons-react";
 import { useIsModerator } from "@/hooks/useIsModerator";
 import { useRoomId } from "@/hooks/useRoomId";
+import { useUpdateCurrentPlayerDetails } from "@/hooks/useUpdateCurrentPlayerDetails";
+import { AddEditPlayerModal } from "./AddEditPlayerModal";
 
 export const PlayerAvatar = ({
   player,
@@ -19,6 +21,7 @@ export const PlayerAvatar = ({
 }) => {
   const roomId = useRoomId();
   const { getAvatarImageSrcForIndex } = usePlayerAvatar();
+  const { mutate: updatePlayerDetailsMutate } = useUpdateCurrentPlayerDetails();
 
   const isCurrentPlayer = currentPlayer?.id === player.id;
   const { data: isModerator } = useIsModerator(roomId);
@@ -54,6 +57,14 @@ export const PlayerAvatar = ({
             >
               {<IconUserCog />}
             </IconButton>
+          ) : null}
+          {isCurrentPlayer ? (
+            <AddEditPlayerModal
+              isEdit
+              submitCallback={(playerDetails) => {
+                updatePlayerDetailsMutate(playerDetails);
+              }}
+            />
           ) : null}
         </Stack>
       </Card.Body>

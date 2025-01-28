@@ -9,13 +9,12 @@ import { toaster } from "../ui/toaster";
 import { Button } from "../ui/button";
 import { useStartGame } from "@/hooks/useStartGame";
 import { useIsModerator } from "@/hooks/useIsModerator";
-import { PlayerSettingsDrawer } from "./PlayerSettingsDrawer";
 import { PlayersSection } from "./PlayerSection";
+import { LeaveRoomButton } from "./LeaveRoomButton";
 
 export const Lobby = () => {
   const roomId = useRoomId();
   const { t } = useTranslation();
-
   const { data: isModerator } = useIsModerator(roomId);
   const { data: currentPlayer } = useCurrentPlayer(roomId);
 
@@ -51,7 +50,7 @@ export const Lobby = () => {
               }}
             />
           </HStack>
-          <PlayerSettingsDrawer />
+          <LeaveRoomButton />
         </HStack>
         <ModeratorCard />
         {isModerator ? (

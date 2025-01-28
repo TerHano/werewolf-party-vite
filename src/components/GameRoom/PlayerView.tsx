@@ -3,6 +3,7 @@ import { getColorForRoleType, useRole } from "@/hooks/useRoles";
 import { useRoomId } from "@/hooks/useRoomId";
 import { Badge, Card, Image, Skeleton, Text, VStack } from "@chakra-ui/react";
 import { SkeletonCircle, SkeletonText } from "../ui/skeleton";
+import { WaitingPlayerCard } from "./WaitingPlayerCard";
 
 export const PlayerView = () => {
   const roomId = useRoomId();
@@ -16,7 +17,7 @@ export const PlayerView = () => {
   // }
 
   if (!isAssignedRoleLoading && !roleInfo) {
-    return "Spectating";
+    return <WaitingPlayerCard />;
   }
 
   return (

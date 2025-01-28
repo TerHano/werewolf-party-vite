@@ -1,9 +1,11 @@
 import { Role } from "@/enum/Role";
 import { useRole, useRoles } from "@/hooks/useRoles";
-import { HStack, Separator, Stack, Text, VStack } from "@chakra-ui/react";
-import React from "react";
+import { Stack } from "@chakra-ui/react";
 import { ActiveRolesList } from "./ActiveRolesList";
 import { useMeasure } from "@uidotdev/usehooks";
+import { RoleInfoList } from "../RoleInfoList";
+import { RoleInformationDialog } from "../RoleInformationDialog";
+import { useTranslation } from "react-i18next";
 
 export const RoomRoleSettingsInfo = ({
   numberOfWerewolves,
@@ -12,67 +14,33 @@ export const RoomRoleSettingsInfo = ({
   numberOfWerewolves: number;
   activeRoles: number[];
 }) => {
+  const { t } = useTranslation();
   const { data: werewolfRole } = useRole(Role.WereWolf);
-  const { data } = useRoles({ roles: activeRoles });
+  const { data: allRoles } = useRoles();
+  const activeRolesData = allRoles?.filter((role) =>
+    activeRoles.includes(role.roleName)
+  );
   const [ref, { width }] = useMeasure();
 
   if (!werewolfRole) {
     throw new Error("Problem getting werewolf");
   }
   return (
-    <Stack ref={ref} mb="1rem" gap={2}>
+    <Stack ref={ref} mb="1rem" gap={3}>
       <ActiveRolesList
         justify="center"
         widthOfContainer={width}
         numberOfWerewolves={numberOfWerewolves}
         activeRoles={activeRoles}
       />
-      <Separator />
-      <HStack gap={5}>
-        <VStack minW="4rem" gap={1}>
-          <img width={36} src={werewolfRole.imgSrc} alt={werewolfRole.label} />
-          <Text textStyle="accent" fontSize={18}>
-            {werewolfRole.label}
-          </Text>
-        </VStack>
-        <Stack>
-          <Text
-            textStyle="accent"
-            color="gray.400"
-            fontStyle="italic"
-            fontWeight={600}
-            fontSize="1.2rem"
-          >
-            {werewolfRole.shortDescription}
-          </Text>
-          <Text>{werewolfRole.description}</Text>
-        </Stack>
-      </HStack>
-      {data.map((role) => (
-        <React.Fragment key={role.roleName}>
-          <Separator />
-          <HStack gap={5}>
-            <VStack minW="4rem" gap={1}>
-              <img width={36} src={role.imgSrc} alt={role.label} />
-              <Text textStyle="accent" fontSize={18}>
-                {role.label}
-              </Text>
-            </VStack>
-            <Stack>
-              <Text
-                textStyle="accent"
-                color="gray.400"
-                fontStyle="italic"
-                fontWeight={600}
-                fontSize="1.2rem"
-              >
-                {role.shortDescription}
-              </Text>
-              <Text>{role.description}</Text>
-            </Stack>
-          </HStack>
-        </React.Fragment>
-      ))}
+
+      <RoleInfoList roles={[werewolfRole, ...activeRolesData]} />
+      <RoleInformationDialog
+        roles={allRoles}
+        button={{
+          children: t("Learn All The Roles"),
+        }}
+      />
     </Stack>
   );
 };

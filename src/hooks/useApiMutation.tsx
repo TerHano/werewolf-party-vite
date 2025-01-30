@@ -24,7 +24,6 @@ export const useApiMutation = <ReturnType, Body>({
   const queryClient = useQueryClient();
   let url = `${import.meta.env.WEREWOLF_SERVER_URL}/api/${endpoint}`;
   return useMutation<ReturnType, Error, Body>({
-    //mutationKey:,
     mutationFn: (body: Body) => {
       let isValidDelete = false;
       if (method === "DELETE") {
@@ -40,13 +39,13 @@ export const useApiMutation = <ReturnType, Body>({
       });
     },
     onSuccess: (data, variables) => {
-      if (onSuccess) {
-        onSuccess(data, variables);
-      }
       if (queryKeysToInvalidate) {
         queryKeysToInvalidate.forEach((queryKey) => {
           queryClient.invalidateQueries({ queryKey: queryKey });
         });
+      }
+      if (onSuccess) {
+        onSuccess(data, variables);
       }
     },
     onError: onError,

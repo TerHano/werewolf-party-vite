@@ -29,9 +29,16 @@ export const WinConditionDialog = ({
   const { t } = useTranslation();
   const roomId = useRoomId();
   const { data: winCondition, refetch } = useWinCondition(roomId);
-  const { mutate: startGameMutate } = useStartGame();
-  const { mutate: endGameMutate } = useEndGame();
-
+  const { mutate: startGameMutate } = useStartGame({
+    onSuccess: async () => {
+      setIsOpen(false);
+    },
+  });
+  const { mutate: endGameMutate } = useEndGame({
+    onSuccess: async () => {
+      setIsOpen(false);
+    },
+  });
 
   useSocketConnection({
     onWinConditionMet: () => {
@@ -96,7 +103,7 @@ export const WinConditionDialog = ({
                   w="full"
                   variant="subtle"
                   onClick={() => {
-                    setIsOpen(false);
+                    // setIsOpen(false);
                     endGameMutate({ roomId });
                   }}
                 >

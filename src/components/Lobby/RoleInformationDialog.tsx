@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import { Button, IconButton } from "@chakra-ui/react";
 import {
   DialogActionTrigger,
   DialogBody,
@@ -10,24 +10,24 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { RoleInfoList } from "./RoleInfoList";
-import { ButtonProps } from "../ui/button";
 import { RoleInfo } from "@/hooks/useRoles";
 import { useTranslation } from "react-i18next";
+import { IconQuestionMark } from "@tabler/icons-react";
 
 interface RoleInformationDialogProps {
   roles: RoleInfo[];
-  button: ButtonProps;
 }
 
 export const RoleInformationDialog = ({
   roles,
-  button,
 }: RoleInformationDialogProps) => {
   const { t } = useTranslation();
   return (
     <DialogRoot scrollBehavior="inside">
       <DialogTrigger asChild>
-        <Button {...button} />
+        <IconButton borderRadius="full" variant="outline" size="2xs">
+          <IconQuestionMark />
+        </IconButton>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

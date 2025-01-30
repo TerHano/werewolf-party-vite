@@ -24,6 +24,7 @@ import { Button } from "../../ui/button";
 import { toaster } from "../../ui/toaster";
 import { SegmentedControl } from "../../ui/segmented-control";
 import { Field } from "../../ui/field";
+import { RoleInformationDialog } from "@/components/Lobby/RoleInformationDialog";
 
 interface EditRoomRoleSettingsForm {
   numberOfWerewolves: string;
@@ -230,9 +231,12 @@ export const EditRoomRoleSettings = ({
             value={traditonalRolesController.field.value}
             onValueChange={traditonalRolesController.field.onChange}
           >
-            <Text textStyle="accent" fontWeight={600} fontSize="lg">
-              Traditional Roles
-            </Text>
+            <Group>
+              <Text textStyle="accent" fontWeight={600} fontSize="lg">
+                Traditional Roles
+              </Text>
+              <RoleInformationDialog roles={traditonalRoles} />
+            </Group>
             <Skeleton
               w="full"
               loading={isRoomRoleSettingsLoading}
@@ -275,9 +279,12 @@ export const EditRoomRoleSettings = ({
             value={specialRolesController.field.value}
             onValueChange={specialRolesController.field.onChange}
           >
-            <Text textStyle="accent" fontWeight={600} fontSize="lg">
-              Special Roles
-            </Text>
+            <Group>
+              <Text textStyle="accent" fontWeight={600} fontSize="lg">
+                Special Roles
+              </Text>{" "}
+              <RoleInformationDialog roles={specialRoles} />
+            </Group>
             <Skeleton
               w="full"
               loading={isRoomRoleSettingsLoading}

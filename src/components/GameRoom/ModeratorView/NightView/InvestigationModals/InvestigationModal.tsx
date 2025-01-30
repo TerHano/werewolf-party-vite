@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   DialogBackdrop,
   DialogRoot,
@@ -8,11 +8,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from "@/components/ui/dialog";
-import { PlayerList } from "./PlayerList";
+import { PlayerList } from "../ActionModals/PlayerList";
 import {
   DialogContext,
-  Group,
   StepsContent,
   StepsItem,
   StepsList,
@@ -26,13 +26,16 @@ import { StepsRoot } from "@/components/ui/steps";
 import { useAllPlayerRoles } from "@/hooks/useAllPlayerRoles";
 import { RoleActionDto } from "@/dto/RoleActionDto";
 import { IconSearch } from "@tabler/icons-react";
-import { Role } from "@/enum/Role";
-
-//type InvestigationActionTypes = ActionType.Investigate;
+import { WerewolfInvestigationResult } from "@/components/GameRoom/ModeratorView/NightView/InvestigationModals/WerewolfInvestigationResult";
 
 export interface InvestigationProps {
   playerId: string;
   action: RoleActionDto;
+}
+
+interface InvestigationModalProps {
+  title: string;
+  resultNode: React.ReactNode;
 }
 
 export const InvestigationModal = ({
@@ -42,23 +45,18 @@ export const InvestigationModal = ({
   const roomId = useRoomId();
   const { t } = useTranslation();
   const { data: allPlayers } = useAllPlayerRoles(roomId);
-
   const [step, setStep] = useState(0);
 
   const [selectedPlayerId, setSelectedPlayerId] = useState<string>();
   const { mutate: createUpdateQueuedAction } = useCreateUpdateQueuedAction({
     onSuccess: async () => {
-      // close();
+      setStep(1);
     },
   });
 
   const alivePlayers =
     allPlayers?.filter((player) => player.isAlive && player.id !== playerId) ??
     [];
-
-  const selectedPlayerDetails = allPlayers?.find(
-    (player) => player.id === selectedPlayerId
-  );
 
   const onSubmit = useCallback(() => {
     if (selectedPlayerId) {
@@ -68,12 +66,26 @@ export const InvestigationModal = ({
         affectedPlayerId: selectedPlayerId,
         action: action.type,
       });
-      setStep(1);
     }
   }, [action, createUpdateQueuedAction, playerId, roomId, selectedPlayerId]);
 
+  const investigationModalProps = useMemo<InvestigationModalProps>(() => {
+    switch (action.type) {
+      default:
+        return {
+          title: t("Who do we think is the Werewolf"),
+          resultNode: (
+            <WerewolfInvestigationResult
+              allPlayers={allPlayers ?? []}
+              playerId={playerId}
+            />
+          ),
+        };
+    }
+  }, [action.type, allPlayers, playerId, t]);
+
   return (
-    <DialogRoot placement="center" onExitComplete={() => setStep(0)}>
+    <DialogRoot size="md" placement="center" onExitComplete={() => setStep(0)}>
       <DialogBackdrop />
       <DialogTrigger>
         <Button disabled={!action.enabled} size="sm" colorPalette="blue">
@@ -81,11 +93,15 @@ export const InvestigationModal = ({
           {t("Investigate")}
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent minH="20rem">
         <DialogCloseTrigger />
         <DialogHeader>
           <DialogTitle>
-            <Text textStyle="accent">{t("Investigate")}</Text>
+            <Text textStyle="accent">
+              {step === 0
+                ? investigationModalProps.title
+                : t("Investigation Result")}
+            </Text>
           </DialogTitle>
         </DialogHeader>
         <DialogBody>
@@ -105,37 +121,33 @@ export const InvestigationModal = ({
               />
             </StepsContent>
             <StepsContent index={1}>
-              {selectedPlayerDetails?.role === Role.WereWolf ? "Yup" : "Nope"}
+              {investigationModalProps.resultNode}
             </StepsContent>
-            <DialogContext>
-              {(context) => (
-                <Group>
-                  {step === 0 && (
-                    <Button onClick={onSubmit} variant="outline" size="sm">
-                      Investigate Guy
-                    </Button>
-                  )}
-                  {step === 1 && (
-                    <Button
-                      onClick={() => {
-                        context.setOpen(false);
-                      }}
-                      variant="outline"
-                      size="sm"
-                    >
-                      Close
-                    </Button>
-                  )}
-                </Group>
-              )}
-            </DialogContext>
           </StepsRoot>
         </DialogBody>
-        {/* <DialogFooter>
-          <Button onClick={onSubmit} disabled={selectedPlayerId === undefined}>
-            Test
-          </Button>
-        </DialogFooter> */}
+        <DialogFooter>
+          <DialogContext>
+            {(context) => (
+              <>
+                {step === 0 && (
+                  <Button onClick={onSubmit} size="sm">
+                    {t("Investigate")}
+                  </Button>
+                )}
+                {step === 1 && (
+                  <Button
+                    onClick={() => {
+                      context.setOpen(false);
+                    }}
+                    size="sm"
+                  >
+                    {t("Close")}
+                  </Button>
+                )}
+              </>
+            )}
+          </DialogContext>
+        </DialogFooter>
       </DialogContent>
     </DialogRoot>
   );

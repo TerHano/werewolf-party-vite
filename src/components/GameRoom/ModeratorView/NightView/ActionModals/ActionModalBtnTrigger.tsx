@@ -1,5 +1,5 @@
 import { ActionType } from "@/enum/ActionType";
-import { InvestigationModal } from "./InvestigationModal";
+import { InvestigationModal } from "../InvestigationModals/InvestigationModal";
 import { SimpleActionModal } from "./SimpleActionModal";
 import { RoleActionDto } from "@/dto/RoleActionDto";
 

@@ -2,51 +2,55 @@ import { ActionType } from "@/enum/ActionType";
 import { useCallback, useMemo, useState } from "react";
 import {
   DialogBackdrop,
-  DialogRoot,
   DialogBody,
   DialogCloseTrigger,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
-import { PlayerRoleWithDetails } from "../NightCall";
 import { PlayerList } from "./PlayerList";
-import { Text } from "@chakra-ui/react";
+import { DialogRootProvider, Text, useDialog } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { useCreateUpdateQueuedAction } from "@/hooks/useCreateUpdateQueuedAction";
 import { Role } from "@/enum/Role";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonProps } from "@/components/ui/button";
 import { useRoomId } from "@/hooks/useRoomId";
+import { PlayerRoleActionDto } from "@/dto/PlayerRoleActionDto";
+import { useAllPlayerRoles } from "@/hooks/useAllPlayerRoles";
+import { RoleActionDto } from "@/dto/RoleActionDto";
 
-export interface ActionModalProps {
-  isOpen: boolean;
-  onOpenChange: (isOpen: boolean) => void;
-  allPlayers: PlayerRoleWithDetails[];
+export interface SimpleActionModalProps {
+  //isOpen: boolean;
+  //onOpenChange: (isOpen: boolean) => void;
   playerId?: string;
-  actionType: ActionType;
+  action: RoleActionDto;
 }
 
 interface ModalContentProps {
   title: string;
+  dialogTriggerBtn: ButtonProps;
   btnLabel: string;
-  playerList: PlayerRoleWithDetails[];
+  playerList?: PlayerRoleActionDto[];
 }
 
-export const ActionModal = ({
-  allPlayers,
-  isOpen,
+export const SimpleActionModal = ({
+  //isOpen,
   playerId,
-  onOpenChange,
-  actionType,
-}: ActionModalProps) => {
+  // onOpenChange,
+  action,
+}: SimpleActionModalProps) => {
   const roomId = useRoomId();
   const { t } = useTranslation();
-  const close = useCallback(() => onOpenChange(false), [onOpenChange]);
+  const dialog = useDialog();
+
+  //const close = useCallback(() => onOpenChange(false), [onOpenChange]);
+  const { data: allPlayers } = useAllPlayerRoles(roomId);
   const [selectedPlayerId, setSelectedPlayerId] = useState<string>();
   const { mutate: createUpdateQueuedAction } = useCreateUpdateQueuedAction({
     onSuccess: async () => {
-      close();
+      dialog.setOpen(false);
     },
   });
 
@@ -58,24 +62,22 @@ export const ActionModal = ({
         roomId,
         playerId: playerId,
         affectedPlayerId: selectedPlayerId,
-        action: actionType,
+        action: action.type,
       });
     }
-  }, [
-    actionType,
-    createUpdateQueuedAction,
-    playerId,
-    roomId,
-    selectedPlayerId,
-  ]);
+  }, [action, createUpdateQueuedAction, playerId, roomId, selectedPlayerId]);
 
   const modalContent = useMemo<ModalContentProps>(() => {
-    switch (actionType) {
+    switch (action.type) {
       case ActionType.WerewolfKill:
         return {
           title: t("Werewolves, who do we attack?"),
           btnLabel: t("Attack"),
-          playerList: allPlayers.filter(
+          dialogTriggerBtn: {
+            children: t("Attack"),
+            colorPalette: "red",
+          },
+          playerList: allPlayers?.filter(
             (player) => player.role !== Role.WereWolf && player.isAlive
           ),
         };
@@ -83,28 +85,39 @@ export const ActionModal = ({
         return {
           title: t("Who to heal?"),
           btnLabel: t("Heal"),
-          playerList: allPlayers.filter((player) => player.isAlive),
+          dialogTriggerBtn: {
+            children: t("Heal"),
+            colorPalette: "green",
+          },
+          playerList: allPlayers?.filter((player) => player.isAlive),
         };
 
       default:
         return {
           title: t("Who to kill?"),
           btnLabel: t("Attack"),
-          playerList: allPlayers.filter(
+          dialogTriggerBtn: {
+            children: t("Attack"),
+            colorPalette: "red",
+          },
+          playerList: allPlayers?.filter(
             (player) => player.id != playerId && player.isAlive
           ),
         };
     }
-  }, [actionType, allPlayers, playerId, t]);
+  }, [action, allPlayers, playerId, t]);
 
   return (
-    <DialogRoot
-      placement="center"
-      lazyMount
-      open={isOpen}
-      onOpenChange={(x) => onOpenChange(x.open)}
-    >
+    <DialogRootProvider value={dialog}>
       <DialogBackdrop />
+      <DialogTrigger>
+        <Button
+          {...modalContent.dialogTriggerBtn}
+          disabled={!action.enabled}
+          size="sm"
+          minW="5rem"
+        />
+      </DialogTrigger>
       <DialogContent>
         <DialogCloseTrigger />
         <DialogHeader>
@@ -114,7 +127,7 @@ export const ActionModal = ({
         </DialogHeader>
         <DialogBody>
           <PlayerList
-            players={modalContent.playerList}
+            players={modalContent.playerList ?? []}
             onPlayerSelect={setSelectedPlayerId}
             selectedPlayer={selectedPlayerId}
           />
@@ -125,6 +138,6 @@ export const ActionModal = ({
           </Button>
         </DialogFooter>
       </DialogContent>
-    </DialogRoot>
+    </DialogRootProvider>
   );
 };

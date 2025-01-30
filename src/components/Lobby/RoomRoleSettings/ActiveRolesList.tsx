@@ -10,12 +10,10 @@ interface RolesToShow {
 }
 export const ActiveRolesList = ({
   widthOfContainer,
-  justify = "flex-start",
   numberOfWerewolves = 1,
   activeRoles = [],
 }: {
   widthOfContainer: number | null;
-  justify?: "center" | "flex-start" | "flex-end";
   numberOfWerewolves?: number;
   activeRoles?: Role[];
 }) => {
@@ -34,7 +32,7 @@ export const ActiveRolesList = ({
   }, [data, widthOfContainer]);
 
   return (
-    <HStack justify={justify}>
+    <HStack>
       <Box position="relative" minW="32px" minH="32px" w="32px" h="32px">
         <img src={werewolfImg} alt="werewolf" />
         {numberOfWerewolves > 1 ? (

@@ -1,6 +1,6 @@
 import { useEndGame } from "@/hooks/useEndGame";
-import { IconButton, Skeleton, Stack } from "@chakra-ui/react";
-import { Button } from "../ui/button";
+import { Skeleton, Stack } from "@chakra-ui/react";
+import { Button } from "../../ui/button";
 import { useRoomId } from "@/hooks/useRoomId";
 import { useDayDetails } from "@/hooks/useDayDetails";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
@@ -17,7 +17,7 @@ import {
   DrawerRoot,
   DrawerTitle,
   DrawerTrigger,
-} from "../ui/drawer";
+} from "../../ui/drawer";
 import { IconSettings } from "@tabler/icons-react";
 
 export const ModeratorView = () => {

@@ -58,7 +58,7 @@ export const LeaveRoomButton = () => {
               </Alert.Root>
             ) : null}
             {t(
-              "You will not be able to play if you join the room again while a game is in progress."
+              "You will not be able to participate if you join the room again while a game is in progress."
             )}
           </Stack>
         </DialogBody>

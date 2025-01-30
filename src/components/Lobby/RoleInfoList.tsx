@@ -5,9 +5,10 @@ import React from "react";
 export const RoleInfoList = ({ roles }: { roles: RoleInfo[] }) => {
   return (
     <Stack gap={3}>
-      {roles.map((role) => (
+      {roles.map((role, index) => (
         <React.Fragment key={role.roleName}>
-          <Separator />
+          {index > 0 ? <Separator /> : null}
+
           <HStack gap={5}>
             <VStack minW="4rem" gap={1}>
               <img width={36} src={role.imgSrc} alt={role.label} />

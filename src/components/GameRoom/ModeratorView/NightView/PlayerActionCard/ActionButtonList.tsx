@@ -1,0 +1,33 @@
+import { RoleActionDto } from "@/dto/RoleActionDto";
+import { Group, Stack, Text } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
+import { DisabledActionsTooltip } from "./DisabledActionsTooltip";
+import { ActionModalBtnTrigger } from "../ActionModals/ActionModalBtnTrigger";
+
+export const ActionButtonList = ({
+  playerId,
+  actions,
+  isVisible,
+}: {
+  playerId?: string;
+  actions?: RoleActionDto[];
+  isVisible: boolean;
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <Stack style={{ display: isVisible ? "inherit" : "none" }}>
+      <Group>
+        <Text fontSize="lg" textStyle="accent">
+          {t("Choose a player to...")}
+        </Text>
+        <DisabledActionsTooltip actions={actions} />
+      </Group>
+      <Group justifyContent="center">
+        {actions?.map((action) => {
+          return <ActionModalBtnTrigger action={action} playerId={playerId} />;
+        })}
+      </Group>
+    </Stack>
+  );
+};

@@ -1,0 +1,81 @@
+import { Badge, defineStyle, SimpleGrid, Stack } from "@chakra-ui/react";
+import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
+import { PlayerDto } from "@/dto/PlayerDto";
+import { Avatar } from "@/components/ui/avatar";
+
+export interface PlayerListProps {
+  players: PlayerDto[];
+  selectedPlayer: string | undefined;
+  onPlayerSelect: (selectedPlayerId: string | undefined) => void;
+}
+
+export const PlayerList = ({
+  players,
+  selectedPlayer,
+  onPlayerSelect,
+}: PlayerListProps) => {
+  const { getAvatarImageSrcForIndex } = usePlayerAvatar();
+  const ringCss = defineStyle({
+    outlineWidth: "2px",
+    outlineColor: "blue.500",
+    outlineOffset: "2px",
+    outlineStyle: "solid",
+  });
+  return (
+    // <SimpleGrid columns={{ base: 2, xs: 3, sm: 5, md: 5 }} gap={5}>
+    //   {players.map((player) => {
+    //     return (
+    //       <Stack align="center" gap={1}>
+    //         <Avatar.Root
+    //           variant="subtle"
+    //           borderRadius="xl"
+    //           size="2xl"
+    //           onClick={() => onPlayerSelect(player.id)}
+    //           key={player.id}
+    //           style={{ cursor: "pointer" }}
+    //           css={selectedPlayer === player.id ? ringCss : undefined}
+    //         >
+    //           <Avatar.Image
+    //             marginTop={1}
+    //             src={getAvatarImageSrcForIndex(player.avatarIndex)}
+    //           />
+    //         </Avatar.Root>
+    //         <Badge
+    //           colorPalette={selectedPlayer === player.id ? "blue" : undefined}
+    //         >
+    //           {player.nickname}
+    //         </Badge>
+    //       </Stack>
+    //     );
+    //   })}
+    // </SimpleGrid>
+    <SimpleGrid columns={{ base: 2, xs: 3, sm: 5, md: 5 }} gap={5}>
+      {players?.map((player) => {
+        return (
+          <Stack key={player.id} gap={0} align="center">
+            <Avatar
+              size="2xl"
+              shape="rounded"
+              src={getAvatarImageSrcForIndex(player.avatarIndex)}
+              colorPalette={selectedPlayer === player.id ? "blue" : undefined}
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                if (selectedPlayer === player.id) {
+                  onPlayerSelect(undefined);
+                  return;
+                }
+                onPlayerSelect(player.id);
+              }}
+              css={selectedPlayer === player.id ? ringCss : undefined}
+            />
+            <Badge
+              colorPalette={selectedPlayer === player.id ? "blue" : undefined}
+            >
+              {player.nickname}
+            </Badge>
+          </Stack>
+        );
+      })}
+    </SimpleGrid>
+  );
+};

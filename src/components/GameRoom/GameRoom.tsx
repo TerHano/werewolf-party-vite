@@ -1,7 +1,7 @@
 import { useRoomId } from "@/hooks/useRoomId";
 import { Skeleton } from "../ui/skeleton";
-import { ModeratorView } from "./ModeratorView";
-import { PlayerView } from "./PlayerView";
+import { ModeratorView } from "./ModeratorView/ModeratorView";
+import { PlayerView } from "@/components/GameRoom/PlayerView/PlayerView";
 import { WinConditionDialog } from "./WinConditionDialog";
 import { useIsModerator } from "@/hooks/useIsModerator";
 import { useSocketConnection } from "@/hooks/useSocketConnection";

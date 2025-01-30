@@ -4,10 +4,9 @@ import { useMemo } from "react";
 import { QueuedActionDto } from "@/dto/QueuedActionDto";
 import { Role } from "@/enum/Role";
 import { PlayerRoleWithDetails } from "../NightCall";
-import { ActionButtonList } from "./ActionButtonList";
-import { QueuedActionCard } from "./QueuedActionCard";
 import { PlayerActionCardHeader } from "./PlayerActionCardHeader";
 import { PlayerActionCardBody } from "./PlayerActionCardBody";
+import { PlayerActionCardFooter } from "@/components/GameRoom/ModeratorView/NightView/PlayerActionCard/PlayerActionCardFooter";
 
 export const WerewolfPlayersActionCard = ({
   allPlayerDetails,
@@ -26,7 +25,7 @@ export const WerewolfPlayersActionCard = ({
     (player) => player.role === Role.WereWolf
   );
 
-  const roleActions = werewolfPlayers[0]?.actions;
+  const roleActions = werewolfPlayers[0]?.actions ?? [];
 
   return (
     <Card.Root alignItems="center" width="100%" borderBottomRadius={0}>
@@ -40,14 +39,11 @@ export const WerewolfPlayersActionCard = ({
         <PlayerActionCardBody playerDetails={werewolfPlayers} />
       </Card.Body>
       <Card.Footer>
-        {!queuedAction ? (
-          <ActionButtonList actions={roleActions} />
-        ) : (
-          <QueuedActionCard
-            queuedAction={queuedAction}
-            allPlayersDetails={allPlayerDetails}
-          />
-        )}
+        <PlayerActionCardFooter
+          actions={roleActions}
+          queuedAction={queuedAction}
+          allPlayerDetails={allPlayerDetails}
+        />
       </Card.Footer>
     </Card.Root>
   );

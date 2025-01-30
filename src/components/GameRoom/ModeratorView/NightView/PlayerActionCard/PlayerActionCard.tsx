@@ -4,10 +4,9 @@ import { useMemo } from "react";
 import { QueuedActionDto } from "@/dto/QueuedActionDto";
 import { Role } from "@/enum/Role";
 import { PlayerRoleWithDetails } from "../NightCall";
-import { ActionButtonList } from "./ActionButtonList";
-import { QueuedActionCard } from "./QueuedActionCard";
 import { PlayerActionCardHeader } from "./PlayerActionCardHeader";
 import { PlayerActionCardBody } from "./PlayerActionCardBody";
+import { PlayerActionCardFooter } from "@/components/GameRoom/ModeratorView/NightView/PlayerActionCard/PlayerActionCardFooter";
 
 export const PlayerActionCard = ({
   playerDetails,
@@ -43,17 +42,12 @@ export const PlayerActionCard = ({
         <PlayerActionCardBody playerDetails={[playerDetails]} />
       </Card.Body>
       <Card.Footer>
-        {!queuedAction ? (
-          <ActionButtonList
-            playerId={playerDetails.id}
-            actions={playerRoleActions}
-          />
-        ) : (
-          <QueuedActionCard
-            queuedAction={queuedAction}
-            allPlayersDetails={allPlayerDetails}
-          />
-        )}
+        <PlayerActionCardFooter
+          playerId={playerDetails.id}
+          actions={playerRoleActions}
+          queuedAction={queuedAction}
+          allPlayerDetails={allPlayerDetails}
+        />
       </Card.Footer>
     </Card.Root>
   );

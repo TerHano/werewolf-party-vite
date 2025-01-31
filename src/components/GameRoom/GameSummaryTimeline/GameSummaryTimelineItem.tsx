@@ -12,11 +12,12 @@ import { Role } from "@/enum/Role";
 import { useRoleActionHelper } from "@/hooks/useRoleActionHelper";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Image } from "@chakra-ui/react";
+import { Image, Tokens } from "@chakra-ui/react";
 import voteImg from "@/assets/icons/vote-board.png";
 
 interface TimelineLabels {
   iconSrc?: string;
+  iconOutline: Tokens["colors"];
   title?: string;
   description: string;
 }
@@ -42,6 +43,7 @@ export const GameSummaryTimelineItem = ({
     switch (action.action) {
       case ActionType.VotedOut:
         return {
+          iconOutline: "yellow.500",
           iconSrc: voteImg,
           title: t("Group Vote"),
           description: `The villagers chose to lynch ${action.affectedPlayer.nickname}`,
@@ -49,18 +51,21 @@ export const GameSummaryTimelineItem = ({
 
       case ActionType.WerewolfKill:
         return {
+          iconOutline: "red.500",
           iconSrc: roleDoingAction?.imgSrc,
           title: t("Werewolves"),
           description: `${getActionButtonProps(action.action).pastTenseLabel} ${action.affectedPlayer.nickname}`,
         };
       case ActionType.Revive:
         return {
+          iconOutline: "green.500",
           iconSrc: roleDoingAction?.imgSrc,
           title: roleDoingAction?.label,
           description: `${getActionButtonProps(action.action).pastTenseLabel} ${action.affectedPlayer.nickname}`,
         };
       case ActionType.Investigate:
         return {
+          iconOutline: "blue.500",
           iconSrc: roleDoingAction?.imgSrc,
           title: roleDoingAction?.label,
           description: `${getActionButtonProps(action.action).pastTenseLabel} ${action.affectedPlayer.nickname}`,
@@ -68,6 +73,7 @@ export const GameSummaryTimelineItem = ({
 
       case ActionType.Suicide:
         return {
+          iconOutline: "red.700",
           iconSrc: roleDoingAction?.imgSrc,
           title: roleDoingAction?.label,
           description: `${affectedPlayerRole?.label} decided to take their own life`,
@@ -76,6 +82,7 @@ export const GameSummaryTimelineItem = ({
       case ActionType.VigilanteKill:
       case ActionType.Kill:
         return {
+          iconOutline: "red.500",
           iconSrc: roleDoingAction?.imgSrc,
           title: roleDoingAction?.label,
           description: `${getActionButtonProps(action.action).pastTenseLabel} ${action.affectedPlayer.nickname}`,
@@ -83,6 +90,7 @@ export const GameSummaryTimelineItem = ({
 
       default:
         return {
+          iconOutline: "gray.500",
           title: t("Unkown"),
           description: `Unknown`,
         };
@@ -99,7 +107,12 @@ export const GameSummaryTimelineItem = ({
 
   return (
     <TimelineItem>
-      <TimelineConnector>
+      <TimelineConnector
+        outlineWidth="1px"
+        outlineOffset="1px"
+        outlineStyle="solid"
+        outlineColor={timelineLabels.iconOutline}
+      >
         <Image src={timelineLabels.iconSrc} width="24px" />
       </TimelineConnector>
       <TimelineContent>

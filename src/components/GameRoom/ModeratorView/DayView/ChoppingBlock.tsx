@@ -15,7 +15,7 @@ export const ChoppingBlock = () => {
 
   const { data: allPlayerRoles } = useAllPlayerRoles(roomId);
   const alivePlayers = allPlayerRoles?.filter((player) => player.isAlive);
-  const [selectedPlayer, setSelectedPlayer] = useState<string | undefined>();
+  const [selectedPlayer, setSelectedPlayer] = useState<number | undefined>();
   const { mutate: votePlayerOutMutate } = useVotePlayerOut();
 
   return (
@@ -62,7 +62,7 @@ export const ChoppingBlock = () => {
                 onClick={() => {
                   votePlayerOutMutate({
                     roomId,
-                    playerId: undefined,
+                    playerRoleId: undefined,
                   });
                 }}
               >
@@ -74,7 +74,7 @@ export const ChoppingBlock = () => {
                 onClick={() => {
                   votePlayerOutMutate({
                     roomId,
-                    playerId: selectedPlayer,
+                    playerRoleId: selectedPlayer,
                   });
                 }}
               >

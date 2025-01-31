@@ -26,7 +26,7 @@ export const PlayerActionCard = ({
       );
     }
     return allQueuedActions.find(
-      (action) => action.playerId === playerDetails.id
+      (action) => action.playerRoleId === playerDetails.id
     );
   }, [allQueuedActions, playerDetails.id, playerDetails.role]);
 
@@ -43,7 +43,7 @@ export const PlayerActionCard = ({
       </Card.Body>
       <Card.Footer>
         <PlayerActionCardFooter
-          playerId={playerDetails.id}
+          playerRoleId={playerDetails.id}
           actions={playerRoleActions}
           queuedAction={queuedAction}
           allPlayerDetails={allPlayerDetails}

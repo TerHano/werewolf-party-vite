@@ -29,7 +29,7 @@ import { IconSearch } from "@tabler/icons-react";
 import { WerewolfInvestigationResult } from "@/components/GameRoom/ModeratorView/NightView/InvestigationModals/WerewolfInvestigationResult";
 
 export interface InvestigationProps {
-  playerId: string;
+  playerRoleId: number;
   action: RoleActionDto;
 }
 
@@ -39,7 +39,7 @@ interface InvestigationModalProps {
 }
 
 export const InvestigationModal = ({
-  playerId,
+  playerRoleId,
   action,
 }: InvestigationProps) => {
   const roomId = useRoomId();
@@ -47,7 +47,7 @@ export const InvestigationModal = ({
   const { data: allPlayers } = useAllPlayerRoles(roomId);
   const [step, setStep] = useState(0);
 
-  const [selectedPlayerId, setSelectedPlayerId] = useState<string>();
+  const [selectedPlayerRoleId, setSelectedPlayerRoleId] = useState<number>();
   const { mutate: createUpdateQueuedAction } = useCreateUpdateQueuedAction({
     onSuccess: async () => {
       setStep(1);
@@ -55,19 +55,26 @@ export const InvestigationModal = ({
   });
 
   const alivePlayers =
-    allPlayers?.filter((player) => player.isAlive && player.id !== playerId) ??
-    [];
+    allPlayers?.filter(
+      (player) => player.isAlive && player.id !== playerRoleId
+    ) ?? [];
 
   const onSubmit = useCallback(() => {
-    if (selectedPlayerId) {
+    if (selectedPlayerRoleId) {
       createUpdateQueuedAction({
         roomId,
-        playerId: playerId,
-        affectedPlayerId: selectedPlayerId,
+        playerRoleId: playerRoleId,
+        affectedPlayerRoleId: selectedPlayerRoleId,
         action: action.type,
       });
     }
-  }, [action, createUpdateQueuedAction, playerId, roomId, selectedPlayerId]);
+  }, [
+    action.type,
+    createUpdateQueuedAction,
+    playerRoleId,
+    roomId,
+    selectedPlayerRoleId,
+  ]);
 
   const investigationModalProps = useMemo<InvestigationModalProps>(() => {
     switch (action.type) {
@@ -77,12 +84,12 @@ export const InvestigationModal = ({
           resultNode: (
             <WerewolfInvestigationResult
               allPlayers={allPlayers ?? []}
-              playerId={playerId}
+              playerRoleId={selectedPlayerRoleId}
             />
           ),
         };
     }
-  }, [action.type, allPlayers, playerId, t]);
+  }, [action.type, allPlayers, selectedPlayerRoleId, t]);
 
   return (
     <DialogRoot size="md" placement="center" onExitComplete={() => setStep(0)}>
@@ -113,10 +120,10 @@ export const InvestigationModal = ({
 
             <StepsContent index={0}>
               <PlayerList
-                selectedPlayer={selectedPlayerId}
+                selectedPlayer={selectedPlayerRoleId}
                 players={alivePlayers}
-                onPlayerSelect={(playerId) => {
-                  setSelectedPlayerId(playerId);
+                onPlayerSelect={(playerRoleId) => {
+                  setSelectedPlayerRoleId(playerRoleId);
                 }}
               />
             </StepsContent>

@@ -5,12 +5,12 @@ import { QueuedActionCard } from "@/components/GameRoom/ModeratorView/NightView/
 import { QueuedActionDto } from "@/dto/QueuedActionDto";
 
 export const PlayerActionCardFooter = ({
-  playerId,
+  playerRoleId,
   actions,
   queuedAction,
   allPlayerDetails,
 }: {
-  playerId?: string;
+  playerRoleId?: number;
   actions: RoleActionDto[];
   queuedAction: QueuedActionDto | undefined;
   allPlayerDetails: PlayerRoleWithDetails[];
@@ -19,7 +19,7 @@ export const PlayerActionCardFooter = ({
     <>
       <ActionButtonList
         isVisible={!queuedAction}
-        playerId={playerId}
+        playerRoleId={playerRoleId}
         actions={actions}
       />
       {queuedAction ? (

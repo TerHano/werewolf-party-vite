@@ -2,7 +2,7 @@ import { ActionType } from "@/enum/ActionType";
 
 export interface QueuedActionDto {
   id: number;
-  playerId: string;
+  playerRoleId?: number;
   action: ActionType;
-  affectedPlayerId: string;
+  affectedPlayerRoleId: number;
 }

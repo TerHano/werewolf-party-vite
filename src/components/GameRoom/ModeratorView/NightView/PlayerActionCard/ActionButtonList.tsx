@@ -5,11 +5,11 @@ import { DisabledActionsTooltip } from "./DisabledActionsTooltip";
 import { ActionModalBtnTrigger } from "../ActionModals/ActionModalBtnTrigger";
 
 export const ActionButtonList = ({
-  playerId,
+  playerRoleId,
   actions,
   isVisible,
 }: {
-  playerId?: string;
+  playerRoleId?: number;
   actions?: RoleActionDto[];
   isVisible: boolean;
 }) => {
@@ -25,7 +25,12 @@ export const ActionButtonList = ({
       </Group>
       <Group justifyContent="center">
         {actions?.map((action) => {
-          return <ActionModalBtnTrigger action={action} playerId={playerId} />;
+          return (
+            <ActionModalBtnTrigger
+              action={action}
+              playerRoleId={playerRoleId}
+            />
+          );
         })}
       </Group>
     </Stack>

@@ -49,7 +49,7 @@ export const ManagePlayersButton = () => {
   const onUpdateModerator = useCallback(
     (playerId: string) => {
       updateModeratorMutate({
-        newModeratorId: playerId,
+        NewModeratorPlayerRoomId: playerId,
         roomId,
       });
     },

@@ -1,4 +1,4 @@
 export interface KickPlayerDto {
-  playerToKickId: string;
+  playerToKickId: number;
   roomId: string;
 }

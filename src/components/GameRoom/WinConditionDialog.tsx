@@ -18,6 +18,7 @@ import { useEndGame } from "@/hooks/useEndGame";
 import { useStartGame } from "@/hooks/useStartGame";
 import werewolfImg from "@/assets/icons/roles/werewolf-color.png";
 import villagerImg from "@/assets/icons/roles/villager-color.png";
+import { GameSummaryTimeline } from "@/components/GameRoom/GameSummaryTimeline/GameSummaryTimeline";
 
 export const WinConditionDialog = ({
   isModerator,
@@ -29,6 +30,7 @@ export const WinConditionDialog = ({
   const { t } = useTranslation();
   const roomId = useRoomId();
   const { data: winCondition, refetch } = useWinCondition(roomId);
+
   const { mutate: startGameMutate } = useStartGame({
     onSuccess: async () => {
       setIsOpen(false);
@@ -71,20 +73,21 @@ export const WinConditionDialog = ({
           ) : null}
 
           <DialogBody>
-            <Stack mt="3rem" gap={0} align="center">
+            <Stack mt="2rem" gap={0} align="center">
               <Image
-                width="13rem"
+                width="8rem"
                 src={werewolvesWin ? werewolfImg : villagerImg}
               />
               <Badge
-                size="lg"
+                size="md"
                 variant="subtle"
                 colorPalette={werewolvesWin ? "red" : "green"}
               >
-                <Text textStyle="accent" fontSize="3xl">
+                <Text textStyle="accent" fontSize="2xl">
                   {werewolvesWin ? t("Werewolves Win") : t("Villagers Win")}
                 </Text>
               </Badge>
+              <GameSummaryTimeline />
             </Stack>
           </DialogBody>
           {isModerator ? (
@@ -97,7 +100,7 @@ export const WinConditionDialog = ({
                     startGameMutate({ roomId });
                   }}
                 >
-                  {t("Start New Game")}
+                  {t("Play Again")}
                 </Button>
                 <Button
                   w="full"

@@ -27,7 +27,7 @@ export const QueuedActionCard = ({
     [deleteQueuedAction]
   );
   const affectedPlayer = allPlayersDetails.find(
-    (player) => player.id === queuedAction.affectedPlayerId
+    (player) => player.id === queuedAction.affectedPlayerRoleId
   );
 
   if (!affectedPlayer) {

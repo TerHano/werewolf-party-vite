@@ -1,8 +1,10 @@
 import { Role } from "@/enum/Role";
 import { RoleActionDto } from "./RoleActionDto";
-import { PlayerDto } from "./PlayerDto";
 
-export interface PlayerRoleActionDto extends PlayerDto {
+export interface PlayerRoleActionDto {
+  id: number;
+  nickname: string;
+  avatarIndex: number;
   role: Role;
   actions: RoleActionDto[];
   isAlive: boolean;

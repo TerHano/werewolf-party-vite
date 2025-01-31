@@ -2,11 +2,12 @@ import { Badge, defineStyle, SimpleGrid, Stack } from "@chakra-ui/react";
 import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
 import { PlayerDto } from "@/dto/PlayerDto";
 import { Avatar } from "@/components/ui/avatar";
+import { PlayerRoleActionDto } from "@/dto/PlayerRoleActionDto";
 
 export interface PlayerListProps {
-  players: PlayerDto[];
-  selectedPlayer: string | undefined;
-  onPlayerSelect: (selectedPlayerId: string | undefined) => void;
+  players: PlayerDto[] | PlayerRoleActionDto[];
+  selectedPlayer: number | undefined;
+  onPlayerSelect: (selectedPlayerId: number | undefined) => void;
 }
 
 export const PlayerList = ({

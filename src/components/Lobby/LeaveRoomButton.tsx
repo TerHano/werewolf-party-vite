@@ -31,7 +31,7 @@ export const LeaveRoomButton = () => {
     <DialogRoot role="alertdialog">
       <DialogTrigger asChild>
         <Button size="sm" variant="subtle" colorPalette="red">
-          <IconLogout2 /> {t("Leave Room")}
+          <IconLogout2 /> {t("Leave")}
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -57,9 +57,11 @@ export const LeaveRoomButton = () => {
                 </Alert.Content>
               </Alert.Root>
             ) : null}
-            {t(
-              "You will not be able to participate if you join the room again while a game is in progress."
-            )}
+            <Text fontSize="xs">
+              {t(
+                "You will not be able to participate if you join the room again while a game is in progress."
+              )}
+            </Text>
           </Stack>
         </DialogBody>
         <DialogFooter>

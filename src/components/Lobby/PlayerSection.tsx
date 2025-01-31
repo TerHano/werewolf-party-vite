@@ -62,7 +62,7 @@ export const PlayersSection = ({
     },
   });
   const onPlayerKicked = useCallback(
-    (kickedPlayerId: string) => {
+    (kickedPlayerId: number) => {
       if (currentPlayer?.id === kickedPlayerId) {
         toaster.create({
           title: t("You Were Kicked!"),
@@ -78,9 +78,9 @@ export const PlayersSection = ({
   );
 
   const onUpdateModerator = useCallback(
-    (playerId: string) => {
+    (playerId: number) => {
       updateModeratorMutate({
-        newModeratorId: playerId,
+        NewModeratorPlayerRoomId: playerId,
         roomId,
       });
     },
@@ -88,7 +88,7 @@ export const PlayersSection = ({
   );
 
   const onKickPlayer = useCallback(
-    (playerId: string) => {
+    (playerId: number) => {
       kickPlayerMutate({
         playerToKickId: playerId,
         roomId,
@@ -154,6 +154,7 @@ export const PlayersSection = ({
                 {t("Invite Some Friends")}
               </Text>
               <Text
+                textAlign="center"
                 lineHeight="shorter"
                 color="gray.400"
                 fontSize="lg"

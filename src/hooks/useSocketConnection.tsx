@@ -7,8 +7,8 @@ import { HubConnectionState } from "@microsoft/signalr";
 interface UseSocketConnection {
   onLobbyUpdated?: () => void;
   onGameStateChanged?: () => void;
-  onModeratorUpdated?: (moderatorId: string) => void;
-  onPlayerKicked?: (kickedPlayerId: string) => void;
+  onModeratorUpdated?: (moderatorId: number) => void;
+  onPlayerKicked?: (kickedPlayerId: number) => void;
   onReconnect?: () => void;
   onRoomRoleSettingsUpdated?: () => void;
   onDayOrTimeUpdated?: () => void;

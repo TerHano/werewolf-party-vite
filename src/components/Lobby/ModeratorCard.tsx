@@ -19,6 +19,8 @@ import { useTranslation } from "react-i18next";
 import { useModerator } from "@/hooks/useModerator";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { Skeleton, SkeletonCircle } from "../ui/skeleton";
+import { AddEditPlayerModal } from "@/components/Lobby/AddEditPlayerModal";
+import { useUpdateCurrentPlayerDetails } from "@/hooks/useUpdateCurrentPlayerDetails";
 
 export const ModeratorCard = () => {
   const { t } = useTranslation();
@@ -28,6 +30,7 @@ export const ModeratorCard = () => {
     isLoading: isModeratorLoading,
     refetch: refetchModerator,
   } = useModerator(roomId);
+  const { mutate: updatePlayerDetailsMutate } = useUpdateCurrentPlayerDetails();
   const { data: currentPlayer } = useCurrentPlayer(roomId);
   const { getAvatarImageSrcForIndex } = usePlayerAvatar();
 
@@ -39,7 +42,7 @@ export const ModeratorCard = () => {
   }, []);
 
   const onModeratorUpdated = useCallback(
-    (newModeratorId: string) => {
+    (newModeratorId: number) => {
       if (newModeratorId === currentPlayer?.id) {
         toaster.create({
           title: t("You're In Charge!"),
@@ -93,10 +96,23 @@ export const ModeratorCard = () => {
                   />
                 </SkeletonCircle>
                 <Skeleton loading={isModeratorLoading}>
-                  <Text textStyle="accent" fontSize="xl" fontWeight={500}>
+                  <Text
+                    truncate
+                    textStyle="accent"
+                    fontSize="md"
+                    fontWeight={500}
+                  >
                     {currentModerator?.nickname}
                   </Text>
                 </Skeleton>
+                {isModeratorCurrentPlayer ? (
+                  <AddEditPlayerModal
+                    isEdit
+                    submitCallback={(playerDetails) => {
+                      updatePlayerDetailsMutate(playerDetails);
+                    }}
+                  />
+                ) : null}
               </Group>
               <Group>
                 <Badge variant="subtle" colorPalette="yellow">

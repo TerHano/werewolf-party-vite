@@ -5,18 +5,18 @@ import { RoleActionDto } from "@/dto/RoleActionDto";
 
 export interface ActionModalBtnTriggerProps {
   action: RoleActionDto;
-  playerId?: string;
+  playerRoleId?: number;
 }
 
 export const ActionModalBtnTrigger = ({
   action,
-  playerId,
+  playerRoleId,
 }: ActionModalBtnTriggerProps) => {
   switch (action.type) {
     case ActionType.Investigate:
-      if (!playerId) return null;
-      return <InvestigationModal playerId={playerId} action={action} />;
+      if (!playerRoleId) return null;
+      return <InvestigationModal playerRoleId={playerRoleId} action={action} />;
     default:
-      return <SimpleActionModal playerId={playerId} action={action} />;
+      return <SimpleActionModal playerRoleId={playerRoleId} action={action} />;
   }
 };

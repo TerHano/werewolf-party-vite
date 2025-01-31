@@ -1,4 +1,4 @@
 export interface UpdateModeratorDto {
-  newModeratorId: string;
+  NewModeratorPlayerRoomId: number;
   roomId: string;
 }

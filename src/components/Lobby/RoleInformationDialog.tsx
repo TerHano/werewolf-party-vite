@@ -25,7 +25,7 @@ export const RoleInformationDialog = ({
   return (
     <DialogRoot scrollBehavior="inside">
       <DialogTrigger asChild>
-        <IconButton borderRadius="full" variant="outline" size="2xs">
+        <IconButton borderRadius="full" variant="subtle" size="2xs">
           <IconQuestionMark />
         </IconButton>
       </DialogTrigger>

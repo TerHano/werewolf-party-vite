@@ -7,15 +7,16 @@ import { VStack, Image, Text, Highlight } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 export const WerewolfInvestigationResult = ({
-  playerId,
+  playerRoleId,
   allPlayers,
 }: {
-  playerId: string | undefined;
+  playerRoleId: number | undefined;
   allPlayers: PlayerRoleActionDto[];
 }) => {
   const { t } = useTranslation();
-  const suspect = allPlayers.find((player) => player.id === playerId);
-  const isWerewolf = suspect?.role === Role.WereWolf;
+  const suspect = allPlayers.find((player) => player.id === playerRoleId);
+  const isWerewolf =
+    suspect?.role == Role.WereWolf || suspect?.role == Role.Cursed;
 
   if (isWerewolf) {
     return (

@@ -124,7 +124,7 @@ export const AddEditPlayerModal = ({
         <DialogBackdrop />
         {isEdit && (
           <DialogTrigger>
-            <IconButton size="sm" variant="ghost" colorScheme="blue">
+            <IconButton size="xs" variant="plain" colorScheme="blue">
               <IconPencil />
             </IconButton>
           </DialogTrigger>

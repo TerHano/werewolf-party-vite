@@ -24,7 +24,7 @@ import { RoleActionDto } from "@/dto/RoleActionDto";
 export interface SimpleActionModalProps {
   //isOpen: boolean;
   //onOpenChange: (isOpen: boolean) => void;
-  playerId?: string;
+  playerRoleId?: number;
   action: RoleActionDto;
 }
 
@@ -37,7 +37,7 @@ interface ModalContentProps {
 
 export const SimpleActionModal = ({
   //isOpen,
-  playerId,
+  playerRoleId,
   // onOpenChange,
   action,
 }: SimpleActionModalProps) => {
@@ -47,7 +47,9 @@ export const SimpleActionModal = ({
 
   //const close = useCallback(() => onOpenChange(false), [onOpenChange]);
   const { data: allPlayers } = useAllPlayerRoles(roomId);
-  const [selectedPlayerId, setSelectedPlayerId] = useState<string>();
+  const [selectedPlayerId, setSelectedPlayerId] = useState<
+    number | undefined
+  >();
   const { mutate: createUpdateQueuedAction } = useCreateUpdateQueuedAction({
     onSuccess: async () => {
       dialog.setOpen(false);
@@ -60,12 +62,18 @@ export const SimpleActionModal = ({
     if (selectedPlayerId) {
       createUpdateQueuedAction({
         roomId,
-        playerId: playerId,
-        affectedPlayerId: selectedPlayerId,
+        playerRoleId: playerRoleId,
+        affectedPlayerRoleId: selectedPlayerId,
         action: action.type,
       });
     }
-  }, [action, createUpdateQueuedAction, playerId, roomId, selectedPlayerId]);
+  }, [
+    action,
+    createUpdateQueuedAction,
+    playerRoleId,
+    roomId,
+    selectedPlayerId,
+  ]);
 
   const modalContent = useMemo<ModalContentProps>(() => {
     switch (action.type) {
@@ -101,14 +109,14 @@ export const SimpleActionModal = ({
             colorPalette: "red",
           },
           playerList: allPlayers?.filter(
-            (player) => player.id != playerId && player.isAlive
+            (player) => player.id != playerRoleId && player.isAlive
           ),
         };
     }
-  }, [action, allPlayers, playerId, t]);
+  }, [action.type, allPlayers, playerRoleId, t]);
 
   return (
-    <DialogRootProvider value={dialog}>
+    <DialogRootProvider placement="center" value={dialog}>
       <DialogBackdrop />
       <DialogTrigger>
         <Button

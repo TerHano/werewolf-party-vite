@@ -1,5 +1,5 @@
 export interface PlayerDto {
-  id: string;
+  id: number;
   nickname: string;
   avatarIndex: number;
 }

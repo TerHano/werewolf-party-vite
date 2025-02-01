@@ -27,7 +27,7 @@ export const WerewolfInvestigationResult = ({
             styles={{ bg: "green.subtle", color: "green.fg" }}
             query={t("IS")}
           >
-            {t(`${suspect.nickname} IS a Werewolf!`)}
+            {t(`YIKES! ${suspect.nickname} IS a Werewolf!`)}
           </Highlight>
         </Text>
       </VStack>

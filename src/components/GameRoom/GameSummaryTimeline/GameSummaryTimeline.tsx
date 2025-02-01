@@ -1,8 +1,7 @@
 import { useRoomId } from "@/hooks/useRoomId";
 import { useGameSummary } from "@/hooks/useGameSummary";
-import { Stack, Text } from "@chakra-ui/react";
-import { DaySummary } from "@/components/GameRoom/GameSummaryTimeline/DaySummary";
-import { NightSummary } from "@/components/GameRoom/GameSummaryTimeline/NightSummary";
+import { Separator, Stack, Text } from "@chakra-ui/react";
+import { NightDaySummary } from "@/components/GameRoom/GameSummaryTimeline/NightDaySummary";
 import { useTranslation } from "react-i18next";
 
 export const GameSummaryTimeline = () => {
@@ -15,13 +14,20 @@ export const GameSummaryTimeline = () => {
       <Text fontSize="md">{t("Game History")}</Text>
       {gameSummary?.map((summary) => {
         return (
-          <Stack>
-            <NightSummary
-              night={summary.night}
-              actions={summary.nightActions}
-            />
-            <DaySummary day={summary.night} actions={summary.dayActions} />
-          </Stack>
+          <>
+            <Stack gap={2}>
+              <NightDaySummary
+                night={summary.night}
+                actions={summary.nightActions}
+              />
+              <NightDaySummary
+                isDay
+                night={summary.night}
+                actions={summary.dayActions}
+              />
+              <Separator />
+            </Stack>
+          </>
         );
       })}
     </Stack>

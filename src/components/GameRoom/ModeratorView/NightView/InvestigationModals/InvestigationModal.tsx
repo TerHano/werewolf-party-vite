@@ -27,6 +27,7 @@ import { useAllPlayerRoles } from "@/hooks/useAllPlayerRoles";
 import { RoleActionDto } from "@/dto/RoleActionDto";
 import { IconSearch } from "@tabler/icons-react";
 import { WerewolfInvestigationResult } from "@/components/GameRoom/ModeratorView/NightView/InvestigationModals/WerewolfInvestigationResult";
+import { useQueryClient } from "@tanstack/react-query";
 
 export interface InvestigationProps {
   playerRoleId: number;
@@ -46,12 +47,14 @@ export const InvestigationModal = ({
   const { t } = useTranslation();
   const { data: allPlayers } = useAllPlayerRoles(roomId);
   const [step, setStep] = useState(0);
+  const queryClient = useQueryClient();
 
   const [selectedPlayerRoleId, setSelectedPlayerRoleId] = useState<number>();
   const { mutate: createUpdateQueuedAction } = useCreateUpdateQueuedAction({
     onSuccess: async () => {
       setStep(1);
     },
+    skipInvalidatingQueries: true,
   });
 
   const alivePlayers =
@@ -76,11 +79,21 @@ export const InvestigationModal = ({
     selectedPlayerRoleId,
   ]);
 
+  const onModalExit = useCallback(() => {
+    queryClient.invalidateQueries({
+      queryKey: ["queued-action"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["all-queued-actions"],
+    });
+    setStep(0);
+  }, [queryClient]);
+
   const investigationModalProps = useMemo<InvestigationModalProps>(() => {
     switch (action.type) {
       default:
         return {
-          title: t("Who do we think is the Werewolf"),
+          title: t("Who do we think is the Werewolf?"),
           resultNode: (
             <WerewolfInvestigationResult
               allPlayers={allPlayers ?? []}
@@ -92,7 +105,7 @@ export const InvestigationModal = ({
   }, [action.type, allPlayers, selectedPlayerRoleId, t]);
 
   return (
-    <DialogRoot size="md" placement="center" onExitComplete={() => setStep(0)}>
+    <DialogRoot placement="center" onExitComplete={onModalExit}>
       <DialogBackdrop />
       <DialogTrigger>
         <Button disabled={!action.enabled} size="sm" colorPalette="blue">
@@ -100,7 +113,7 @@ export const InvestigationModal = ({
           {t("Investigate")}
         </Button>
       </DialogTrigger>
-      <DialogContent minH="20rem">
+      <DialogContent height="24rem">
         <DialogCloseTrigger />
         <DialogHeader>
           <DialogTitle>
@@ -137,7 +150,11 @@ export const InvestigationModal = ({
             {(context) => (
               <>
                 {step === 0 && (
-                  <Button onClick={onSubmit} size="sm">
+                  <Button
+                    disabled={!selectedPlayerRoleId}
+                    onClick={onSubmit}
+                    size="sm"
+                  >
                     {t("Investigate")}
                   </Button>
                 )}

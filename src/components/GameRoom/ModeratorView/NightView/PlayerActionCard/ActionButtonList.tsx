@@ -16,7 +16,11 @@ export const ActionButtonList = ({
   const { t } = useTranslation();
 
   return (
-    <Stack style={{ display: isVisible ? "inherit" : "none" }}>
+    <Stack
+      className="animate-fade-in-from-bottom"
+      animationDelay="slow"
+      style={{ display: isVisible ? "inherit" : "none" }}
+    >
       <Group>
         <Text fontSize="lg" textStyle="accent">
           {t("Choose a player to...")}

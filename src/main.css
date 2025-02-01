@@ -23,6 +23,18 @@
     }
 }
 
+@keyframes fade-in-from-left {
+    from {
+        transform: translateX(-10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
 
 @keyframes fade-in-and-rotate-from-right {
     0% {
@@ -49,6 +61,11 @@
 .animate-fade-in-from-bottom {
     opacity: 0;
     animation: fade-in-from-bottom 0.5s ease-in-out forwards;
+}
+
+.animate-fade-in-from-left {
+    opacity: 0;
+    animation: fade-in-from-left 0.5s ease-in-out forwards;
 }
 
 .animate-fade-in-and-rotate-from-right {

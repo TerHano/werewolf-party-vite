@@ -34,7 +34,12 @@ export const QueuedActionCard = ({
     return null;
   }
   return (
-    <Stack direction="column" gap={1}>
+    <Stack
+      className="animate-fade-in-from-bottom"
+      animationDelay="moderate"
+      direction="column"
+      gap={1}
+    >
       <Text fontSize="lg" textStyle="accent">
         {t("You decided to...")}
       </Text>

@@ -27,7 +27,7 @@ export const PlayerAvatar = ({
   const { data: isModerator } = useIsModerator(roomId);
 
   return (
-    <Card.Root variant="elevated" w="100%" size="sm">
+    <Card.Root variant="subtle" w="100%" size="sm">
       <Card.Body>
         <Stack direction="row" justify="space-between" align="center">
           <Stack direction="row" align="center" gap={2}>

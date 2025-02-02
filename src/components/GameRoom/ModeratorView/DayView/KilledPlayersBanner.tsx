@@ -36,7 +36,7 @@ export const KilledPlayersBanner = () => {
           <Group gap={1} align="center">
             <IconGrave2 size={20} />
             <Text fontSize="xl" textStyle="accent">
-              {t("Deaths From Previous Night")}
+              {t("Deaths")}
             </Text>
           </Group>
         </Card.Title>

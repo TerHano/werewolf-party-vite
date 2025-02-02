@@ -75,7 +75,10 @@ export const NightCall = () => {
         count={nightCallLength}
         gap={2}
       >
-        <StepsList justifyContent="center">
+        <StepsList
+          className="animate-fade-in-from-left"
+          justifyContent="center"
+        >
           <Flex wrap="wrap" gapY={2}>
             <StepsItem
               maxW="10rem"

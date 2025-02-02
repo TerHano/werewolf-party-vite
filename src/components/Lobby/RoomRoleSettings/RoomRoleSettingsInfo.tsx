@@ -1,12 +1,19 @@
 import { Role } from "@/enum/Role";
 import { useRole, useRoles } from "@/hooks/useRoles";
-import { Separator, Stack } from "@chakra-ui/react";
+import { HStack, Separator, Stack, Text } from "@chakra-ui/react";
 import { ActiveRolesList } from "./ActiveRolesList";
 import { useMeasure } from "@uidotdev/usehooks";
 import { RoleInfoList } from "../RoleInfoList";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { SegmentedControl } from "@/components/ui/segmented-control";
+import {
+  DrawerBody,
+  DrawerCloseTrigger,
+  DrawerContent,
+  DrawerHeader,
+} from "@/components/ui/drawer";
+import { IconCards } from "@tabler/icons-react";
 
 type ShowRoleControl = "active" | "all";
 
@@ -35,29 +42,36 @@ export const RoomRoleSettingsInfo = ({
     roleControl === "all" ? allRoles : [werewolfRole, ...activeRolesData];
 
   return (
-    <Stack ref={ref} mb="1rem" align="center" gap={3}>
-      <ActiveRolesList
-        widthOfContainer={width}
-        numberOfWerewolves={numberOfWerewolves}
-        activeRoles={activeRoles}
-      />
-      <Separator />
-      <SegmentedControl
-        w="fit-content"
-        value={roleControl}
-        onValueChange={(e) => setRoleControl(e.value as ShowRoleControl)}
-        items={[
-          { label: t("Active"), value: "active" },
-          { label: t("All"), value: "all" },
-        ]}
-      />
-      <RoleInfoList roles={roleList} />
-      {/* <RoleInformationDialog
-        roles={allRoles}
-        button={{
-          children: t("Learn All The Roles"),
-        }}
-      /> */}
-    </Stack>
+    <DrawerContent>
+      <DrawerCloseTrigger />
+      <DrawerHeader>
+        <HStack gap={1}>
+          <IconCards size={18} />
+          <Text fontWeight={500} fontSize="lg">
+            Role Settings
+          </Text>
+        </HStack>
+      </DrawerHeader>
+      <DrawerBody>
+        <Stack ref={ref} mb="1rem" align="center" gap={3}>
+          <ActiveRolesList
+            widthOfContainer={width}
+            numberOfWerewolves={numberOfWerewolves}
+            activeRoles={activeRoles}
+          />
+          <Separator />
+          <SegmentedControl
+            w="fit-content"
+            value={roleControl}
+            onValueChange={(e) => setRoleControl(e.value as ShowRoleControl)}
+            items={[
+              { label: t("Active"), value: "active" },
+              { label: t("All"), value: "all" },
+            ]}
+          />
+          <RoleInfoList roles={roleList} />
+        </Stack>
+      </DrawerBody>
+    </DrawerContent>
   );
 };

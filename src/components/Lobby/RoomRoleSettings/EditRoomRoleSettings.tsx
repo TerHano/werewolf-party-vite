@@ -1,21 +1,25 @@
 import {
   CheckboxGroup,
+  Field as ChakraField,
   Float,
   Group,
   Image,
   Separator,
   SimpleGrid,
-  Skeleton,
   Stack,
+  Tabs,
   Text,
+  DrawerFooter,
+  HStack,
+  Badge,
 } from "@chakra-ui/react";
 import werewolfImg from "@/assets/icons/roles/werewolf-color.png";
 import { CheckboxCard, CheckboxCardIndicator } from "../../ui/checkbox-card";
 import { useRoles } from "@/hooks/useRoles";
 import { RoleType } from "@/enum/RoleType";
-import { SubmitHandler, useController, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useRoomRoleSettings } from "@/hooks/useRoomRoleSettings";
 import { useRoomId } from "@/hooks/useRoomId";
 import { RoomRoleSettingsDto } from "@/dto/RoomRoleSettingsDto";
@@ -23,21 +27,32 @@ import { useUpdateRoomRoleSettings } from "@/hooks/useUpdateRoomRoleSettings";
 import { Button } from "../../ui/button";
 import { toaster } from "../../ui/toaster";
 import { SegmentedControl } from "../../ui/segmented-control";
-import { Field } from "../../ui/field";
 import { RoleInformationDialog } from "@/components/Lobby/RoleInformationDialog";
+import { Switch } from "@/components/ui/switch";
+import { Field } from "@/components/ui/field";
+import {
+  DrawerBody,
+  DrawerCloseTrigger,
+  DrawerContent,
+  DrawerHeader,
+} from "@/components/ui/drawer";
+import { IconCards } from "@tabler/icons-react";
+import { Skeleton } from "@/components/ui-addons/skeleton";
 
 interface EditRoomRoleSettingsForm {
   numberOfWerewolves: string;
   traditonalRoles: string[];
   specialRoles: string[];
+  showGameSummary: boolean;
+  allowMultipleSelfHeals: boolean;
 }
 
 export const EditRoomRoleSettings = ({
   roomRoleSettingsQuery,
-  closeDrawerCallback,
+  closeDrawer,
 }: {
   roomRoleSettingsQuery: ReturnType<typeof useRoomRoleSettings>;
-  closeDrawerCallback: () => void;
+  closeDrawer: () => void;
 }) => {
   const { t } = useTranslation();
   const roomId = useRoomId();
@@ -54,13 +69,15 @@ export const EditRoomRoleSettings = ({
   const { data, isRoleType } = useRoles();
   const { data: savedRoleSettings, isLoading: isRoomRoleSettingsLoading } =
     roomRoleSettingsQuery;
-  const { control, handleSubmit, setValue } =
-    useForm<EditRoomRoleSettingsForm>();
+  const { control, handleSubmit } = useForm<EditRoomRoleSettingsForm>({
+    shouldUnregister: true,
+  });
   const onSubmit: SubmitHandler<EditRoomRoleSettingsForm> = useCallback(
     (data) => {
       if (!savedRoleSettings) {
         throw new Error("error");
       }
+      console.log(data);
       const request: RoomRoleSettingsDto = {
         id: savedRoleSettings.id,
         roomId: roomId,
@@ -69,192 +86,289 @@ export const EditRoomRoleSettings = ({
           ...data.traditonalRoles.map((val) => parseInt(val)),
           ...data.specialRoles.map((val) => parseInt(val)),
         ],
+        showGameSummary: data.showGameSummary,
+        allowMultipleSelfHeals: data.allowMultipleSelfHeals,
       };
       void mutate(request, {
         onSuccess: () => {
-          closeDrawerCallback();
+          closeDrawer();
         },
       });
     },
-    [closeDrawerCallback, mutate, roomId, savedRoleSettings]
+    [closeDrawer, mutate, roomId, savedRoleSettings]
   );
 
-  const traditonalRoles = data?.filter(
+  const traditonalRoles = data.filter(
     (role) => role.roleType === RoleType.Traditional
   );
-  const specialRoles = data?.filter(
+  const specialRoles = data.filter(
     (role) => role.roleType === RoleType.Special
   );
 
-  const werewolvesController = useController({
-    control,
-    name: "numberOfWerewolves",
-    defaultValue: "1",
-  });
-
-  const traditonalRolesController = useController({
-    control,
-    name: "traditonalRoles",
-    defaultValue: [],
-  });
-
-  const specialRolesController = useController({
-    control,
-    name: "specialRoles",
-    defaultValue: [],
-  });
-
-  useEffect(() => {
-    if (savedRoleSettings) {
-      setValue(
-        "numberOfWerewolves",
-        savedRoleSettings.numberOfWerewolves.toString()
-      );
-      const savedTraditonalRoles = savedRoleSettings.selectedRoles.filter(
-        (role) => isRoleType(role, RoleType.Traditional)
-      );
-      const savedSpecialRoles = savedRoleSettings.selectedRoles.filter((role) =>
-        isRoleType(role, RoleType.Special)
-      );
-      setValue(
-        "traditonalRoles",
-        savedTraditonalRoles.map((role) => role.toString())
-      );
-      setValue(
-        "specialRoles",
-        savedSpecialRoles.map((role) => role.toString())
-      );
-    }
-  }, [isRoleType, savedRoleSettings, setValue]);
-
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack w="full" gap={3}>
-          <Group>
-            <Field
-              label={
-                <Text textStyle="accent" fontWeight={600} fontSize="lg">
-                  Number of Werewolves
-                </Text>
-              }
-            >
-              <SegmentedControl
-                name={werewolvesController.field.name}
-                value={werewolvesController.field.value}
-                onChange={werewolvesController.field.onChange}
-                size="lg"
-                defaultValue="1"
-                items={["1", "2", "3", "4"]}
-              />
-            </Field>
-            <Image src={werewolfImg} alt="werewolf" w="64px" />
-          </Group>
+    <form>
+      <DrawerContent>
+        <DrawerCloseTrigger />
 
-          <Separator />
-
-          <CheckboxGroup
-            name={traditonalRolesController.field.name}
-            value={traditonalRolesController.field.value}
-            onValueChange={traditonalRolesController.field.onChange}
-          >
-            <Group>
-              <Text textStyle="accent" fontWeight={600} fontSize="lg">
-                Traditional Roles
-              </Text>
-              <RoleInformationDialog roles={traditonalRoles} />
-            </Group>
-            <Skeleton
-              w="full"
-              loading={isRoomRoleSettingsLoading}
-              minH={isRoomRoleSettingsLoading ? "100px" : undefined}
+        <DrawerHeader>
+          <HStack gap={1}>
+            <IconCards size={18} />
+            <Text fontWeight={500} fontSize="lg">
+              Role Settings
+            </Text>
+          </HStack>
+        </DrawerHeader>
+        <DrawerBody>
+          <Tabs.Root fitted defaultValue="roles">
+            <Tabs.List>
+              <Tabs.Trigger value="roles">Roles</Tabs.Trigger>
+              <Tabs.Trigger value="settings">Settings</Tabs.Trigger>
+            </Tabs.List>
+            <Tabs.Content
+              _open={{
+                animationName: "fade-in-from-bottom",
+                animationDuration: "500ms",
+              }}
+              value="roles"
             >
-              <SimpleGrid columns={{ base: 2, sm: 3, md: 5, lg: 8 }} gap="2">
-                {traditonalRoles.map((role) => (
-                  <CheckboxCard
-                    variant="surface"
-                    align="center"
-                    key={role.label}
-                    icon={
-                      <img
-                        src={role.imgSrc}
-                        alt={role.label}
-                        width="36"
-                        height="36"
-                      />
-                    }
+              <Stack w="full" gap={3}>
+                <Group>
+                  <Field
                     label={
-                      <Text fontSize="lg" fontWeight="bold" textStyle="accent">
-                        {role.label}
+                      <Text textStyle="accent" fontWeight={600} fontSize="lg">
+                        {t("Number of Werewolves")}
                       </Text>
                     }
-                    indicator={
-                      <Float placement="top-end" offset="1em">
-                        <CheckboxCardIndicator w="1rem" h="1rem" />
-                      </Float>
-                    }
-                    value={role.roleName.toString()}
-                  />
-                ))}
-              </SimpleGrid>
-            </Skeleton>
-          </CheckboxGroup>
-
-          <Separator />
-          <CheckboxGroup
-            name={specialRolesController.field.name}
-            value={specialRolesController.field.value}
-            onValueChange={specialRolesController.field.onChange}
-          >
-            <Group>
-              <Text textStyle="accent" fontWeight={600} fontSize="lg">
-                Special Roles
-              </Text>{" "}
-              <RoleInformationDialog roles={specialRoles} />
-            </Group>
-            <Skeleton
-              w="full"
-              loading={isRoomRoleSettingsLoading}
-              minH={isRoomRoleSettingsLoading ? "100px" : undefined}
-            >
-              <SimpleGrid
-                columns={{ base: 2, xs: 3, sm: 4, md: 5, lg: 8 }}
-                gap="2"
-              >
-                {specialRoles.map((role) => (
-                  <CheckboxCard
-                    variant="surface"
-                    align="center"
-                    key={role.label}
-                    icon={
-                      <img
-                        src={role.imgSrc}
-                        alt={role.label}
-                        width="36"
-                        height="36"
+                  >
+                    <Skeleton height={10} loading={isRoomRoleSettingsLoading}>
+                      <Controller
+                        name="numberOfWerewolves"
+                        control={control}
+                        defaultValue={savedRoleSettings?.numberOfWerewolves.toString()}
+                        render={({ field }) => (
+                          <SegmentedControl
+                            name={field.name}
+                            value={field.value}
+                            onChange={field.onChange}
+                            size="lg"
+                            items={["1", "2", "3", "4"]}
+                          />
+                        )}
                       />
-                    }
-                    indicator={
-                      <Float placement="top-end" offset="1em">
-                        <CheckboxCardIndicator w="1rem" h="1rem" />
-                      </Float>
-                    }
-                    label={
-                      <Text fontSize="lg" fontWeight="bold" textStyle="accent">
-                        {role.label}
-                      </Text>
-                    }
-                    value={role.roleName.toString()}
+                    </Skeleton>
+                  </Field>
+                  <Image src={werewolfImg} alt="werewolf" w="64px" />
+                </Group>
+
+                <Separator />
+                <Skeleton height="6rem" loading={isRoomRoleSettingsLoading}>
+                  <Controller
+                    name="traditonalRoles"
+                    control={control}
+                    defaultValue={savedRoleSettings?.selectedRoles
+                      .filter((role) => isRoleType(role, RoleType.Traditional))
+                      .map((role) => role.toString())}
+                    render={({ field }) => (
+                      <CheckboxGroup
+                        name={field.name}
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <Group>
+                          <Text
+                            textStyle="accent"
+                            fontWeight={600}
+                            fontSize="lg"
+                          >
+                            {t("Traditional Roles")}
+                          </Text>
+                          <RoleInformationDialog roles={traditonalRoles} />
+                        </Group>
+
+                        <SimpleGrid
+                          columns={{ base: 2, sm: 3, md: 5, lg: 8 }}
+                          gap="2"
+                        >
+                          {traditonalRoles.map((role) => (
+                            <CheckboxCard
+                              variant="surface"
+                              align="center"
+                              key={role.label}
+                              icon={
+                                <img
+                                  src={role.imgSrc}
+                                  alt={role.label}
+                                  width="36"
+                                  height="36"
+                                />
+                              }
+                              label={
+                                <Text
+                                  fontSize="lg"
+                                  fontWeight="bold"
+                                  textStyle="accent"
+                                >
+                                  {role.label}
+                                </Text>
+                              }
+                              indicator={
+                                <Float placement="top-end" offset="1em">
+                                  <CheckboxCardIndicator w="1rem" h="1rem" />
+                                </Float>
+                              }
+                              value={role.roleName.toString()}
+                            />
+                          ))}
+                        </SimpleGrid>
+                      </CheckboxGroup>
+                    )}
                   />
-                ))}
-              </SimpleGrid>
-            </Skeleton>
-          </CheckboxGroup>
-          <Button mb={6} mt={3} loading={isUpdatingSettings} type="submit">
+                </Skeleton>
+
+                <Separator />
+                <Skeleton height="6rem" loading={isRoomRoleSettingsLoading}>
+                  <Controller
+                    name="specialRoles"
+                    control={control}
+                    defaultValue={savedRoleSettings?.selectedRoles
+                      .filter((role) => isRoleType(role, RoleType.Special))
+                      .map((role) => role.toString())}
+                    render={({ field }) => (
+                      <CheckboxGroup
+                        name={field.name}
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <Group>
+                          <Text
+                            textStyle="accent"
+                            fontWeight={600}
+                            fontSize="lg"
+                          >
+                            {t("Special Roles")}
+                          </Text>
+                          <RoleInformationDialog roles={specialRoles} />
+                        </Group>
+                        <Skeleton
+                          w="full"
+                          loading={isRoomRoleSettingsLoading}
+                          minH={isRoomRoleSettingsLoading ? "100px" : undefined}
+                        >
+                          <SimpleGrid
+                            columns={{ base: 2, xs: 3, sm: 4, md: 5, lg: 8 }}
+                            gap="2"
+                          >
+                            {specialRoles.map((role) => (
+                              <CheckboxCard
+                                variant="surface"
+                                align="center"
+                                key={role.label}
+                                icon={
+                                  <img
+                                    src={role.imgSrc}
+                                    alt={role.label}
+                                    width="36"
+                                    height="36"
+                                  />
+                                }
+                                indicator={
+                                  <Float placement="top-end" offset="1em">
+                                    <CheckboxCardIndicator w="1rem" h="1rem" />
+                                  </Float>
+                                }
+                                label={
+                                  <Text
+                                    fontSize="lg"
+                                    fontWeight="bold"
+                                    textStyle="accent"
+                                  >
+                                    {role.label}
+                                  </Text>
+                                }
+                                value={role.roleName.toString()}
+                              />
+                            ))}
+                          </SimpleGrid>
+                        </Skeleton>
+                      </CheckboxGroup>
+                    )}
+                  />
+                </Skeleton>
+              </Stack>
+            </Tabs.Content>
+            <Tabs.Content
+              _open={{
+                animationName: "fade-in-from-bottom",
+                animationDuration: "500ms",
+              }}
+              value="settings"
+            >
+              <Stack gap={4}>
+                <ChakraField.Root>
+                  <ChakraField.Label>
+                    <Text>{t("Show Game Summary")}</Text>
+                  </ChakraField.Label>
+                  <Controller
+                    name="showGameSummary"
+                    control={control}
+                    render={({ field }) => (
+                      <Switch
+                        name={field.name}
+                        checked={field.value}
+                        onCheckedChange={({ checked }) =>
+                          field.onChange(checked)
+                        }
+                        inputProps={{ onBlur: field.onBlur }}
+                      />
+                    )}
+                  />
+                  <ChakraField.HelperText>
+                    {t(
+                      "Toggles whether or not to show the game summary to players once the game is done"
+                    )}
+                  </ChakraField.HelperText>
+                </ChakraField.Root>
+                <ChakraField.Root>
+                  <ChakraField.Label>
+                    <Text>{t("Allow Continuous Self Heals")} </Text>
+                    <Badge colorPalette="yellow" variant="subtle">
+                      {t("Coming Soon")}
+                    </Badge>
+                  </ChakraField.Label>
+                  <Controller
+                    name="allowMultipleSelfHeals"
+                    control={control}
+                    render={({ field }) => (
+                      <Switch
+                        disabled
+                        name={field.name}
+                        checked={field.value}
+                        onCheckedChange={({ checked }) =>
+                          field.onChange(checked)
+                        }
+                        inputProps={{ onBlur: field.onBlur }}
+                      />
+                    )}
+                  />
+                  <ChakraField.HelperText>
+                    {t("Restricts how often a healer can heal themselves")}
+                  </ChakraField.HelperText>
+                </ChakraField.Root>
+              </Stack>
+            </Tabs.Content>
+          </Tabs.Root>
+        </DrawerBody>
+        <DrawerFooter>
+          <Button
+            w="full"
+            onClick={handleSubmit(onSubmit)}
+            loading={isUpdatingSettings}
+            type="submit"
+          >
             {t("Update Settings")}
           </Button>
-        </Stack>
-      </form>
-    </>
+        </DrawerFooter>
+      </DrawerContent>
+    </form>
   );
 };

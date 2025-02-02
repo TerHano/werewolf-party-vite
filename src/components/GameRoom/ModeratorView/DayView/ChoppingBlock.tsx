@@ -28,8 +28,8 @@ export const ChoppingBlock = () => {
       >
         <Card.Body>
           <Card.Title>
-            <Text textStyle="accent" fontSize="2xl">
-              {t("Who do we think it is?")}
+            <Text textStyle="accent" fontSize="xl">
+              {t("Villagers, who do you think it is?")}
             </Text>
             {/* <InfoTip
               content={

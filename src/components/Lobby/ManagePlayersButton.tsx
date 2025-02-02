@@ -47,9 +47,9 @@ export const ManagePlayersButton = () => {
   });
 
   const onUpdateModerator = useCallback(
-    (playerId: string) => {
+    (playerId: number) => {
       updateModeratorMutate({
-        NewModeratorPlayerRoomId: playerId,
+        newModeratorPlayerRoomId: playerId,
         roomId,
       });
     },
@@ -57,7 +57,7 @@ export const ManagePlayersButton = () => {
   );
 
   const onKickPlayer = useCallback(
-    (playerId: string) => {
+    (playerId: number) => {
       kickPlayerMutate({
         playerToKickId: playerId,
         roomId,

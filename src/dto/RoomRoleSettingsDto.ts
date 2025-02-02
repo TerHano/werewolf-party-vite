@@ -3,4 +3,6 @@ export interface RoomRoleSettingsDto {
   roomId: string;
   numberOfWerewolves: number;
   selectedRoles: number[];
+  showGameSummary: boolean;
+  allowMultipleSelfHeals: boolean;
 }

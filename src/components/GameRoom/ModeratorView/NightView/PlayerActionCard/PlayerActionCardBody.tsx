@@ -1,7 +1,8 @@
-import { VStack, Image, Badge, Stack } from "@chakra-ui/react";
+import { VStack, Image, Stack } from "@chakra-ui/react";
 import { IconSkull, IconUser } from "@tabler/icons-react";
 import { PlayerRoleWithDetails } from "../NightCall";
 import { SkeletonCircle } from "@/components/ui/skeleton";
+import { Tag } from "@/components/ui/tag";
 
 export const PlayerActionCardBody = ({
   playerDetails,
@@ -22,15 +23,13 @@ export const PlayerActionCardBody = ({
       <Stack direction="row" gap={1}>
         {playerDetails.map((playerDetail) =>
           !playerDetail.isAlive ? (
-            <Badge colorPalette="red">
-              <IconSkull size={12} />
+            <Tag startElement={<IconSkull size={12} />} colorPalette="red">
               {playerDetail.nickname}
-            </Badge>
+            </Tag>
           ) : (
-            <Badge colorPalette="current">
-              <IconUser size={12} />
+            <Tag startElement={<IconUser size={12} />}>
               {playerDetail.nickname}
-            </Badge>
+            </Tag>
           )
         )}
       </Stack>

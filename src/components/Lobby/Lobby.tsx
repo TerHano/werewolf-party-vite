@@ -1,5 +1,5 @@
 import { ModeratorCard } from "./ModeratorCard";
-import { HStack, Stack, Text, SimpleGrid, Container } from "@chakra-ui/react";
+import { HStack, Stack, Text, SimpleGrid, Card } from "@chakra-ui/react";
 import { useCurrentPlayer } from "@/hooks/useCurrentPlayer";
 import { useTranslation } from "react-i18next";
 import { useRoomId } from "@/hooks/useRoomId";
@@ -35,7 +35,7 @@ export const Lobby = () => {
   }, [roomId, startGameMutate]);
 
   return (
-    <Container mt={2}>
+    <Card.Root w="full" p={3} variant="outline">
       <Stack w="full" gap={2}>
         <HStack justify="space-between">
           <HStack justifyContent="center">
@@ -69,6 +69,6 @@ export const Lobby = () => {
 
         <PlayersSection currentPlayer={currentPlayer} />
       </Stack>
-    </Container>
+    </Card.Root>
   );
 };

@@ -32,6 +32,7 @@ import {
 import emptyLobby from "@/assets/icons/lobby/lobby-empty.png";
 import { SkeletonCircle, SkeletonText } from "../ui/skeleton";
 import { ClipboardButton } from "../ui-addons/clipboard-button";
+import React from "react";
 
 export const PlayersSection = ({
   currentPlayer,
@@ -80,7 +81,7 @@ export const PlayersSection = ({
   const onUpdateModerator = useCallback(
     (playerId: number) => {
       updateModeratorMutate({
-        NewModeratorPlayerRoomId: playerId,
+        newModeratorPlayerRoomId: playerId,
         roomId,
       });
     },
@@ -144,7 +145,7 @@ export const PlayersSection = ({
         </Text>
         <Separator flex="1" />
       </HStack>
-      <Card.Root p={2} w="full" className="animate-fade-in-from-bottom">
+      <React.Fragment>
         <PlayerListSkeleton loading={isPlayersLoading} />
         {noPlayersInLobby ? (
           <VStack paddingY={3} gap={3}>
@@ -183,7 +184,7 @@ export const PlayersSection = ({
             />
           ))}
         </SimpleGrid>
-      </Card.Root>
+      </React.Fragment>
       <DrawerRoot
         open={isDrawerOpen}
         onOpenChange={(e) => {

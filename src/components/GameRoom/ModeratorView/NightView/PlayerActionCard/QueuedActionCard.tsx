@@ -41,7 +41,7 @@ export const QueuedActionCard = ({
       gap={1}
     >
       <Text fontSize="lg" textStyle="accent">
-        {t("You decided to...")}
+        {t("They decided to...")}
       </Text>
       <Card.Root py={1} pl={3} pr={1}>
         <Stack direction="row" alignItems="center" gap={2}>

@@ -41,7 +41,7 @@ export const Route = createFileRoute("/room/$roomId")({
 
 function RouteComponent() {
   const { roomId } = Route.useParams();
-  useDocumentTitle(`Werewolf Party - Room ${roomId}`);
+  useDocumentTitle(`Werewolf Party | Room ${roomId}`);
   const _isPlayerAlreadyInRoomInitialData = Route.useLoaderData();
   const navigate = useNavigate();
   const { mutate: checkRoomMutate } = useCheckRoom({

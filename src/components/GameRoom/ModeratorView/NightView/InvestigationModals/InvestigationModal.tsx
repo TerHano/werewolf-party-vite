@@ -87,6 +87,7 @@ export const InvestigationModal = ({
       queryKey: ["all-queued-actions"],
     });
     setStep(0);
+    setSelectedPlayerRoleId(undefined);
   }, [queryClient]);
 
   const investigationModalProps = useMemo<InvestigationModalProps>(() => {

@@ -1,10 +1,10 @@
 import { useAssignedRole } from "@/hooks/useAssignedRole";
 import { useRole } from "@/hooks/useRoles";
 import { useRoomId } from "@/hooks/useRoomId";
-import { Card, Skeleton, VStack } from "@chakra-ui/react";
+import { Card, VStack } from "@chakra-ui/react";
 import { WaitingPlayerCard } from "@/components/GameRoom/PlayerView/WaitingPlayerCard";
 import { PlayerRoleCard } from "@/components/GameRoom/PlayerView/PlayerRoleCard";
-import { SkeletonCircle } from "@/components/ui/skeleton";
+import { SkeletonCircle, SkeletonText } from "@/components/ui-addons/skeleton";
 
 export const PlayerView = () => {
   const roomId = useRoomId();
@@ -13,28 +13,37 @@ export const PlayerView = () => {
 
   const { data: roleInfo } = useRole(assignedRole);
 
-  if (isAssignedRoleLoading) {
-    return (
-      <Card.Root>
-        <Card.Body>
-          <VStack gap={2}>
-            <SkeletonCircle loading width="10rem" />
-            <Skeleton loading height={4} />
-          </VStack>
-        </Card.Body>
-      </Card.Root>
-    );
-  }
-
   const isPlayerInWaitingRoom = !roleInfo;
 
   return (
-    <>
-      {isPlayerInWaitingRoom ? (
-        <WaitingPlayerCard />
-      ) : (
-        <PlayerRoleCard roleInfo={roleInfo} />
-      )}
-    </>
+    <Card.Root className="animate-fade-in-from-bottom">
+      <Card.Body>
+        <PlayerViewLoading loading={isAssignedRoleLoading}>
+          {isPlayerInWaitingRoom ? (
+            <WaitingPlayerCard />
+          ) : (
+            <PlayerRoleCard roleInfo={roleInfo} />
+          )}
+        </PlayerViewLoading>
+      </Card.Body>
+    </Card.Root>
   );
+};
+
+const PlayerViewLoading = ({
+  loading,
+  children,
+}: {
+  loading: boolean;
+  children: React.ReactNode;
+}) => {
+  if (loading) {
+    return (
+      <VStack gap={4}>
+        <SkeletonCircle loading size="10rem" />
+        <SkeletonText loading noOfLines={4} />
+      </VStack>
+    );
+  }
+  return children;
 };

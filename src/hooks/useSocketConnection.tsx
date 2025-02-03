@@ -3,11 +3,12 @@ import { AddEditPlayerDetailsDto } from "@/dto/AddEditPlayerDetailsDto";
 import { APIResponse } from "@/dto/APIResponse";
 import { SocketContext } from "@/context/SocketContext";
 import { HubConnectionState } from "@microsoft/signalr";
+import { PlayerDto } from "@/dto/PlayerDto";
 
 interface UseSocketConnection {
   onLobbyUpdated?: () => void;
   onGameStateChanged?: () => void;
-  onModeratorUpdated?: (moderatorId: number) => void;
+  onModeratorUpdated?: (moderator: PlayerDto) => void;
   onPlayerKicked?: (kickedPlayerId: number) => void;
   onReconnect?: () => void;
   onRoomRoleSettingsUpdated?: () => void;

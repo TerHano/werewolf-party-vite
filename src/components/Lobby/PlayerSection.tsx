@@ -19,7 +19,7 @@ import { IconKarate, IconSpeakerphone } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { toaster } from "../ui/toaster";
+import { toaster } from "../ui-addons/toaster";
 import { PlayerAvatar } from "./PlayerAvatar";
 import {
   DrawerRoot,
@@ -30,9 +30,13 @@ import {
   DrawerCloseTrigger,
 } from "../ui/drawer";
 import emptyLobby from "@/assets/icons/lobby/lobby-empty.png";
-import { SkeletonCircle, SkeletonText } from "../ui/skeleton";
 import { ClipboardButton } from "../ui-addons/clipboard-button";
 import React from "react";
+import {
+  Skeleton,
+  SkeletonCircle,
+  SkeletonComposed,
+} from "@/components/ui-addons/skeleton";
 
 export const PlayersSection = ({
   currentPlayer,
@@ -110,30 +114,6 @@ export const PlayersSection = ({
 
   const noPlayersInLobby = players?.length === 0;
 
-  //   if () {
-  //     return (
-  //       <Card.Root w="full" className="animate-fade-in-from-bottom">
-  //         <VStack paddingY={3} gap={3}>
-  //           <VStack gap={0}>
-  //             <Image src={emptyLobby} height={32} width={32} />
-  //             <Text lineHeight="shorter" fontSize="xl" textStyle="accent">
-  //               {t("Invite Some Friends")}
-  //             </Text>
-  //             <Text
-  //               lineHeight="shorter"
-  //               color="gray.400"
-  //               fontSize="lg"
-  //               textStyle="accent"
-  //             >
-  //               {t("Copy and send the room code to your friends!")}
-  //             </Text>
-  //           </VStack>
-  //           <Button>{t("Copy Room URL")}</Button>
-  //         </VStack>
-  //       </Card.Root>
-  //     );
-  //   }
-
   return (
     <>
       <HStack my={1}>
@@ -146,44 +126,53 @@ export const PlayersSection = ({
         <Separator flex="1" />
       </HStack>
       <React.Fragment>
-        <PlayerListSkeleton loading={isPlayersLoading} />
-        {noPlayersInLobby ? (
-          <VStack paddingY={3} gap={3}>
-            <VStack gap={0}>
-              <Image src={emptyLobby} height={32} width={32} />
-              <Text lineHeight="shorter" fontSize="xl" textStyle="accent">
-                {t("Invite Some Friends")}
-              </Text>
-              <Text
-                textAlign="center"
-                lineHeight="shorter"
-                color="gray.400"
-                fontSize="lg"
-                textStyle="accent"
-              >
-                {t("Copy and send the room code to your friends!")}
-              </Text>
+        <SkeletonComposed
+          loading={isPlayersLoading}
+          skeleton={<PlayerListSkeleton />}
+        >
+          {noPlayersInLobby ? (
+            <VStack paddingY={3} gap={3}>
+              <VStack gap={0}>
+                <Image src={emptyLobby} height={32} width={32} />
+                <Text lineHeight="shorter" fontSize="xl" textStyle="accent">
+                  {t("Invite Some Friends")}
+                </Text>
+                <Text
+                  textAlign="center"
+                  lineHeight="shorter"
+                  color="gray.400"
+                  fontSize="lg"
+                  textStyle="accent"
+                >
+                  {t("Copy and send the room code to your friends!")}
+                </Text>
+              </VStack>
+              <ClipboardButton value={window.location.href}>
+                {t("Copy Room URL")}
+              </ClipboardButton>
             </VStack>
-            <ClipboardButton value={window.location.href}>
-              {t("Copy Room URL")}
-            </ClipboardButton>
-          </VStack>
-        ) : null}
-        <SimpleGrid justifyItems="center" gap={2} columns={{ base: 1, md: 3 }}>
-          {players?.map((player, index) => (
-            <PlayerAvatar
-              currentPlayer={currentPlayer}
-              key={player.id}
-              player={player}
-              onSettingsClick={() => {
-                setSelectedPlayer(player);
-                setDrawerOpen(true);
-              }}
-              className="animate-fade-in-from-bottom"
-              css={{ animationDelay: `${index * 50}ms` }}
-            />
-          ))}
-        </SimpleGrid>
+          ) : null}
+
+          <SimpleGrid
+            justifyItems="center"
+            gap={2}
+            columns={{ base: 1, md: 3 }}
+          >
+            {players?.map((player, index) => (
+              <PlayerAvatar
+                currentPlayer={currentPlayer}
+                key={player.id}
+                player={player}
+                onSettingsClick={() => {
+                  setSelectedPlayer(player);
+                  setDrawerOpen(true);
+                }}
+                className="animate-fade-in-from-bottom"
+                css={{ animationDelay: `${index * 50}ms` }}
+              />
+            ))}
+          </SimpleGrid>
+        </SkeletonComposed>
       </React.Fragment>
       <DrawerRoot
         open={isDrawerOpen}
@@ -194,7 +183,9 @@ export const PlayersSection = ({
       >
         <DrawerBackdrop />
         <DrawerContent borderRadius="sm">
-          <DrawerHeader>Manage {selectedPlayer?.nickname}</DrawerHeader>
+          <DrawerHeader>
+            {t("Manage")} {selectedPlayer?.nickname}
+          </DrawerHeader>
           <DrawerBody>
             {selectedPlayer ? (
               <SimpleGrid mb={5} columns={2} gap={2}>
@@ -230,23 +221,23 @@ export const PlayersSection = ({
   );
 };
 
-const PlayerListSkeleton = ({ loading = false }: { loading: boolean }) => {
-  return loading ? (
+const PlayerListSkeleton = () => {
+  return (
     <Stack>
       <PlayerSkeleton />
       <PlayerSkeleton />
       <PlayerSkeleton />
     </Stack>
-  ) : null;
+  );
 };
 
 const PlayerSkeleton = () => {
   return (
-    <Card.Root w="full" variant="elevated">
+    <Card.Root size="sm" w="full" variant="elevated">
       <Card.Body>
         <HStack justify="start" w="100%" gap={3}>
           <SkeletonCircle h="3rem" w="3rem" loading />
-          <SkeletonText noOfLines={1} loading />
+          <Skeleton height={8} w="100%" loading />
         </HStack>
       </Card.Body>
     </Card.Root>

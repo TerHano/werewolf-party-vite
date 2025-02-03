@@ -1,28 +1,30 @@
 import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
 import {
-  HStack,
   Text,
   Image,
   Badge,
-  Float,
-  Box,
   Group,
+  Stack,
+  defineStyle,
 } from "@chakra-ui/react";
 import { Card } from "@chakra-ui/react/card";
 import { useCallback } from "react";
-import { RoomRoleSettingsCard } from "./RoomRoleSettings/RoomRoleSettingsCard";
-import React from "react";
-import { useCurrentPlayer } from "@/hooks/useCurrentPlayer";
 import { useRoomId } from "@/hooks/useRoomId";
-import { toaster } from "../ui/toaster";
+import { toaster } from "../ui-addons/toaster";
 import { useTranslation } from "react-i18next";
 import { useModerator } from "@/hooks/useModerator";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
-import { Skeleton, SkeletonCircle } from "../ui/skeleton";
 import { AddEditPlayerModal } from "@/components/Lobby/AddEditPlayerModal";
 import { useUpdateCurrentPlayerDetails } from "@/hooks/useUpdateCurrentPlayerDetails";
+import { PlayerDto } from "@/dto/PlayerDto";
+import { Skeleton, SkeletonCircle } from "../ui-addons/skeleton";
+import { IconSpeakerphone } from "@tabler/icons-react";
 
-export const ModeratorCard = () => {
+export interface ModeratorCardProps {
+  currentPlayer?: PlayerDto;
+}
+
+export const ModeratorCard = ({ currentPlayer }: ModeratorCardProps) => {
   const { t } = useTranslation();
   const roomId = useRoomId();
   const {
@@ -31,29 +33,35 @@ export const ModeratorCard = () => {
     refetch: refetchModerator,
   } = useModerator(roomId);
   const { mutate: updatePlayerDetailsMutate } = useUpdateCurrentPlayerDetails();
-  const { data: currentPlayer } = useCurrentPlayer(roomId);
   const { getAvatarImageSrcForIndex } = usePlayerAvatar();
 
-  const resetAnimation = useCallback(() => {
-    setAnimation("none");
-    setTimeout(() => {
-      setAnimation("");
-    }, 50);
-  }, []);
-
   const onModeratorUpdated = useCallback(
-    (newModeratorId: number) => {
-      if (newModeratorId === currentPlayer?.id) {
+    (newModerator: PlayerDto) => {
+      if (newModerator.id === currentPlayer?.id) {
         toaster.create({
+          meta: { icon: <IconSpeakerphone /> },
           title: t("You're In Charge!"),
           description: t("You are now the moderator!"),
           duration: 2500,
         });
+      } else {
+        toaster.create({
+          title: t("New Moderator In Town!"),
+          meta: { icon: <IconSpeakerphone /> },
+          description: (
+            <Group gap={1}>
+              <Text fontStyle="italic" fontWeight="bold">
+                {newModerator.nickname}
+              </Text>
+              <Text>{t("is now moderator")}</Text>
+            </Group>
+          ),
+          duration: 2500,
+        });
       }
-      resetAnimation();
       refetchModerator();
     },
-    [currentPlayer?.id, refetchModerator, resetAnimation, t]
+    [currentPlayer?.id, refetchModerator, t]
   );
 
   useSocketConnection({
@@ -65,69 +73,52 @@ export const ModeratorCard = () => {
 
   const isModeratorCurrentPlayer = currentModerator?.id === currentPlayer?.id;
 
-  const [animation, setAnimation] = React.useState<string | undefined>("");
+  const ringCss = defineStyle({
+    outlineWidth: "2px",
+    outlineColor: "yellow.700",
+    outlineStyle: "solid",
+  });
 
   return (
-    <Box
-      position="relative"
-      // className="animate-fade-in-from-bottom "
-      marginTop="52px"
-    >
-      <RoomRoleSettingsCard />
-
-      <Float w="full" offset={-4} placement="top-center">
-        <Card.Root
-          bg="colorPalette.900"
-          //  bgColor="red"
-          className="animate-slide-in-from-bottom"
-          animation={animation}
-          variant="outline"
-          w="full"
-        >
-          <Card.Body mb={2} p={2}>
-            <HStack justify="space-between">
+    <Card.Root css={ringCss} variant="subtle" w="100%" size="sm">
+      <Card.Body>
+        <Stack direction="row" justify="space-between" align="center">
+          <Stack direction="row" align="center" gap={2}>
+            <SkeletonCircle size="3rem" loading={isModeratorLoading}>
+              <Image
+                width="3rem"
+                src={getAvatarImageSrcForIndex(currentModerator?.avatarIndex)}
+                alt="thing"
+              />
+            </SkeletonCircle>
+            <Stack direction="column" align="start" gap={0}>
               <Group>
-                <SkeletonCircle loading={isModeratorLoading}>
-                  <Image
-                    h="40px"
-                    src={getAvatarImageSrcForIndex(
-                      currentModerator?.avatarIndex
-                    )}
-                  />
-                </SkeletonCircle>
-                <Skeleton loading={isModeratorLoading}>
-                  <Text
-                    truncate
-                    textStyle="accent"
-                    fontSize="md"
-                    fontWeight={500}
-                  >
-                    {currentModerator?.nickname}
-                  </Text>
-                </Skeleton>
+                <Badge colorPalette="yellow" size="sm">
+                  <Text fontSize="sm">{t("Moderator")}</Text>
+                </Badge>
                 {isModeratorCurrentPlayer ? (
-                  <AddEditPlayerModal
-                    isEdit
-                    submitCallback={(playerDetails) => {
-                      updatePlayerDetailsMutate(playerDetails);
-                    }}
-                  />
+                  <Badge colorPalette="blue" size="sm">
+                    <Text fontSize="sm">{t("You")}</Text>
+                  </Badge>
                 ) : null}
               </Group>
-              <Group>
-                <Badge variant="subtle" colorPalette="yellow">
-                  Moderator
-                </Badge>
-                {isModeratorCurrentPlayer && (
-                  <Badge variant="subtle" colorPalette="blue">
-                    You
-                  </Badge>
-                )}
-              </Group>
-            </HStack>
-          </Card.Body>
-        </Card.Root>
-      </Float>
-    </Box>
+              <Skeleton w="full" height={8} loading={isModeratorLoading}>
+                <Text fontSize="lg" textStyle="accent">
+                  {currentModerator?.nickname}
+                </Text>
+              </Skeleton>
+            </Stack>
+          </Stack>
+          {isModeratorCurrentPlayer ? (
+            <AddEditPlayerModal
+              isEdit
+              submitCallback={(playerDetails) => {
+                updatePlayerDetailsMutate(playerDetails);
+              }}
+            />
+          ) : null}
+        </Stack>
+      </Card.Body>
+    </Card.Root>
   );
 };

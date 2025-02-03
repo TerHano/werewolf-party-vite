@@ -1,7 +1,7 @@
 import { VStack, Image, Stack } from "@chakra-ui/react";
 import { IconSkull, IconUser } from "@tabler/icons-react";
 import { PlayerRoleWithDetails } from "../NightCall";
-import { SkeletonCircle } from "@/components/ui/skeleton";
+import { SkeletonCircle } from "@/components/ui-addons/skeleton";
 import { Tag } from "@/components/ui/tag";
 
 export const PlayerActionCardBody = ({
@@ -18,7 +18,7 @@ export const PlayerActionCardBody = ({
       gap={1}
     >
       <SkeletonCircle loading={!roleImg} size="8rem">
-        <Image src={roleImg} />
+        <Image height="8rem" src={roleImg} />
       </SkeletonCircle>
       <Stack direction="row" gap={1}>
         {playerDetails.map((playerDetail) =>

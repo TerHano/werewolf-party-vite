@@ -1,16 +1,8 @@
 import { useRoomId } from "@/hooks/useRoomId";
 import { useRoomRoleSettings } from "@/hooks/useRoomRoleSettings";
-import {
-  Card,
-  DrawerBackdrop,
-  HStack,
-  Skeleton,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
-import { IconArrowRight, IconCards } from "@tabler/icons-react";
-import { DrawerRoot } from "../../ui/drawer";
-import React, { useCallback, useMemo } from "react";
+import { Card, HStack, Text, VStack } from "@chakra-ui/react";
+import { IconCards } from "@tabler/icons-react";
+import { useCallback, useMemo } from "react";
 import { EditRoomRoleSettings } from "./EditRoomRoleSettings";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { useModerator } from "@/hooks/useModerator";
@@ -18,10 +10,11 @@ import { useCurrentPlayer } from "@/hooks/useCurrentPlayer";
 import { RoomRoleSettingsInfo } from "./RoomRoleSettingsInfo";
 import { ActiveRolesList } from "./ActiveRolesList";
 import { useMeasure } from "@uidotdev/usehooks";
+import { Skeleton } from "@/components/ui-addons/skeleton";
+import { useTranslation } from "react-i18next";
 
 export const RoomRoleSettingsCard = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
-
+  const { t } = useTranslation();
   const roomId = useRoomId();
   const roomRoleSettingsQuery = useRoomRoleSettings(roomId);
   const {
@@ -46,72 +39,45 @@ export const RoomRoleSettingsCard = () => {
     onRoomRoleSettingsUpdated,
   });
 
-  const closeDrawerCallback = useCallback(() => {
-    setIsOpen(false);
-  }, []);
-
   const numberOfWerewolves = settings?.numberOfWerewolves ?? 1;
 
   return (
     <>
-      <Card.Root
-        zIndex={1}
-        variant="outline"
-        onClick={() => {
-          setIsOpen(true);
-        }}
-        w="full"
-      >
+      <Card.Root zIndex={1} variant="elevated" w="full">
         <Card.Body p="1rem">
-          <HStack justifyContent="space-between">
-            <VStack w="100%" alignItems="start">
-              <Card.Title>
-                <HStack gap={1}>
-                  <IconCards size={16} />
-                  <Text fontWeight="semibold" fontSize="sm">
-                    Role Settings
-                  </Text>
-                </HStack>
-              </Card.Title>
-              <Card.Body ref={ref} w="100%" p={0} mt={2}>
-                <Skeleton
-                  minW={isRoomRoleSettingsLoading ? "25%" : undefined}
-                  loading={isRoomRoleSettingsLoading}
-                >
-                  <ActiveRolesList
-                    widthOfContainer={width}
-                    numberOfWerewolves={numberOfWerewolves}
-                    activeRoles={settings?.selectedRoles ?? []}
-                  />
-                </Skeleton>
-              </Card.Body>
-            </VStack>
-            <IconArrowRight />
-          </HStack>
+          <VStack ref={ref} w="100%" alignItems="start">
+            <HStack gap={1}>
+              <IconCards size={16} />
+              <Text fontWeight="semibold" fontSize="sm">
+                {t("Role Settings")}
+              </Text>
+            </HStack>
+
+            <Skeleton
+              w={width ?? "48px"}
+              height="32px"
+              loading={isRoomRoleSettingsLoading}
+            >
+              <ActiveRolesList
+                widthOfContainer={width}
+                numberOfWerewolves={numberOfWerewolves}
+                activeRoles={settings?.selectedRoles ?? []}
+              />
+            </Skeleton>
+
+            {isModerator ? (
+              <EditRoomRoleSettings
+                roomRoleSettingsQuery={roomRoleSettingsQuery}
+              />
+            ) : (
+              <RoomRoleSettingsInfo
+                numberOfWerewolves={numberOfWerewolves}
+                activeRoles={settings?.selectedRoles ?? []}
+              />
+            )}
+          </VStack>
         </Card.Body>
       </Card.Root>
-      <DrawerRoot
-        open={isOpen}
-        onOpenChange={(e) => {
-          setIsOpen(e.open);
-        }}
-        size="full"
-        placement="bottom"
-      >
-        <DrawerBackdrop />
-
-        {isModerator ? (
-          <EditRoomRoleSettings
-            roomRoleSettingsQuery={roomRoleSettingsQuery}
-            closeDrawer={closeDrawerCallback}
-          />
-        ) : (
-          <RoomRoleSettingsInfo
-            numberOfWerewolves={numberOfWerewolves}
-            activeRoles={settings?.selectedRoles ?? []}
-          />
-        )}
-      </DrawerRoot>
     </>
   );
 };

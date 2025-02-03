@@ -15,7 +15,7 @@ import campIcon from "../../assets/icons/lobby-icon.png";
 import { useCreateRoom } from "@/hooks/useCreateRoom";
 import { useCheckRoom } from "@/hooks/useCheckRoom";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { toaster } from "../ui/toaster";
+import { toaster } from "../ui-addons/toaster";
 import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 

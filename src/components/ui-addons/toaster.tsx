@@ -2,6 +2,7 @@
 
 import {
   Toaster as ChakraToaster,
+  Icon,
   Portal,
   Spinner,
   Stack,
@@ -22,6 +23,8 @@ export const Toaster = () => {
           <Toast.Root width={{ md: "sm" }}>
             {toast.type === "loading" ? (
               <Spinner size="sm" color="blue.solid" />
+            ) : toast.meta?.icon ? (
+              <Icon>{toast.meta.icon}</Icon>
             ) : (
               <Toast.Indicator />
             )}

@@ -8,12 +8,16 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import {
+  DrawerBackdrop,
   DrawerBody,
   DrawerCloseTrigger,
   DrawerContent,
   DrawerHeader,
+  DrawerRoot,
+  DrawerTrigger,
 } from "@/components/ui/drawer";
-import { IconCards } from "@tabler/icons-react";
+import { IconCards, IconUserUp } from "@tabler/icons-react";
+import { Button } from "@/components/ui/button";
 
 type ShowRoleControl = "active" | "all";
 
@@ -42,36 +46,50 @@ export const RoomRoleSettingsInfo = ({
     roleControl === "all" ? allRoles : [werewolfRole, ...activeRolesData];
 
   return (
-    <DrawerContent>
-      <DrawerCloseTrigger />
-      <DrawerHeader>
-        <HStack gap={1}>
-          <IconCards size={18} />
-          <Text fontWeight={500} fontSize="lg">
-            Role Settings
-          </Text>
-        </HStack>
-      </DrawerHeader>
-      <DrawerBody>
-        <Stack ref={ref} mb="1rem" align="center" gap={3}>
-          <ActiveRolesList
-            widthOfContainer={width}
-            numberOfWerewolves={numberOfWerewolves}
-            activeRoles={activeRoles}
-          />
-          <Separator />
-          <SegmentedControl
-            w="fit-content"
-            value={roleControl}
-            onValueChange={(e) => setRoleControl(e.value as ShowRoleControl)}
-            items={[
-              { label: t("Active"), value: "active" },
-              { label: t("All"), value: "all" },
-            ]}
-          />
-          <RoleInfoList roles={roleList} />
-        </Stack>
-      </DrawerBody>
-    </DrawerContent>
+    <DrawerRoot
+      size="full"
+      placement="bottom"
+      onExitComplete={() => {
+        setRoleControl("active");
+      }}
+    >
+      <DrawerBackdrop />
+      <DrawerTrigger asChild>
+        <Button size="xs" w="full" variant="subtle" colorPalette="blue">
+          <IconUserUp /> {t("View Settings")}
+        </Button>
+      </DrawerTrigger>
+      <DrawerContent>
+        <DrawerCloseTrigger />
+        <DrawerHeader>
+          <HStack gap={1}>
+            <IconCards size={18} />
+            <Text fontWeight={500} fontSize="lg">
+              {t("Role Settings")}
+            </Text>
+          </HStack>
+        </DrawerHeader>
+        <DrawerBody>
+          <Stack ref={ref} mb="1rem" align="center" gap={3}>
+            <ActiveRolesList
+              widthOfContainer={width}
+              numberOfWerewolves={numberOfWerewolves}
+              activeRoles={activeRoles}
+            />
+            <Separator />
+            <SegmentedControl
+              w="fit-content"
+              value={roleControl}
+              onValueChange={(e) => setRoleControl(e.value as ShowRoleControl)}
+              items={[
+                { label: t("Active"), value: "active" },
+                { label: t("All"), value: "all" },
+              ]}
+            />
+            <RoleInfoList roles={roleList} />
+          </Stack>
+        </DrawerBody>
+      </DrawerContent>
+    </DrawerRoot>
   );
 };

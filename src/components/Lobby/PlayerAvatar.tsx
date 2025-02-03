@@ -7,6 +7,7 @@ import { useIsModerator } from "@/hooks/useIsModerator";
 import { useRoomId } from "@/hooks/useRoomId";
 import { useUpdateCurrentPlayerDetails } from "@/hooks/useUpdateCurrentPlayerDetails";
 import { AddEditPlayerModal } from "./AddEditPlayerModal";
+import { useTranslation } from "react-i18next";
 
 export const PlayerAvatar = ({
   player,
@@ -19,6 +20,7 @@ export const PlayerAvatar = ({
   currentPlayer: PlayerDto | undefined;
   onSettingsClick: () => void;
 }) => {
+  const { t } = useTranslation();
   const roomId = useRoomId();
   const { getAvatarImageSrcForIndex } = usePlayerAvatar();
   const { mutate: updatePlayerDetailsMutate } = useUpdateCurrentPlayerDetails();
@@ -39,7 +41,7 @@ export const PlayerAvatar = ({
             <Stack direction="column" align="start" gap={0}>
               {isCurrentPlayer ? (
                 <Badge colorPalette="blue" size="sm">
-                  <Text fontSize="sm">You</Text>
+                  <Text fontSize="sm">{t("You")}</Text>
                 </Badge>
               ) : null}
               <Text fontSize="lg" textStyle="accent">

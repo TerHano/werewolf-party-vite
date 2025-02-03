@@ -5,12 +5,13 @@ import { useTranslation } from "react-i18next";
 import { useRoomId } from "@/hooks/useRoomId";
 import { ClipboardIconButton } from "../ui-addons/clipboard-button";
 import { useCallback } from "react";
-import { toaster } from "../ui/toaster";
+import { toaster } from "../ui-addons/toaster";
 import { Button } from "../ui/button";
 import { useStartGame } from "@/hooks/useStartGame";
 import { useIsModerator } from "@/hooks/useIsModerator";
 import { PlayersSection } from "./PlayerSection";
 import { LeaveRoomButton } from "./LeaveRoomButton";
+import { RoomRoleSettingsCard } from "./RoomRoleSettings/RoomRoleSettingsCard";
 
 export const Lobby = () => {
   const roomId = useRoomId();
@@ -52,7 +53,8 @@ export const Lobby = () => {
           </HStack>
           <LeaveRoomButton />
         </HStack>
-        <ModeratorCard />
+        <ModeratorCard currentPlayer={currentPlayer} />
+        <RoomRoleSettingsCard />
         {isModerator ? (
           <SimpleGrid gap={2} columns={1}>
             {/* <ManagePlayersButton /> */}

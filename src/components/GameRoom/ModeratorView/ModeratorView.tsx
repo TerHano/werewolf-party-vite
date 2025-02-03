@@ -1,5 +1,5 @@
 import { useEndGame } from "@/hooks/useEndGame";
-import { Skeleton, Stack } from "@chakra-ui/react";
+import { Stack } from "@chakra-ui/react";
 import { Button } from "../../ui/button";
 import { useRoomId } from "@/hooks/useRoomId";
 import { useDayDetails } from "@/hooks/useDayDetails";
@@ -19,6 +19,7 @@ import {
   DrawerTrigger,
 } from "../../ui/drawer";
 import { IconSettings } from "@tabler/icons-react";
+import { Skeleton } from "@/components/ui-addons/skeleton";
 
 export const ModeratorView = () => {
   const { t } = useTranslation();
@@ -64,7 +65,7 @@ export const ModeratorView = () => {
                     endGameMutation({ roomId });
                   }}
                 >
-                  End Game
+                  {t("End Game")}
                 </Button>
               </DrawerBody>
             </DrawerContent>

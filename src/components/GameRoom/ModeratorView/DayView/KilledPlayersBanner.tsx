@@ -18,7 +18,7 @@ export const KilledPlayersBanner = () => {
           <Card.Title>
             <Group gap={1} align="center">
               <IconGrave2 size={16} />
-              <Text textStyle="accent">{t("Deaths From Previous Night")}</Text>
+              <Text textStyle="accent">{t("Deaths")}</Text>
             </Group>
           </Card.Title>
           <Card.Description>

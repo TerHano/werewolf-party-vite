@@ -75,7 +75,7 @@ export const ModeratorCard = ({ currentPlayer }: ModeratorCardProps) => {
 
   const ringCss = defineStyle({
     outlineWidth: "2px",
-    outlineColor: "yellow.700",
+    outlineColor: "yellow.600",
     outlineStyle: "solid",
   });
 

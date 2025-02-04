@@ -1,24 +1,22 @@
 import { PlayerDto } from "@/dto/PlayerDto";
 import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
-import { Badge, Card, IconButton, Image, Stack, Text } from "@chakra-ui/react";
+import { Badge, Card, Image, Stack, Text } from "@chakra-ui/react";
 import { CSSProperties } from "react";
-import { IconUserCog } from "@tabler/icons-react";
 import { useIsModerator } from "@/hooks/useIsModerator";
 import { useRoomId } from "@/hooks/useRoomId";
 import { useUpdateCurrentPlayerDetails } from "@/hooks/useUpdateCurrentPlayerDetails";
 import { AddEditPlayerModal } from "./AddEditPlayerModal";
 import { useTranslation } from "react-i18next";
+import { ManagePlayersButton } from "./ManagePlayersButton";
 
 export const PlayerAvatar = ({
   player,
   currentPlayer,
-  onSettingsClick,
 }: {
   player: PlayerDto;
   className?: string;
   css?: CSSProperties;
   currentPlayer: PlayerDto | undefined;
-  onSettingsClick: () => void;
 }) => {
   const { t } = useTranslation();
   const roomId = useRoomId();
@@ -49,17 +47,7 @@ export const PlayerAvatar = ({
               </Text>
             </Stack>
           </Stack>
-          {isModerator ? (
-            <IconButton
-              size="sm"
-              borderRadius="full"
-              variant="subtle"
-              colorPalette="blue"
-              onClick={onSettingsClick}
-            >
-              {<IconUserCog />}
-            </IconButton>
-          ) : null}
+          {isModerator ? <ManagePlayersButton player={player} /> : null}
           {isCurrentPlayer ? (
             <AddEditPlayerModal
               isEdit

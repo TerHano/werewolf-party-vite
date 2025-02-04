@@ -325,20 +325,27 @@ export const EditRoomRoleSettings = ({
                     <ChakraField.Label>
                       <Text>{t("Show Game Summary")}</Text>
                     </ChakraField.Label>
-                    <Controller
-                      name="showGameSummary"
-                      control={control}
-                      render={({ field }) => (
-                        <Switch
-                          name={field.name}
-                          checked={field.value}
-                          onCheckedChange={({ checked }) =>
-                            field.onChange(checked)
-                          }
-                          inputProps={{ onBlur: field.onBlur }}
-                        />
-                      )}
-                    />
+                    <Skeleton
+                      height={6}
+                      width={12}
+                      loading={isRoomRoleSettingsLoading}
+                    >
+                      <Controller
+                        name="showGameSummary"
+                        control={control}
+                        defaultValue={savedRoleSettings?.showGameSummary}
+                        render={({ field }) => (
+                          <Switch
+                            name={field.name}
+                            checked={field.value}
+                            onCheckedChange={({ checked }) =>
+                              field.onChange(checked)
+                            }
+                            inputProps={{ onBlur: field.onBlur }}
+                          />
+                        )}
+                      />
+                    </Skeleton>
                     <ChakraField.HelperText>
                       {t(
                         "Toggles whether or not to show the game summary to players once the game is done"
@@ -352,21 +359,27 @@ export const EditRoomRoleSettings = ({
                         {t("Coming Soon")}
                       </Badge>
                     </ChakraField.Label>
-                    <Controller
-                      name="allowMultipleSelfHeals"
-                      control={control}
-                      render={({ field }) => (
-                        <Switch
-                          disabled
-                          name={field.name}
-                          checked={field.value}
-                          onCheckedChange={({ checked }) =>
-                            field.onChange(checked)
-                          }
-                          inputProps={{ onBlur: field.onBlur }}
-                        />
-                      )}
-                    />
+                    <Skeleton
+                      height={6}
+                      width={12}
+                      loading={isRoomRoleSettingsLoading}
+                    >
+                      <Controller
+                        name="allowMultipleSelfHeals"
+                        control={control}
+                        render={({ field }) => (
+                          <Switch
+                            disabled
+                            name={field.name}
+                            checked={field.value}
+                            onCheckedChange={({ checked }) =>
+                              field.onChange(checked)
+                            }
+                            inputProps={{ onBlur: field.onBlur }}
+                          />
+                        )}
+                      />
+                    </Skeleton>
                     <ChakraField.HelperText>
                       {t("Restricts how often a healer can heal themselves")}
                     </ChakraField.HelperText>

@@ -6,43 +6,39 @@ import {
   DrawerCloseTrigger,
   DrawerContent,
   DrawerHeader,
-  DrawerRoot,
   DrawerTrigger,
 } from "../ui/drawer";
-import { usePlayers } from "@/hooks/usePlayers";
 import { useRoomId } from "@/hooks/useRoomId";
-import { Card, HStack, IconButton, Image, Stack, Text } from "@chakra-ui/react";
+import {
+  DrawerRootProvider,
+  IconButton,
+  Image,
+  Stack,
+  Text,
+  useDrawer,
+} from "@chakra-ui/react";
 import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
 import { useTranslation } from "react-i18next";
 import { IconKarate, IconSpeakerphone, IconUserCog } from "@tabler/icons-react";
 import { useUpdateModerator } from "@/hooks/useUpdateModerator";
-import { useCallback, useMemo } from "react";
-import React from "react";
+import { useCallback } from "react";
 import { useKickPlayer } from "@/hooks/useKickPlayer";
 
-export const ManagePlayersButton = () => {
+export const ManagePlayersButton = ({ player }: { player: PlayerDto }) => {
   const { t } = useTranslation();
+  const drawer = useDrawer();
   const roomId = useRoomId();
-  const [isOpen, setIsOpen] = React.useState(false);
-  const { data: players, isFetching: isPlayersLoading } = usePlayers(roomId);
   const { getAvatarImageSrcForIndex } = usePlayerAvatar();
-
-  const isDisabled = useMemo(() => {
-    if (isPlayersLoading) return true;
-    if (!players || players.length === 0) return true;
-
-    return false;
-  }, [isPlayersLoading, players]);
 
   const { mutate: updateModeratorMutate } = useUpdateModerator({
     onSuccess: async () => {
-      setIsOpen(false);
+      drawer.setOpen(false);
     },
   });
 
   const { mutate: kickPlayerMutate } = useKickPlayer({
     onSuccess: async () => {
-      setIsOpen(false);
+      drawer.setOpen(false);
     },
   });
 
@@ -66,83 +62,60 @@ export const ManagePlayersButton = () => {
     [kickPlayerMutate, roomId]
   );
   return (
-    <DrawerRoot
-      open={isOpen}
-      onOpenChange={(e) => {
-        setIsOpen(e.open);
-      }}
+    <DrawerRootProvider
+      value={drawer}
+      lazyMount
+      unmountOnExit
       placement="bottom"
     >
       <DrawerBackdrop />
-
-      <DrawerTrigger asChild>
-        <Button
-          disabled={isDisabled}
+      <DrawerTrigger>
+        <IconButton
+          size="sm"
+          borderRadius="full"
           variant="subtle"
           colorPalette="blue"
-          size="sm"
         >
-          <IconUserCog /> <Text fontSize="xs">{t("Manage Players")}</Text>
-        </Button>
+          <IconUserCog />
+        </IconButton>
       </DrawerTrigger>
-
       <DrawerContent borderRadius="sm">
-        <DrawerHeader>Manage Players</DrawerHeader>
+        <DrawerHeader>
+          <Stack align="center" direction="row" gap={1}>
+            <Text>{t("Manage")}</Text>
+            <Text fontWeight="semibold">{player.nickname}</Text>
+            <Image
+              src={getAvatarImageSrcForIndex(player.avatarIndex)}
+              width="2rem"
+            />
+          </Stack>
+        </DrawerHeader>
         <DrawerBody>
-          <Stack gap={2}>
-            {players?.map((player: PlayerDto) => (
-              <Card.Root key={player.id} w="full">
-                <Card.Body>
-                  <HStack justifyContent="space-between" gap={2}>
-                    <HStack gap={2}>
-                      <Image
-                        h="36px"
-                        src={getAvatarImageSrcForIndex(player?.avatarIndex)}
-                      />
-                      <Text>{player?.nickname}</Text>
-                    </HStack>
-                    <HStack gap={2}>
-                      <IconButton
-                        onClick={() => {
-                          void onKickPlayer(player.id);
-                        }}
-                        borderRadius="full"
-                        variant="subtle"
-                        colorPalette="red"
-                      >
-                        <IconKarate />
-                      </IconButton>
-                      {/* <Button
-                          onClick={() => {
-                            void onKickPlayer(player.id);
-                          }}
-                          size="xs"
-                          variant="subtle"
-                          colorPalette="red"
-                        >
-                          <HStack alignContent="center" gap={1}>
-                            <IconKarate /> {t("Kick")}
-                          </HStack>
-                        </Button> */}
-                      <IconButton
-                        borderRadius="full"
-                        onClick={() => {
-                          void onUpdateModerator(player.id);
-                        }}
-                        colorPalette="orange"
-                        variant="subtle"
-                      >
-                        <IconSpeakerphone />
-                      </IconButton>
-                    </HStack>
-                  </HStack>
-                </Card.Body>
-              </Card.Root>
-            ))}
+          <Stack mb={5} columns={2} gap={4}>
+            <Button
+              onClick={() => {
+                void onKickPlayer(player.id);
+              }}
+              //variant="subtle"
+              colorPalette="red"
+            >
+              <IconKarate />
+              <Text fontSize="xs">{t("Kick Player")}</Text>
+            </Button>
+            <Button
+              onClick={() => {
+                void onUpdateModerator(player.id);
+              }}
+              colorPalette="orange"
+              // variant="subtle"
+            >
+              <IconSpeakerphone />
+              <Text fontSize="xs"> {t("Make Moderator")}</Text>
+            </Button>
           </Stack>
         </DrawerBody>
         <DrawerCloseTrigger />
       </DrawerContent>
-    </DrawerRoot>
+    </DrawerRootProvider>
   );
 };

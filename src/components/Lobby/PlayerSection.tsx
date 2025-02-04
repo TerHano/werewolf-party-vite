@@ -1,13 +1,10 @@
 import { PlayerDto } from "@/dto/PlayerDto";
-import { useKickPlayer } from "@/hooks/useKickPlayer";
 import { usePlayers } from "@/hooks/usePlayers";
 import { useRoomId } from "@/hooks/useRoomId";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
-import { useUpdateModerator } from "@/hooks/useUpdateModerator";
 import {
   Card,
   VStack,
-  Button,
   Image,
   SimpleGrid,
   Text,
@@ -15,20 +12,11 @@ import {
   HStack,
   Stack,
 } from "@chakra-ui/react";
-import { IconKarate, IconSpeakerphone } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { toaster } from "../ui-addons/toaster";
 import { PlayerAvatar } from "./PlayerAvatar";
-import {
-  DrawerRoot,
-  DrawerBackdrop,
-  DrawerContent,
-  DrawerHeader,
-  DrawerBody,
-  DrawerCloseTrigger,
-} from "../ui/drawer";
 import emptyLobby from "@/assets/icons/lobby/lobby-empty.png";
 import { ClipboardButton } from "../ui-addons/clipboard-button";
 import React from "react";
@@ -47,25 +35,12 @@ export const PlayersSection = ({
   const roomId = useRoomId();
   const navigate = useNavigate();
 
-  const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [selectedPlayer, setSelectedPlayer] = useState<PlayerDto | undefined>();
-
   const {
     data: players,
     isLoading: isPlayersLoading,
     refetch: refetchPlayers,
   } = usePlayers(roomId);
-  const { mutate: updateModeratorMutate } = useUpdateModerator({
-    onSuccess: async () => {
-      setDrawerOpen(false);
-    },
-  });
 
-  const { mutate: kickPlayerMutate } = useKickPlayer({
-    onSuccess: async () => {
-      setDrawerOpen(false);
-    },
-  });
   const onPlayerKicked = useCallback(
     (kickedPlayerId: number) => {
       if (currentPlayer?.id === kickedPlayerId) {
@@ -80,26 +55,6 @@ export const PlayersSection = ({
       }
     },
     [currentPlayer?.id, t, navigate, refetchPlayers]
-  );
-
-  const onUpdateModerator = useCallback(
-    (playerId: number) => {
-      updateModeratorMutate({
-        newModeratorPlayerRoomId: playerId,
-        roomId,
-      });
-    },
-    [roomId, updateModeratorMutate]
-  );
-
-  const onKickPlayer = useCallback(
-    (playerId: number) => {
-      kickPlayerMutate({
-        playerToKickId: playerId,
-        roomId,
-      });
-    },
-    [kickPlayerMutate, roomId]
   );
 
   useSocketConnection({
@@ -163,10 +118,6 @@ export const PlayersSection = ({
                 currentPlayer={currentPlayer}
                 key={player.id}
                 player={player}
-                onSettingsClick={() => {
-                  setSelectedPlayer(player);
-                  setDrawerOpen(true);
-                }}
                 className="animate-fade-in-from-bottom"
                 css={{ animationDelay: `${index * 50}ms` }}
               />
@@ -174,49 +125,6 @@ export const PlayersSection = ({
           </SimpleGrid>
         </SkeletonComposed>
       </React.Fragment>
-      <DrawerRoot
-        open={isDrawerOpen}
-        onOpenChange={(e) => {
-          setDrawerOpen(e.open);
-        }}
-        placement="bottom"
-      >
-        <DrawerBackdrop />
-        <DrawerContent borderRadius="sm">
-          <DrawerHeader>
-            {t("Manage")} {selectedPlayer?.nickname}
-          </DrawerHeader>
-          <DrawerBody>
-            {selectedPlayer ? (
-              <SimpleGrid mb={5} columns={2} gap={2}>
-                <Button
-                  size="sm"
-                  onClick={() => {
-                    void onKickPlayer(selectedPlayer.id);
-                  }}
-                  variant="subtle"
-                  colorPalette="red"
-                >
-                  <IconKarate />
-                  <Text fontSize="xs">{t("Kick Player")}</Text>
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={() => {
-                    void onUpdateModerator(selectedPlayer.id);
-                  }}
-                  colorPalette="orange"
-                  variant="subtle"
-                >
-                  <IconSpeakerphone />
-                  <Text fontSize="xs"> {t("Make Moderator")}</Text>
-                </Button>
-              </SimpleGrid>
-            ) : null}
-          </DrawerBody>
-          <DrawerCloseTrigger />
-        </DrawerContent>
-      </DrawerRoot>
     </>
   );
 };

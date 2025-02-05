@@ -25,6 +25,7 @@ jobs:
     - name: Build
       run: |
         npm install
+        npx @chakra-ui/cli typegen ./theme.ts
         npm run build
 
     - name: Bundle and uppload artifact build

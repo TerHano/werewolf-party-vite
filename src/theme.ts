@@ -1,6 +1,4 @@
 import {
-  Card,
-  CardBody,
   createSystem,
   defaultConfig,
   defineTextStyles,

@@ -38,6 +38,9 @@ export const ActiveRolesList = ({
         {numberOfWerewolves > 1 ? (
           <Float placement="top-end">
             <Badge variant="surface" size="xs">
+              {
+                // eslint-disable-next-line i18next/no-literal-string -- no need for translation
+              }
               x{numberOfWerewolves}
             </Badge>
           </Float>

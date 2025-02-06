@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "typegen": "npx chakra typegen ./src/theme.ts",
     "lint": "eslint .",
     "preview": "vite preview",
     "dev-host": "vite --host"
@@ -27,6 +28,7 @@
     "react-icons": "^5.4.0"
   },
   "devDependencies": {
+    "@chakra-ui/cli": "^3.7.0",
     "@eslint/js": "^9.15.0",
     "@tanstack/router-devtools": "^1.87.3",
     "@tanstack/router-plugin": "^1.87.4",

@@ -112,7 +112,7 @@ export const EditRoomRoleSettings = ({
     <DrawerRootProvider value={drawer} size="full" placement="bottom">
       <DrawerBackdrop />
       <DrawerTrigger asChild>
-        <Button size="xs" w="full" variant="subtle" colorPalette="blue">
+        <Button size="sm" w="full" variant="subtle" colorPalette="blue">
           <IconSettings /> {t("Edit Settings")}
         </Button>
       </DrawerTrigger>

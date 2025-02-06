@@ -5,7 +5,7 @@ import {
   HubConnectionBuilder,
   LogLevel,
 } from "@microsoft/signalr";
-import React, {
+import {
   PropsWithChildren,
   useCallback,
   useEffect,

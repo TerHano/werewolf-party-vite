@@ -55,7 +55,7 @@ export const RoomRoleSettingsInfo = ({
     >
       <DrawerBackdrop />
       <DrawerTrigger asChild>
-        <Button size="xs" w="full" variant="subtle" colorPalette="blue">
+        <Button size="sm" w="full" variant="subtle" colorPalette="blue">
           <IconUserUp /> {t("View Settings")}
         </Button>
       </DrawerTrigger>

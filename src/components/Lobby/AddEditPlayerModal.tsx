@@ -124,7 +124,7 @@ export const AddEditPlayerModal = ({
         <DialogBackdrop />
         {isEdit && (
           <DialogTrigger>
-            <IconButton size="xs" variant="plain" colorScheme="blue">
+            <IconButton size="sm" variant="plain" colorScheme="blue">
               <IconPencil />
             </IconButton>
           </DialogTrigger>
@@ -227,7 +227,7 @@ export const AddEditPlayerModal = ({
             <HStack gap={1}>
               <IconUser size={18} />
               <Text fontWeight={500} fontSize="lg">
-                Pick A Avatar
+                {t("Pick A Avatar")}
               </Text>
             </HStack>
           </DrawerHeader>
@@ -260,10 +260,10 @@ export const AddEditPlayerModal = ({
               })}
             </SimpleGrid>
           </DrawerBody>
-          {/* <DrawerCloseTrigger /> */}
+
           <DrawerFooter>
             <Button w="full" onClick={() => setDrawerOpen(false)}>
-              Close
+              {t("Update")}
             </Button>
           </DrawerFooter>
         </DrawerContent>

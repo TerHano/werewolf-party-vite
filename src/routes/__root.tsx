@@ -4,7 +4,6 @@ import { getApi } from "@/util/api";
 import { getSessionCookie, setSessionCookie } from "@/util/cookie";
 import { Container, Skeleton } from "@chakra-ui/react";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
 export const Route = createRootRoute({
   wrapInSuspense: true,
@@ -26,7 +25,6 @@ export const Route = createRootRoute({
         <Outlet />
         <Toaster />
       </Container>
-      <TanStackRouterDevtools />
     </SocketProvider>
   ),
 });

@@ -55,7 +55,7 @@ export const ManagePlayersButton = ({ player }: { player: PlayerDto }) => {
   const onKickPlayer = useCallback(
     (playerId: number) => {
       kickPlayerMutate({
-        playerToKickId: playerId,
+        playerRoomIdToKick: playerId,
         roomId,
       });
     },

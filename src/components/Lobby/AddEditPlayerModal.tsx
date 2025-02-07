@@ -196,6 +196,7 @@ export const AddEditPlayerModal = ({
                   label={t("Nickname")}
                 >
                   <Input
+                    size="lg"
                     {...nicknameField}
                     ref={(e) => {
                       ref(e);

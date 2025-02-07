@@ -1,6 +1,7 @@
 import { GameRoom } from "@/components/GameRoom/GameRoom";
 import { AddEditPlayerModal } from "@/components/Lobby/AddEditPlayerModal";
 import { Lobby } from "@/components/Lobby/Lobby";
+import { Skeleton } from "@/components/ui-addons/skeleton";
 import { RoomContext } from "@/context/RoomProvider";
 import { AddEditPlayerDetailsDto } from "@/dto/AddEditPlayerDetailsDto";
 import { GameState } from "@/enum/GameState";
@@ -9,7 +10,6 @@ import { useGameState } from "@/hooks/useGameState";
 import { useIsPlayerInRoom } from "@/hooks/useIsPlayerInRoom";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { getApi } from "@/util/api";
-import { Skeleton } from "@chakra-ui/react";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { useCallback, useEffect } from "react";
@@ -55,13 +55,16 @@ function RouteComponent() {
       }
     },
   });
-  const { data: isPlayerAlreadyInRoom, refetch: refetchIsPlayerInRoom } =
-    useIsPlayerInRoom({
-      roomId,
-      options: {
-        initialData: _isPlayerAlreadyInRoomInitialData,
-      },
-    });
+  const {
+    data: isPlayerAlreadyInRoom,
+    refetch: refetchIsPlayerInRoom,
+    isFetching: isPlayerInRoomLoading,
+  } = useIsPlayerInRoom({
+    roomId,
+    options: {
+      initialData: _isPlayerAlreadyInRoomInitialData,
+    },
+  });
 
   const { joinRoom } = useSocketConnection({
     onReconnect: () => {
@@ -86,11 +89,13 @@ function RouteComponent() {
 
   return (
     <RoomContext.Provider value={{ roomId }}>
-      {isPlayerAlreadyInRoom ? (
-        <Room roomId={roomId} />
-      ) : (
-        <AddEditPlayerModal submitCallback={joinRoomCb} />
-      )}
+      <Skeleton loading={isPlayerInRoomLoading} h={0} w={0}>
+        {isPlayerAlreadyInRoom ? (
+          <Room roomId={roomId} />
+        ) : (
+          <AddEditPlayerModal submitCallback={joinRoomCb} />
+        )}
+      </Skeleton>
     </RoomContext.Provider>
   );
 }

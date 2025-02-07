@@ -52,11 +52,11 @@ export const MainMenu = () => {
           title: "Room Not Found",
           description: (
             <Text as="span">
-              Room with ID:{" "}
+              {t("Room with ID:")}{" "}
               <Text as="span" fontWeight="bold">
                 {roomId}
               </Text>{" "}
-              not found. Please try again
+              {t("not found. Please try again")}
             </Text>
           ),
           duration: 2000,
@@ -81,7 +81,7 @@ export const MainMenu = () => {
           <Stack alignItems="center" gap={0}>
             <Image width={150} src={campIcon} />
             <Text textStyle="accent" fontSize="2.5rem" fontWeight="bold">
-              Werewolf Party
+              {t("Werewolf Party")}
             </Text>
             <Text textStyle="accent" fontSize="medium" color="gray.300">
               {t("Cards for a party game full of lies, deceit, & accusations")}
@@ -143,7 +143,7 @@ export const MainMenu = () => {
             onClick={() => {
               createNewRoom();
             }}
-            size="sm"
+            size="md"
           >
             {t("Create New Room")} <IconUsersGroup />
           </Button>

@@ -108,6 +108,7 @@ export const MainMenu = () => {
             >
               <Group attached>
                 <Input
+                  size="lg"
                   {...register("roomId", {
                     required: {
                       value: true,

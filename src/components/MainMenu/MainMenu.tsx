@@ -1,9 +1,11 @@
+/* eslint-disable i18next/no-literal-string */
 import {
   Card,
   Group,
   HStack,
   Image,
   Input,
+  Link,
   Separator,
   Stack,
   Text,
@@ -147,9 +149,27 @@ export const MainMenu = () => {
           >
             {t("Create New Room")} <IconUsersGroup />
           </Button>
-          <Text color="gray.500" textStyle="accent">
-            {t("Developed By Terry Hanoman")}
-          </Text>
+          <Stack align="center" gap={0} direction="column">
+            <Text color="gray.500" textStyle="accent">
+              {t("Developed By Terry Hanoman")}
+            </Text>
+            <Text color="gray.500" textStyle="accent">
+              {t("Icons by ")}{" "}
+              <Link
+                target="_blank"
+                href="https://icons8.com/icon/WlXKRWqXdjfz/werewolf"
+              >
+                Icons8
+              </Link>{" "}
+              {t("and")}{" "}
+              <Link
+                target="_blank"
+                href="https://www.flaticon.com/authors/graphiqa"
+              >
+                Graphiqa
+              </Link>
+            </Text>
+          </Stack>
         </Stack>
       </Card.Root>
     </Stack>

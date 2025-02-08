@@ -44,6 +44,7 @@ export const ModeratorCard = ({ currentPlayer }: ModeratorCardProps) => {
           title: t("You're In Charge!"),
           description: t("You are now the moderator!"),
           duration: 2500,
+          type: "warning",
         });
       } else {
         toaster.create({
@@ -57,6 +58,7 @@ export const ModeratorCard = ({ currentPlayer }: ModeratorCardProps) => {
               <Text>{t("is now moderator")}</Text>
             </Group>
           ),
+          type: "warning",
           duration: 2500,
         });
       }

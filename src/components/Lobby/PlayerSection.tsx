@@ -25,6 +25,7 @@ import {
   SkeletonCircle,
   SkeletonComposed,
 } from "@/components/ui-addons/skeleton";
+import { IconCopyCheck } from "@tabler/icons-react";
 
 export const PlayersSection = ({
   currentPlayer,
@@ -102,7 +103,18 @@ export const PlayersSection = ({
                   {t("Copy and send the room code to your friends!")}
                 </Text>
               </VStack>
-              <ClipboardButton value={window.location.href}>
+              <ClipboardButton
+                onCopy={() => {
+                  toaster.create({
+                    meta: {
+                      icon: <IconCopyCheck />,
+                    },
+                    title: t("Room ID Copied!"),
+                    description: t("Send it to your friends!"),
+                  });
+                }}
+                value={window.location.href}
+              >
                 {t("Copy Room URL")}
               </ClipboardButton>
             </VStack>

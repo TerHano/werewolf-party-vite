@@ -12,6 +12,7 @@ import { useIsModerator } from "@/hooks/useIsModerator";
 import { PlayersSection } from "./PlayerSection";
 import { LeaveRoomButton } from "./LeaveRoomButton";
 import { RoomRoleSettingsCard } from "./RoomRoleSettings/RoomRoleSettingsCard";
+import { IconCopyCheck } from "@tabler/icons-react";
 
 export const Lobby = () => {
   const roomId = useRoomId();
@@ -49,6 +50,17 @@ export const Lobby = () => {
                 size: "sm",
                 variant: "subtle",
               }}
+              onCopy={() =>
+                toaster.create({
+                  meta: {
+                    icon: <IconCopyCheck />,
+                  },
+                  duration: 1000,
+                  type: "success",
+                  title: t("Room ID Copied!"),
+                  description: t("Send it to your friends!"),
+                })
+              }
             />
           </HStack>
           <LeaveRoomButton />

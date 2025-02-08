@@ -128,9 +128,9 @@ export const AddEditPlayerModal = ({
         <DialogBackdrop />
         {isEdit && (
           <DialogTrigger>
-            <IconButton size="sm" variant="plain" colorScheme="blue">
-              <IconPencil />
-            </IconButton>
+            <Button size="2xs" variant="outline">
+              {t("Edit Name")} <IconPencil />
+            </Button>
           </DialogTrigger>
         )}
         <DialogContent>

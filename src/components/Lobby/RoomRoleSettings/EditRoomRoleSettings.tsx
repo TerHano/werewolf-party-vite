@@ -63,18 +63,21 @@ export const EditRoomRoleSettings = ({
     onSuccess: async () => {
       toaster.create({
         title: t("Role Settings Updated"),
-        //description: t("You are now the moderator!"),
+        description: t("Your new roles and game settings have been saved!"),
         type: "success",
-        duration: 1500,
+        duration: 2500,
       });
     },
   });
   const { data, isRoleType } = useRoles();
   const { data: savedRoleSettings, isLoading: isRoomRoleSettingsLoading } =
     roomRoleSettingsQuery;
-  const { control, handleSubmit } = useForm<EditRoomRoleSettingsForm>({
-    shouldUnregister: true,
-  });
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isDirty: isFormDirty },
+  } = useForm<EditRoomRoleSettingsForm>();
   const onSubmit: SubmitHandler<EditRoomRoleSettingsForm> = useCallback(
     (data) => {
       if (!savedRoleSettings) {
@@ -95,10 +98,11 @@ export const EditRoomRoleSettings = ({
       void mutate(request, {
         onSuccess: () => {
           drawer.setOpen(false);
+          reset(data);
         },
       });
     },
-    [drawer, mutate, roomId, savedRoleSettings]
+    [drawer, mutate, reset, roomId, savedRoleSettings]
   );
 
   const traditonalRoles = data.filter(
@@ -109,7 +113,12 @@ export const EditRoomRoleSettings = ({
   );
 
   return (
-    <DrawerRootProvider value={drawer} size="full" placement="bottom">
+    <DrawerRootProvider
+      value={drawer}
+      size="full"
+      onExitComplete={() => reset()}
+      placement="bottom"
+    >
       <DrawerBackdrop />
       <DrawerTrigger asChild>
         <Button size="sm" w="full" variant="subtle" colorPalette="blue">
@@ -392,6 +401,7 @@ export const EditRoomRoleSettings = ({
           </DrawerBody>
           <DrawerFooter>
             <Button
+              disabled={!isFormDirty}
               w="full"
               onClick={handleSubmit(onSubmit)}
               loading={isUpdatingSettings}

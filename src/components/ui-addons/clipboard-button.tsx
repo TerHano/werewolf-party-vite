@@ -10,26 +10,40 @@ import {
 import { IconClipboard, IconClipboardCheck } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 
-export interface ClipboardIconButtonProps {
-  label: string;
+interface BaseClipboardButtonProps {
   value: string;
+  onCopy?: () => void;
+}
+
+export interface ClipboardIconButtonProps extends BaseClipboardButtonProps {
+  label: string;
   iconButton: IconButtonProps;
 }
 
-export interface ClipboardButtonProps {
+export interface ClipboardButtonProps extends BaseClipboardButtonProps {
   children: React.ReactNode;
-  value: string;
   button?: ButtonProps;
 }
 
 export const ClipboardIconButton = ({
   iconButton,
+  onCopy,
   value,
   label,
 }: ClipboardIconButtonProps) => {
   const { t } = useTranslation();
   return (
-    <ChakraClipboard.Root timeout={1000} value={value}>
+    <ChakraClipboard.Root
+      onStatusChange={({ copied }) => {
+        if (copied) {
+          if (onCopy) {
+            onCopy();
+          }
+        }
+      }}
+      timeout={1000}
+      value={value}
+    >
       <ChakraClipboard.Trigger asChild>
         <ChakraClipboard.Indicator
           copied={
@@ -57,10 +71,21 @@ export const ClipboardButton = ({
   button,
   children,
   value,
+  onCopy,
 }: ClipboardButtonProps) => {
   const { t } = useTranslation();
   return (
-    <ChakraClipboard.Root timeout={1000} value={value}>
+    <ChakraClipboard.Root
+      onStatusChange={({ copied }) => {
+        if (copied) {
+          if (onCopy) {
+            onCopy();
+          }
+        }
+      }}
+      timeout={1000}
+      value={value}
+    >
       <ChakraClipboard.Trigger asChild>
         <ChakraClipboard.Indicator
           copied={

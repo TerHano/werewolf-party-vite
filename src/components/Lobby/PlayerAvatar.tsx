@@ -21,7 +21,8 @@ export const PlayerAvatar = ({
   const { t } = useTranslation();
   const roomId = useRoomId();
   const { getAvatarImageSrcForIndex } = usePlayerAvatar();
-  const { mutate: updatePlayerDetailsMutate } = useUpdateCurrentPlayerDetails();
+  const { mutateAsync: updatePlayerDetailsMutateAsync } =
+    useUpdateCurrentPlayerDetails();
 
   const isCurrentPlayer = currentPlayer?.id === player.id;
   const { data: isModerator } = useIsModerator(roomId);
@@ -52,7 +53,7 @@ export const PlayerAvatar = ({
             <AddEditPlayerModal
               isEdit
               submitCallback={(playerDetails) => {
-                updatePlayerDetailsMutate(playerDetails);
+                return updatePlayerDetailsMutateAsync(playerDetails);
               }}
             />
           ) : null}

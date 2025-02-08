@@ -32,7 +32,8 @@ export const ModeratorCard = ({ currentPlayer }: ModeratorCardProps) => {
     isLoading: isModeratorLoading,
     refetch: refetchModerator,
   } = useModerator(roomId);
-  const { mutate: updatePlayerDetailsMutate } = useUpdateCurrentPlayerDetails();
+  const { mutateAsync: updatePlayerDetailsMutateAsync } =
+    useUpdateCurrentPlayerDetails();
   const { getAvatarImageSrcForIndex } = usePlayerAvatar();
 
   const onModeratorUpdated = useCallback(
@@ -113,7 +114,7 @@ export const ModeratorCard = ({ currentPlayer }: ModeratorCardProps) => {
             <AddEditPlayerModal
               isEdit
               submitCallback={(playerDetails) => {
-                updatePlayerDetailsMutate(playerDetails);
+                return updatePlayerDetailsMutateAsync(playerDetails);
               }}
             />
           ) : null}

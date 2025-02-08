@@ -79,9 +79,11 @@ function RouteComponent() {
   }, [isPlayerAlreadyInRoom, joinRoom, roomId]);
 
   const joinRoomCb = useCallback(
-    (playerDetails: AddEditPlayerDetailsDto) => {
-      joinRoom(playerDetails).then(() => {
-        void refetchIsPlayerInRoom();
+    async (playerDetails: AddEditPlayerDetailsDto) => {
+      return joinRoom(playerDetails).then(() => {
+        return refetchIsPlayerInRoom().then(() => {
+          return;
+        });
       });
     },
     [joinRoom, refetchIsPlayerInRoom]

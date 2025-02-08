@@ -336,6 +336,7 @@ export const EditRoomRoleSettings = ({
                         defaultValue={savedRoleSettings?.showGameSummary}
                         render={({ field }) => (
                           <Switch
+                            size="lg"
                             name={field.name}
                             checked={field.value}
                             onCheckedChange={({ checked }) =>
@@ -369,6 +370,7 @@ export const EditRoomRoleSettings = ({
                         control={control}
                         render={({ field }) => (
                           <Switch
+                            size="lg"
                             disabled
                             name={field.name}
                             checked={field.value}

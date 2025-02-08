@@ -45,7 +45,7 @@ import { GameState } from "@/enum/GameState";
 
 interface AddEditPlayerModalProps {
   isEdit?: boolean;
-  submitCallback: (playerDetails: AddEditPlayerDetailsDto) => void;
+  submitCallback: (playerDetails: AddEditPlayerDetailsDto) => Promise<void>;
 }
 
 type AddEditPlayerModalForm = {
@@ -65,6 +65,7 @@ export const AddEditPlayerModal = ({
   const { data: avatarNames, getAvatarImageSrcForIndex } = usePlayerAvatar();
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [isSubmitLoading, setSubmitLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -87,8 +88,11 @@ export const AddEditPlayerModal = ({
   const watchAvatarIndex = watch("avatarIndex");
 
   const onSubmit: SubmitHandler<AddEditPlayerModalForm> = (data) => {
-    dialog.setOpen(false);
-    submitCallback({ ...data, roomId });
+    setSubmitLoading(true);
+    submitCallback({ ...data, roomId }).finally(() => {
+      dialog.setOpen(false);
+      setSubmitLoading(false);
+    });
   };
   const focusRef = useRef<HTMLInputElement | null>(null);
   const { ref, ...nicknameField } = register("nickname", {
@@ -208,7 +212,12 @@ export const AddEditPlayerModal = ({
             </form>
           </DialogBody>
           <DialogFooter>
-            <Button form="player-details-form" type="submit">
+            <Button
+              loading={isSubmitLoading}
+              disabled={isSubmitLoading}
+              form="player-details-form"
+              type="submit"
+            >
               {isEdit ? t("Update Details") : t("Join Room")}
             </Button>
           </DialogFooter>

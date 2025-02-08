@@ -8,7 +8,16 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
     rel="stylesheet">
-  <link rel="icon" href="/site-icon.png" />
+
+  <!-- Default favicon (for browsers that don't support media queries in link tags) -->
+  <link rel="icon" href="/site-icon-dark.svg" type="image/svg+xml">
+
+  <!-- Light mode favicon -->
+  <link rel="icon" href="/site-icon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+
+  <!-- Dark mode favicon -->
+  <link rel="icon" href="/site-icon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Werewolf Party</title>
   <meta property="og:title" content="Werewolf Party" />

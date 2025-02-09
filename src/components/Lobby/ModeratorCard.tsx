@@ -49,7 +49,9 @@ export const ModeratorCard = ({ currentPlayer }: ModeratorCardProps) => {
       } else {
         toaster.create({
           title: t("New Moderator In Town!"),
-          meta: { icon: <IconSpeakerphone /> },
+          meta: {
+            icon: <IconSpeakerphone />,
+          },
           description: (
             <Group gap={1}>
               <Text fontStyle="italic" fontWeight="bold">

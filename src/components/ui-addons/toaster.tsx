@@ -2,17 +2,29 @@
 
 import {
   Toaster as ChakraToaster,
+  Circle,
   Icon,
-  JsxStyleProps,
   Portal,
   Spinner,
   Stack,
   Toast,
   createToaster,
 } from "@chakra-ui/react";
-import { useCallback } from "react";
+import {
+  IconAlertSquareFilled,
+  IconAlertTriangle,
+  IconCircleCheck,
+  IconInfoCircle,
+} from "@tabler/icons-react";
+import React, { useMemo } from "react";
 
-type ToastType = "success" | "error" | "loading" | "info" | (string & {});
+type WerewolfToastType =
+  | "success"
+  | "error"
+  | "loading"
+  | "info"
+  | "warning"
+  | (string & {});
 
 export const toaster = createToaster({
   placement: "bottom-end",
@@ -20,42 +32,19 @@ export const toaster = createToaster({
 });
 
 export const Toaster = () => {
-  const getToastCss = useCallback<
-    (toastType: ToastType | undefined) => JsxStyleProps["css"]
-  >((toastType) => {
-    switch (toastType) {
-      case "success":
-        return { bgColor: "green.subtle", color: "green.fg" };
-      case "error":
-        return {
-          bgColor: "red.subtle",
-          color: "red.fg",
-        };
-      case "warning":
-        return {
-          bgColor: "yellow.subtle",
-          color: "yellow.fg",
-        };
-      case "info":
-        return {
-          bgColor: "blue.subtle",
-          color: "blue.fg",
-        };
-      default:
-        return undefined;
-    }
-  }, []);
   return (
     <Portal>
       <ChakraToaster toaster={toaster} insetInline={{ mdDown: "4" }}>
         {(toast) => (
-          <Toast.Root css={getToastCss(toast.type)} width={{ md: "sm" }}>
+          <Toast.Root
+            alignItems="center"
+            css={{ bgColor: "bg", color: "fg" }}
+            width={{ md: "sm" }}
+          >
             {toast.type === "loading" ? (
               <Spinner size="sm" color="blue.solid" />
-            ) : toast.meta?.icon ? (
-              <Icon size="sm">{toast.meta.icon}</Icon>
             ) : (
-              <Toast.Indicator />
+              <ToasterIcon icon={toast.meta?.icon} toastType={toast.type} />
             )}
             <Stack gap="1" flex="1" maxWidth="100%">
               {toast.title && <Toast.Title>{toast.title}</Toast.Title>}
@@ -71,5 +60,71 @@ export const Toaster = () => {
         )}
       </ChakraToaster>
     </Portal>
+  );
+};
+
+const ToasterIcon = ({
+  toastType,
+  icon,
+}: {
+  toastType?: WerewolfToastType;
+  icon?: React.ReactNode;
+}) => {
+  const toastCss = useMemo(() => {
+    let typeCss;
+    switch (toastType) {
+      case "success":
+        typeCss = { bgColor: "green.subtle", color: "green.fg" };
+        break;
+      case "error":
+        typeCss = {
+          bgColor: "red.subtle",
+          color: "red.fg",
+        };
+        break;
+      case "warning":
+        typeCss = {
+          bgColor: "yellow.subtle",
+          color: "yellow.fg",
+        };
+        break;
+      case "info":
+        typeCss = {
+          bgColor: "blue.subtle",
+          color: "blue.fg",
+        };
+        break;
+      default:
+        typeCss = undefined;
+        break;
+    }
+    return {
+      ...typeCss,
+
+      p: "8px",
+      boxSizing: "initial",
+    };
+  }, [toastType]);
+
+  const toastIcon = useMemo<React.ReactNode>(() => {
+    if (icon) {
+      return icon;
+    }
+    switch (toastType) {
+      case "warning":
+        return <IconAlertTriangle />;
+      case "error":
+        return <IconAlertSquareFilled />;
+      case "success":
+        return <IconCircleCheck />;
+      default:
+        return <IconInfoCircle />;
+    }
+  }, [icon, toastType]);
+
+  return (
+    <Circle css={toastCss}>
+      <Icon borderRadius="none">{toastIcon}</Icon>
+    </Circle>
   );
 };

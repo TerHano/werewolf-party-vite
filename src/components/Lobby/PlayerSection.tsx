@@ -108,9 +108,9 @@ export const PlayersSection = ({
                 onCopy={() => {
                   showToast({
                     icon: <IconCopyCheck />,
-
+                    type: "success",
                     title: t("Room ID Copied!"),
-                    description: t("Send it to your friends!"),
+                    // description: t("Send it to your friends!"),
                   });
                 }}
                 value={window.location.href}

@@ -85,7 +85,7 @@ export const AddEditPlayerModal = ({
         showToast({
           type: "success",
           title: t("Player Details Updated"),
-          description: t("You should now see your updated name and avatar"),
+          // description: t("You should now see your updated name and avatar"),
           withDismissButton: true,
         });
       }

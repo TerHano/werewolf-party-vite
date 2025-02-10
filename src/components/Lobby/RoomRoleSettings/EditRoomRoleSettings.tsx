@@ -64,7 +64,7 @@ export const EditRoomRoleSettings = ({
     onSuccess: async () => {
       showToast({
         title: t("Role Settings Updated"),
-        description: t("Your new roles and game settings have been saved!"),
+        // description: t("Your new roles and game settings have been saved!"),
         type: "success",
         duration: 2500,
       });

@@ -57,7 +57,7 @@ export const Lobby = () => {
                   duration: 1000,
                   type: "success",
                   title: t("Room ID Copied!"),
-                  description: t("Send it to your friends!"),
+                  // description: t("Send it to your friends!"),
                 })
               }
             />

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import {
   DialogBackdrop,
   DialogBody,
@@ -29,9 +29,12 @@ import { useCurrentPlayer } from "@/hooks/useCurrentPlayer";
 import { useRoomId } from "@/hooks/useRoomId";
 import { useGameState } from "@/hooks/useGameState";
 import { GameState } from "@/enum/GameState";
-import { AvatarScrollPicker } from "./AvatarScrollPicker";
 import { useToaster } from "@/hooks/ui/useToaster";
 import { SkeletonCircle, SkeletonComposed } from "../ui-addons/skeleton";
+
+const AvatarScrollPicker = lazy(
+  () => import("@/components/Lobby/AvatarScrollPicker")
+);
 
 interface AddEditPlayerModalProps {
   isEdit?: boolean;
@@ -42,6 +45,8 @@ type AddEditPlayerModalForm = {
   nickname: string;
   avatarIndex: number;
 };
+
+const alphaNumericalPattern = /^[a-zA-Z0-9]*$/;
 
 export const AddEditPlayerModal = ({
   isEdit = false,
@@ -85,7 +90,6 @@ export const AddEditPlayerModal = ({
         showToast({
           type: "success",
           title: t("Player Details Updated"),
-          // description: t("You should now see your updated name and avatar"),
           withDismissButton: true,
         });
       }
@@ -101,6 +105,11 @@ export const AddEditPlayerModal = ({
     minLength: {
       value: 3,
       message: t("Nickname must be 3 - 10 characters"),
+    },
+    validate: (val) => {
+      if (!alphaNumericalPattern.test(val)) {
+        return t("Nickname can only contains letters/numbers");
+      }
     },
   });
 
@@ -149,47 +158,56 @@ export const AddEditPlayerModal = ({
               </Alert.Root>
             ) : null}
             <form id="player-details-form" onSubmit={handleSubmit(onSubmit)}>
-              <SkeletonComposed
-                skeleton={
+              <Suspense
+                fallback={
                   <VStack gap={4}>
-                    <SkeletonCircle loading size={4} />
+                    <SkeletonCircle loading size="3rem" />
                     <Skeleton height={4} w="full" />
                   </VStack>
                 }
-                loading={isCurrentPlayerLoading}
               >
-                <VStack gap={4}>
-                  <Field label={t("Avatar")}>
-                    <AvatarScrollPicker
-                      setAvatarIndex={(index) => {
-                        setValue("avatarIndex", index);
-                      }}
-                      initialAvatarIndex={currentPlayer?.avatarIndex}
-                    />
-                  </Field>
+                <SkeletonComposed
+                  skeleton={
+                    <VStack gap={4}>
+                      <SkeletonCircle loading size="3rem" />
+                      <Skeleton height={4} w="full" />
+                    </VStack>
+                  }
+                  loading={isCurrentPlayerLoading}
+                >
+                  <VStack gap={4}>
+                    <Field label={t("Avatar")}>
+                      <AvatarScrollPicker
+                        setAvatarIndex={(index) => {
+                          setValue("avatarIndex", index);
+                        }}
+                        initialAvatarIndex={currentPlayer?.avatarIndex}
+                      />
+                    </Field>
 
-                  <Field
-                    invalid={!!errors.nickname}
-                    errorText={errors.nickname?.message}
-                    helperText={
-                      <Text fontSize="small">
-                        {t("How others will see you!")}
-                      </Text>
-                    }
-                    defaultValue={currentPlayer?.nickname}
-                    label={t("Nickname")}
-                  >
-                    <Input
-                      size="lg"
-                      {...nicknameField}
-                      ref={(e) => {
-                        ref(e);
-                        focusRef.current = e;
-                      }}
-                    />
-                  </Field>
-                </VStack>
-              </SkeletonComposed>
+                    <Field
+                      invalid={!!errors.nickname}
+                      errorText={errors.nickname?.message}
+                      helperText={
+                        <Text fontSize="small">
+                          {t("How others will see you!")}
+                        </Text>
+                      }
+                      defaultValue={currentPlayer?.nickname}
+                      label={t("Nickname")}
+                    >
+                      <Input
+                        size="lg"
+                        {...nicknameField}
+                        ref={(e) => {
+                          ref(e);
+                          focusRef.current = e;
+                        }}
+                      />
+                    </Field>
+                  </VStack>
+                </SkeletonComposed>
+              </Suspense>
             </form>
           </DialogBody>
           <DialogFooter>

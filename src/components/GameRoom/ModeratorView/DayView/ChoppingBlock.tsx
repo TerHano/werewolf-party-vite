@@ -87,3 +87,4 @@ export const ChoppingBlock = () => {
     </Stack>
   );
 };
+export default ChoppingBlock;

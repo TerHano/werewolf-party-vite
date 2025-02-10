@@ -93,3 +93,5 @@ export const RoomRoleSettingsInfo = ({
     </DrawerRoot>
   );
 };
+
+export default RoomRoleSettingsInfo;

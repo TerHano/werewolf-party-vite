@@ -7,7 +7,6 @@ import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { NightCall } from "./NightView/NightCall";
 import { ChoppingBlock } from "./DayView/ChoppingBlock";
 import { useTranslation } from "react-i18next";
-import { DayNightVisual } from "./DayNightVisual";
 import {
   DrawerBackdrop,
   DrawerBody,
@@ -19,7 +18,12 @@ import {
   DrawerTrigger,
 } from "../../ui/drawer";
 import { IconSettings } from "@tabler/icons-react";
-import { Skeleton } from "@/components/ui-addons/skeleton";
+import { Skeleton, SkeletonCircle } from "@/components/ui-addons/skeleton";
+import { lazy, Suspense } from "react";
+
+const DayNightVisual = lazy(
+  () => import("@/components/GameRoom/ModeratorView/DayNightVisual")
+);
 
 export const ModeratorView = () => {
   const { t } = useTranslation();
@@ -70,10 +74,14 @@ export const ModeratorView = () => {
               </DrawerBody>
             </DrawerContent>
           </DrawerRoot>
-          <DayNightVisual />
+          <Suspense fallback={<SkeletonCircle size={10} loading />}>
+            <DayNightVisual />
+          </Suspense>
         </Stack>
         {isDay ? <ChoppingBlock /> : <NightCall />}
       </Stack>
     </Skeleton>
   );
 };
+
+export default ModeratorView;

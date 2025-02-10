@@ -130,3 +130,4 @@ export const ModeratorCard = ({ currentPlayer }: ModeratorCardProps) => {
     </Card.Root>
   );
 };
+export default ModeratorCard;

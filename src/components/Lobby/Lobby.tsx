@@ -1,18 +1,24 @@
-import { ModeratorCard } from "./ModeratorCard";
 import { HStack, Stack, Text, SimpleGrid, Card } from "@chakra-ui/react";
 import { useCurrentPlayer } from "@/hooks/useCurrentPlayer";
 import { useTranslation } from "react-i18next";
 import { useRoomId } from "@/hooks/useRoomId";
 import { ClipboardIconButton } from "../ui-addons/clipboard-button";
-import { useCallback } from "react";
+import { lazy, Suspense, useCallback } from "react";
 import { Button } from "../ui/button";
 import { useStartGame } from "@/hooks/useStartGame";
 import { useIsModerator } from "@/hooks/useIsModerator";
-import { PlayersSection } from "./PlayerSection";
 import { LeaveRoomButton } from "./LeaveRoomButton";
-import { RoomRoleSettingsCard } from "./RoomRoleSettings/RoomRoleSettingsCard";
 import { IconCopyCheck } from "@tabler/icons-react";
 import { useToaster } from "@/hooks/ui/useToaster";
+import { Skeleton, SkeletonCircle } from "../ui-addons/skeleton";
+
+const RoomRoleSettingsCard = lazy(
+  () => import("@/components/Lobby/RoomRoleSettings/RoomRoleSettingsCard")
+);
+
+const PlayersSection = lazy(() => import("@/components/Lobby/PlayerSection"));
+
+const ModeratorCard = lazy(() => import("@/components/Lobby/ModeratorCard"));
 
 export const Lobby = () => {
   const roomId = useRoomId();
@@ -64,11 +70,31 @@ export const Lobby = () => {
           </HStack>
           <LeaveRoomButton />
         </HStack>
-        <ModeratorCard currentPlayer={currentPlayer} />
-        <RoomRoleSettingsCard />
+        <Suspense
+          fallback={
+            <Card.Root size="sm" w="full" variant="elevated">
+              <Card.Body>
+                <HStack justify="start" w="100%" gap={3}>
+                  <SkeletonCircle h="3rem" w="3rem" loading />
+                  <Skeleton height={8} w="100%" loading />
+                </HStack>
+              </Card.Body>
+            </Card.Root>
+          }
+        >
+          <ModeratorCard currentPlayer={currentPlayer} />
+        </Suspense>
+        <Suspense
+          fallback={
+            <Card.Root>
+              <Skeleton loading w="full" height={4} />
+            </Card.Root>
+          }
+        >
+          <RoomRoleSettingsCard />
+        </Suspense>
         {isModerator ? (
           <SimpleGrid gap={2} columns={1}>
-            {/* <ManagePlayersButton /> */}
             <Button
               size="sm"
               width="100%"
@@ -79,8 +105,20 @@ export const Lobby = () => {
             </Button>
           </SimpleGrid>
         ) : null}
-
-        <PlayersSection currentPlayer={currentPlayer} />
+        <Suspense
+          fallback={
+            <Card.Root size="sm" w="full" variant="elevated">
+              <Card.Body>
+                <HStack justify="start" w="100%" gap={3}>
+                  <SkeletonCircle h="3rem" w="3rem" loading />
+                  <Skeleton height={8} w="100%" loading />
+                </HStack>
+              </Card.Body>
+            </Card.Root>
+          }
+        >
+          <PlayersSection currentPlayer={currentPlayer} />
+        </Suspense>
       </Stack>
     </Card.Root>
   );

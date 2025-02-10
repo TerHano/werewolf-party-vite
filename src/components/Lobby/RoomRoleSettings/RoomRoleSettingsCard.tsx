@@ -2,16 +2,22 @@ import { useRoomId } from "@/hooks/useRoomId";
 import { useRoomRoleSettings } from "@/hooks/useRoomRoleSettings";
 import { Card, HStack, Text, VStack } from "@chakra-ui/react";
 import { IconCards } from "@tabler/icons-react";
-import { useCallback, useMemo } from "react";
-import { EditRoomRoleSettings } from "./EditRoomRoleSettings";
+import { lazy, Suspense, useCallback, useMemo } from "react";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { useModerator } from "@/hooks/useModerator";
 import { useCurrentPlayer } from "@/hooks/useCurrentPlayer";
-import { RoomRoleSettingsInfo } from "./RoomRoleSettingsInfo";
 import { ActiveRolesList } from "./ActiveRolesList";
 import { useMeasure } from "@uidotdev/usehooks";
 import { Skeleton } from "@/components/ui-addons/skeleton";
 import { useTranslation } from "react-i18next";
+
+const EditRoomRoleSettings = lazy(
+  () => import("@/components/Lobby/RoomRoleSettings/EditRoomRoleSettings")
+);
+
+const RoomRoleSettingsInfo = lazy(
+  () => import("@/components/Lobby/RoomRoleSettings/RoomRoleSettingsInfo")
+);
 
 export const RoomRoleSettingsCard = () => {
   const { t } = useTranslation();
@@ -66,14 +72,18 @@ export const RoomRoleSettingsCard = () => {
             </Skeleton>
 
             {isModerator ? (
-              <EditRoomRoleSettings
-                roomRoleSettingsQuery={roomRoleSettingsQuery}
-              />
+              <Suspense fallback={<Skeleton loading h="full" w="full" />}>
+                <EditRoomRoleSettings
+                  roomRoleSettingsQuery={roomRoleSettingsQuery}
+                />
+              </Suspense>
             ) : (
-              <RoomRoleSettingsInfo
-                numberOfWerewolves={numberOfWerewolves}
-                activeRoles={settings?.selectedRoles ?? []}
-              />
+              <Suspense fallback={<Skeleton loading h="full" w="full" />}>
+                <RoomRoleSettingsInfo
+                  numberOfWerewolves={numberOfWerewolves}
+                  activeRoles={settings?.selectedRoles ?? []}
+                />
+              </Suspense>
             )}
           </VStack>
         </Card.Body>
@@ -81,3 +91,5 @@ export const RoomRoleSettingsCard = () => {
     </>
   );
 };
+
+export default RoomRoleSettingsCard;

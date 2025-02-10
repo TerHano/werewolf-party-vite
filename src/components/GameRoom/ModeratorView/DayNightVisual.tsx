@@ -64,3 +64,5 @@ export const DayNightVisual = () => {
     </Box>
   );
 };
+
+export default DayNightVisual;

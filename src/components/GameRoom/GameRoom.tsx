@@ -1,12 +1,16 @@
 import { useRoomId } from "@/hooks/useRoomId";
 import { ModeratorView } from "./ModeratorView/ModeratorView";
 import { PlayerView } from "@/components/GameRoom/PlayerView/PlayerView";
-import { WinConditionDialog } from "./WinConditionDialog";
 import { useIsModerator } from "@/hooks/useIsModerator";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { useQueryClient } from "@tanstack/react-query";
 import { querysToInvalidateOnNewGame } from "@/hooks/useStartGame";
 import { Skeleton } from "@/components/ui-addons/skeleton";
+import { lazy } from "react";
+
+const WinConditionDialog = lazy(
+  () => import("@/components/GameRoom/WinConditionDialog")
+);
 
 export const GameRoom = () => {
   const roomId = useRoomId();

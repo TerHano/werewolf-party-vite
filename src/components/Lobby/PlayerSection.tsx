@@ -163,3 +163,5 @@ const PlayerSkeleton = () => {
     </Card.Root>
   );
 };
+
+export default PlayersSection;

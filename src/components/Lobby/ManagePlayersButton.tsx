@@ -119,3 +119,4 @@ export const ManagePlayersButton = ({ player }: { player: PlayerDto }) => {
     </DrawerRootProvider>
   );
 };
+export default ManagePlayersButton;

@@ -47,3 +47,4 @@ export const RoleInformationDialog = ({
     </DialogRoot>
   );
 };
+export default RoleInformationDialog;

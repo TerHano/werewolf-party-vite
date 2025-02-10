@@ -1,12 +1,14 @@
 import "swiper/swiper-bundle.css";
 
 import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
-import { Avatar, Container, IconButton } from "@chakra-ui/react";
+import { Avatar, Container, Float, HStack, IconButton } from "@chakra-ui/react";
 import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
 import styles from "./AvatarScrollPicker.module.css";
 import { Navigation } from "swiper/modules";
 import { useEffect, useRef } from "react";
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
+
+const transitionSpeed = 100;
 
 export const AvatarScrollPicker = ({
   initialAvatarIndex,
@@ -54,7 +56,7 @@ export const AvatarScrollPicker = ({
                   //     opacity: isActive ? "1" : ".4",
                   //   }}
                   variant="subtle"
-                  size="2xl"
+                  size="full"
                   key={avatarName}
                 >
                   <Avatar.Image
@@ -67,36 +69,33 @@ export const AvatarScrollPicker = ({
             </SwiperSlide>
           );
         })}
-
-        <IconButton
-          style={{
-            marginTop: "-5rem",
-            marginLeft: "27%",
-          }}
-          onClick={() => {
-            swipeRef.current?.slidePrev();
-          }}
-          variant="subtle"
-          zIndex={1}
-          size="xs"
-        >
-          <IconArrowLeft />
-        </IconButton>
-        <IconButton
-          zIndex={1}
-          size="xs"
-          variant="subtle"
-          style={{
-            marginTop: "-5rem",
-            marginLeft: "27%",
-          }}
-          onClick={() => {
-            swipeRef.current?.slideNext();
-          }}
-        >
-          <IconArrowRight />
-        </IconButton>
+        <Float placement="middle-center">
+          <HStack gap="7rem">
+            <IconButton
+              onClick={() => {
+                swipeRef.current?.slidePrev(transitionSpeed);
+              }}
+              variant="subtle"
+              zIndex={1}
+              size="xs"
+            >
+              <IconArrowLeft />
+            </IconButton>
+            <IconButton
+              zIndex={1}
+              size="xs"
+              variant="subtle"
+              onClick={() => {
+                swipeRef.current?.slideNext(transitionSpeed);
+              }}
+            >
+              <IconArrowRight />
+            </IconButton>
+          </HStack>
+        </Float>
       </Swiper>
     </Container>
   );
 };
+
+export default AvatarScrollPicker;

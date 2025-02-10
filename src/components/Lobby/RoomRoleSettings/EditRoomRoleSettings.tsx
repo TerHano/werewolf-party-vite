@@ -416,3 +416,5 @@ export const EditRoomRoleSettings = ({
     </DrawerRootProvider>
   );
 };
+
+export default EditRoomRoleSettings;

@@ -8,7 +8,12 @@ export const useUpdateCurrentPlayerDetails = (
     mutation: {
       endpoint: `player/update-player`,
       method: "POST",
-      queryKeysToInvalidate: [[`players`], ["moderator"], ["assigned-roles"]],
+      queryKeysToInvalidate: [
+        [`players`],
+        ["moderator"],
+        ["assigned-roles"],
+        ["current-player"],
+      ],
     },
     ...options,
   });

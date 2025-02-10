@@ -15,7 +15,6 @@ import {
 import { useNavigate } from "@tanstack/react-router";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { toaster } from "../ui-addons/toaster";
 import { PlayerAvatar } from "./PlayerAvatar";
 import emptyLobby from "@/assets/icons/lobby/lobby-empty.png";
 import { ClipboardButton } from "../ui-addons/clipboard-button";
@@ -26,6 +25,7 @@ import {
   SkeletonComposed,
 } from "@/components/ui-addons/skeleton";
 import { IconCopyCheck } from "@tabler/icons-react";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 export const PlayersSection = ({
   currentPlayer,
@@ -33,6 +33,7 @@ export const PlayersSection = ({
   currentPlayer?: PlayerDto;
 }) => {
   const { t } = useTranslation();
+  const { showToast } = useToaster();
   const roomId = useRoomId();
   const navigate = useNavigate();
 
@@ -45,7 +46,7 @@ export const PlayersSection = ({
   const onPlayerKicked = useCallback(
     (kickedPlayerId: number) => {
       if (currentPlayer?.id === kickedPlayerId) {
-        toaster.create({
+        showToast({
           title: t("You Were Kicked!"),
           description: t("Next time be nice!"),
           duration: 1500,
@@ -105,10 +106,9 @@ export const PlayersSection = ({
               </VStack>
               <ClipboardButton
                 onCopy={() => {
-                  toaster.create({
-                    meta: {
-                      icon: <IconCopyCheck />,
-                    },
+                  showToast({
+                    icon: <IconCopyCheck />,
+
                     title: t("Room ID Copied!"),
                     description: t("Send it to your friends!"),
                   });

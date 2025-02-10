@@ -11,7 +11,6 @@ import {
   createToaster,
 } from "@chakra-ui/react";
 import {
-  IconAlertSquareFilled,
   IconAlertTriangle,
   IconCircleCheck,
   IconInfoCircle,
@@ -55,7 +54,7 @@ export const Toaster = () => {
             {toast.action && (
               <Toast.ActionTrigger>{toast.action.label}</Toast.ActionTrigger>
             )}
-            {toast.meta?.closable && <Toast.CloseTrigger />}
+            <Toast.CloseTrigger />
           </Toast.Root>
         )}
       </ChakraToaster>
@@ -101,7 +100,7 @@ const ToasterIcon = ({
     return {
       ...typeCss,
 
-      p: "8px",
+      p: "5px",
       boxSizing: "initial",
     };
   }, [toastType]);
@@ -114,7 +113,7 @@ const ToasterIcon = ({
       case "warning":
         return <IconAlertTriangle />;
       case "error":
-        return <IconAlertSquareFilled />;
+        return <IconAlertTriangle />;
       case "success":
         return <IconCircleCheck />;
       default:
@@ -124,7 +123,9 @@ const ToasterIcon = ({
 
   return (
     <Circle css={toastCss}>
-      <Icon borderRadius="none">{toastIcon}</Icon>
+      <Icon size="md" borderRadius="none">
+        {toastIcon}
+      </Icon>
     </Circle>
   );
 };

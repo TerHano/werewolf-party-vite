@@ -27,7 +27,6 @@ import { useRoomId } from "@/hooks/useRoomId";
 import { RoomRoleSettingsDto } from "@/dto/RoomRoleSettingsDto";
 import { useUpdateRoomRoleSettings } from "@/hooks/useUpdateRoomRoleSettings";
 import { Button } from "../../ui/button";
-import { toaster } from "../../ui-addons/toaster";
 import { SegmentedControl } from "../../ui/segmented-control";
 import { RoleInformationDialog } from "@/components/Lobby/RoleInformationDialog";
 import { Switch } from "@/components/ui/switch";
@@ -42,6 +41,7 @@ import {
 } from "@/components/ui/drawer";
 import { IconCards, IconSettings } from "@tabler/icons-react";
 import { Skeleton } from "@/components/ui-addons/skeleton";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 interface EditRoomRoleSettingsForm {
   numberOfWerewolves: string;
@@ -57,11 +57,12 @@ export const EditRoomRoleSettings = ({
   roomRoleSettingsQuery: ReturnType<typeof useRoomRoleSettings>;
 }) => {
   const { t } = useTranslation();
+  const { showToast } = useToaster();
   const roomId = useRoomId();
   const drawer = useDrawer();
   const { mutate, isPending: isUpdatingSettings } = useUpdateRoomRoleSettings({
     onSuccess: async () => {
-      toaster.create({
+      showToast({
         title: t("Role Settings Updated"),
         description: t("Your new roles and game settings have been saved!"),
         type: "success",

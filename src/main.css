@@ -11,6 +11,8 @@
     font-family: 'Inter', sans-serif;
 } */
 
+
+
 @keyframes fade-in-from-bottom {
     from {
         transform: translateY(10px);

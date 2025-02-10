@@ -22,10 +22,11 @@ export interface SkeletonComposedProps {
 export const SkeletonComposed = React.forwardRef<
   HTMLDivElement,
   SkeletonComposedProps
->(function SkeletonComposed({ loading, skeleton, children }) {
+>(function SkeletonComposed({ loading, skeleton, children }, ref) {
   const _loading = useDebounce(loading, loadingTransitionTimeMs);
   return _loading ? (
     <Box
+      ref={ref}
       w="inherit"
       height="inherit"
       data-state={loading ? "open" : "closed"}

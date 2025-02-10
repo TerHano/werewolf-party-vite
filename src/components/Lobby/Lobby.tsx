@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { useRoomId } from "@/hooks/useRoomId";
 import { ClipboardIconButton } from "../ui-addons/clipboard-button";
 import { useCallback } from "react";
-import { toaster } from "../ui-addons/toaster";
 import { Button } from "../ui/button";
 import { useStartGame } from "@/hooks/useStartGame";
 import { useIsModerator } from "@/hooks/useIsModerator";
@@ -13,9 +12,11 @@ import { PlayersSection } from "./PlayerSection";
 import { LeaveRoomButton } from "./LeaveRoomButton";
 import { RoomRoleSettingsCard } from "./RoomRoleSettings/RoomRoleSettingsCard";
 import { IconCopyCheck } from "@tabler/icons-react";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 export const Lobby = () => {
   const roomId = useRoomId();
+  const { showToast } = useToaster();
   const { t } = useTranslation();
   const { data: isModerator } = useIsModerator(roomId);
   const { data: currentPlayer } = useCurrentPlayer(roomId);
@@ -23,7 +24,7 @@ export const Lobby = () => {
   const { mutate: startGameMutate, isPending: isStartGamePending } =
     useStartGame({
       onError: async (e) => {
-        toaster.create({
+        showToast({
           type: "error",
           title: "Can't Start Game",
           description: e.message,
@@ -51,10 +52,8 @@ export const Lobby = () => {
                 variant: "subtle",
               }}
               onCopy={() =>
-                toaster.create({
-                  meta: {
-                    icon: <IconCopyCheck />,
-                  },
+                showToast({
+                  icon: <IconCopyCheck />,
                   duration: 1000,
                   type: "success",
                   title: t("Room ID Copied!"),

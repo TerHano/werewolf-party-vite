@@ -56,7 +56,7 @@ export const PlayersSection = ({
         void refetchPlayers();
       }
     },
-    [currentPlayer?.id, t, navigate, refetchPlayers]
+    [currentPlayer?.id, showToast, t, navigate, refetchPlayers]
   );
 
   useSocketConnection({

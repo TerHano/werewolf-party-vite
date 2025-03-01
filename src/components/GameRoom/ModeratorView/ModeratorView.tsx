@@ -5,7 +5,6 @@ import { useRoomId } from "@/hooks/useRoomId";
 import { useDayDetails } from "@/hooks/useDayDetails";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { NightCall } from "./NightView/NightCall";
-import { ChoppingBlock } from "./DayView/ChoppingBlock";
 import { useTranslation } from "react-i18next";
 import {
   DrawerBackdrop,
@@ -20,6 +19,8 @@ import {
 import { IconSettings } from "@tabler/icons-react";
 import { Skeleton, SkeletonCircle } from "@/components/ui-addons/skeleton";
 import { lazy, Suspense } from "react";
+
+const ChoppingBlock = lazy(() => import("./DayView/ChoppingBlock"));
 
 const DayNightVisual = lazy(
   () => import("@/components/GameRoom/ModeratorView/DayNightVisual")

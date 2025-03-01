@@ -48,3 +48,5 @@ export const WerewolfPlayersActionCard = ({
     </Card.Root>
   );
 };
+
+export default WerewolfPlayersActionCard;

@@ -1,13 +1,14 @@
 import { PlayerDto } from "@/dto/PlayerDto";
 import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
 import { Badge, Card, Image, Stack, Text } from "@chakra-ui/react";
-import { CSSProperties } from "react";
+import { CSSProperties, lazy } from "react";
 import { useIsModerator } from "@/hooks/useIsModerator";
 import { useRoomId } from "@/hooks/useRoomId";
 import { useUpdateCurrentPlayerDetails } from "@/hooks/useUpdateCurrentPlayerDetails";
 import { AddEditPlayerModal } from "./AddEditPlayerModal";
 import { useTranslation } from "react-i18next";
-import { ManagePlayersButton } from "./ManagePlayersButton";
+
+const ManagePlayersButton = lazy(() => import("./ManagePlayersButton"));
 
 export const PlayerAvatar = ({
   player,

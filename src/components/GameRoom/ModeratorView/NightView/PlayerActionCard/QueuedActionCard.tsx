@@ -60,7 +60,7 @@ export const QueuedActionCard = ({
             onClick={() => onDequeueAction(queuedAction.id)}
           >
             <IconArrowBackUp />
-            Undo
+            {t("Undo")}
           </Button>
         </Stack>
       </Card.Root>

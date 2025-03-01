@@ -41,3 +41,5 @@ export const GameSummaryTimeline = () => {
   //   )}
   // </TimelineRoot>
 };
+
+export default GameSummaryTimeline;

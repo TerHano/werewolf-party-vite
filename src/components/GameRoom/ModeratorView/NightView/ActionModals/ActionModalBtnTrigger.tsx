@@ -1,7 +1,13 @@
 import { ActionType } from "@/enum/ActionType";
-import { InvestigationModal } from "../InvestigationModals/InvestigationModal";
-import { SimpleActionModal } from "./SimpleActionModal";
+
 import { RoleActionDto } from "@/dto/RoleActionDto";
+import { lazy } from "react";
+
+const SimpleActionModal = lazy(() => import("./SimpleActionModal"));
+
+const InvestigationModal = lazy(
+  () => import("../InvestigationModals/InvestigationModal")
+);
 
 export interface ActionModalBtnTriggerProps {
   action: RoleActionDto;

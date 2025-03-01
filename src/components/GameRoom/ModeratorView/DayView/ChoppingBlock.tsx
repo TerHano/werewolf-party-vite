@@ -3,10 +3,11 @@ import { useRoomId } from "@/hooks/useRoomId";
 import { useAllPlayerRoles } from "@/hooks/useAllPlayerRoles";
 import { useVotePlayerOut } from "@/hooks/useVotePlayerOut";
 import { useTranslation } from "react-i18next";
-import { KilledPlayersBanner } from "./KilledPlayersBanner";
 import { Card, Separator, SimpleGrid, Stack, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { lazy, useState } from "react";
 import { PlayerList } from "@/components/GameRoom/ModeratorView/NightView/ActionModals/PlayerList";
+
+const KilledPlayersBanner = lazy(() => import("./KilledPlayersBanner"));
 
 export const ChoppingBlock = () => {
   const roomId = useRoomId();

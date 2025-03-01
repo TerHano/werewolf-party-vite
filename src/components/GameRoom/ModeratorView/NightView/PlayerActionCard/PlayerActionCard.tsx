@@ -52,3 +52,5 @@ export const PlayerActionCard = ({
     </Card.Root>
   );
 };
+
+export default PlayerActionCard;

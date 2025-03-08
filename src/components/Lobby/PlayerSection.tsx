@@ -110,6 +110,7 @@ export const PlayersSection = ({
                     icon: <IconCopyCheck />,
                     type: "success",
                     title: t("Room ID Copied!"),
+                    withDismissButton: true,
                     // description: t("Send it to your friends!"),
                   });
                 }}

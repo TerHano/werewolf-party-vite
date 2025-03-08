@@ -133,7 +133,7 @@ export const SocketProvider = ({ children }: PropsWithChildren) => {
                       startConnection();
                     }}
                   >
-                    Reconnect
+                    {t("Reconnect")}
                   </Button>
                 ) : null}
               </Stack>

@@ -8,7 +8,7 @@ import { createRootRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createRootRoute({
   wrapInSuspense: true,
-  loader: async () => {
+  beforeLoad: async () => {
     const token = getSessionCookie();
     if (token == "") {
       return getApi<string>({

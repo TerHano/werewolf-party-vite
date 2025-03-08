@@ -20,6 +20,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { toaster } from "../ui-addons/toaster";
 import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { useDocumentTitle } from "@uidotdev/usehooks";
 
 type CheckRoomForm = {
   roomId: string;
@@ -71,6 +72,8 @@ export const MainMenu = () => {
       }
     },
   });
+
+  useDocumentTitle(`Werewolf Party`);
 
   return (
     <Stack align="center" w="100%">

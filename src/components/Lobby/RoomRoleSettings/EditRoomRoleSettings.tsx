@@ -65,6 +65,7 @@ export const EditRoomRoleSettings = ({
       showToast({
         title: t("Role Settings Updated"),
         // description: t("Your new roles and game settings have been saved!"),
+        withDismissButton: true,
         type: "success",
         duration: 2500,
       });

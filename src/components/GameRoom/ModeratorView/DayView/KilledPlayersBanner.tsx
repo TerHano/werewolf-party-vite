@@ -65,3 +65,5 @@ export const KilledPlayersBanner = () => {
     </Card.Root>
   );
 };
+
+export default KilledPlayersBanner;

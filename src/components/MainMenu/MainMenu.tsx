@@ -1,9 +1,11 @@
+/* eslint-disable i18next/no-literal-string */
 import {
   Card,
   Group,
   HStack,
   Image,
   Input,
+  Link,
   Separator,
   Stack,
   Text,
@@ -18,6 +20,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { toaster } from "../ui-addons/toaster";
 import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { useDocumentTitle } from "@uidotdev/usehooks";
 
 type CheckRoomForm = {
   roomId: string;
@@ -52,11 +55,11 @@ export const MainMenu = () => {
           title: "Room Not Found",
           description: (
             <Text as="span">
-              Room with ID:{" "}
+              {t("Room with ID:")}{" "}
               <Text as="span" fontWeight="bold">
                 {roomId}
               </Text>{" "}
-              not found. Please try again
+              {t("not found. Please try again")}
             </Text>
           ),
           duration: 2000,
@@ -70,6 +73,8 @@ export const MainMenu = () => {
     },
   });
 
+  useDocumentTitle(`Werewolf Party`);
+
   return (
     <Stack align="center" w="100%">
       <Card.Root
@@ -81,7 +86,7 @@ export const MainMenu = () => {
           <Stack alignItems="center" gap={0}>
             <Image width={150} src={campIcon} />
             <Text textStyle="accent" fontSize="2.5rem" fontWeight="bold">
-              Werewolf Party
+              {t("Werewolf Party")}
             </Text>
             <Text textStyle="accent" fontSize="medium" color="gray.300">
               {t("Cards for a party game full of lies, deceit, & accusations")}
@@ -106,6 +111,7 @@ export const MainMenu = () => {
             >
               <Group attached>
                 <Input
+                  size="lg"
                   {...register("roomId", {
                     required: {
                       value: true,
@@ -143,13 +149,31 @@ export const MainMenu = () => {
             onClick={() => {
               createNewRoom();
             }}
-            size="sm"
+            size="md"
           >
             {t("Create New Room")} <IconUsersGroup />
           </Button>
-          <Text color="gray.500" textStyle="accent">
-            {t("Developed By Terry Hanoman")}
-          </Text>
+          <Stack align="center" gap={0} direction="column">
+            <Text color="gray.500" textStyle="accent">
+              {t("Developed By Terry Hanoman")}
+            </Text>
+            <Text color="gray.500" textStyle="accent">
+              {t("Icons by ")}{" "}
+              <Link
+                target="_blank"
+                href="https://icons8.com/icon/WlXKRWqXdjfz/werewolf"
+              >
+                Icons8
+              </Link>{" "}
+              {t("and")}{" "}
+              <Link
+                target="_blank"
+                href="https://www.flaticon.com/authors/graphiqa"
+              >
+                Graphiqa
+              </Link>
+            </Text>
+          </Stack>
         </Stack>
       </Card.Root>
     </Stack>

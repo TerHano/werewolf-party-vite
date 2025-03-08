@@ -55,7 +55,7 @@ export const ManagePlayersButton = ({ player }: { player: PlayerDto }) => {
   const onKickPlayer = useCallback(
     (playerId: number) => {
       kickPlayerMutate({
-        playerToKickId: playerId,
+        playerRoomIdToKick: playerId,
         roomId,
       });
     },
@@ -96,7 +96,7 @@ export const ManagePlayersButton = ({ player }: { player: PlayerDto }) => {
               onClick={() => {
                 void onKickPlayer(player.id);
               }}
-              //variant="subtle"
+              variant="subtle"
               colorPalette="red"
             >
               <IconKarate />
@@ -107,7 +107,7 @@ export const ManagePlayersButton = ({ player }: { player: PlayerDto }) => {
                 void onUpdateModerator(player.id);
               }}
               colorPalette="orange"
-              // variant="subtle"
+              variant="subtle"
             >
               <IconSpeakerphone />
               <Text fontSize="xs"> {t("Make Moderator")}</Text>
@@ -119,3 +119,4 @@ export const ManagePlayersButton = ({ player }: { player: PlayerDto }) => {
     </DrawerRootProvider>
   );
 };
+export default ManagePlayersButton;

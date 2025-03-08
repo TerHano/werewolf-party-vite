@@ -27,7 +27,6 @@ import { useRoomId } from "@/hooks/useRoomId";
 import { RoomRoleSettingsDto } from "@/dto/RoomRoleSettingsDto";
 import { useUpdateRoomRoleSettings } from "@/hooks/useUpdateRoomRoleSettings";
 import { Button } from "../../ui/button";
-import { toaster } from "../../ui-addons/toaster";
 import { SegmentedControl } from "../../ui/segmented-control";
 import { RoleInformationDialog } from "@/components/Lobby/RoleInformationDialog";
 import { Switch } from "@/components/ui/switch";
@@ -42,6 +41,7 @@ import {
 } from "@/components/ui/drawer";
 import { IconCards, IconSettings } from "@tabler/icons-react";
 import { Skeleton } from "@/components/ui-addons/skeleton";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 interface EditRoomRoleSettingsForm {
   numberOfWerewolves: string;
@@ -57,24 +57,28 @@ export const EditRoomRoleSettings = ({
   roomRoleSettingsQuery: ReturnType<typeof useRoomRoleSettings>;
 }) => {
   const { t } = useTranslation();
+  const { showToast } = useToaster();
   const roomId = useRoomId();
   const drawer = useDrawer();
   const { mutate, isPending: isUpdatingSettings } = useUpdateRoomRoleSettings({
     onSuccess: async () => {
-      toaster.create({
+      showToast({
         title: t("Role Settings Updated"),
-        //description: t("You are now the moderator!"),
+        // description: t("Your new roles and game settings have been saved!"),
         type: "success",
-        duration: 1500,
+        duration: 2500,
       });
     },
   });
   const { data, isRoleType } = useRoles();
   const { data: savedRoleSettings, isLoading: isRoomRoleSettingsLoading } =
     roomRoleSettingsQuery;
-  const { control, handleSubmit } = useForm<EditRoomRoleSettingsForm>({
-    shouldUnregister: true,
-  });
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isDirty: isFormDirty },
+  } = useForm<EditRoomRoleSettingsForm>();
   const onSubmit: SubmitHandler<EditRoomRoleSettingsForm> = useCallback(
     (data) => {
       if (!savedRoleSettings) {
@@ -95,10 +99,11 @@ export const EditRoomRoleSettings = ({
       void mutate(request, {
         onSuccess: () => {
           drawer.setOpen(false);
+          reset(data);
         },
       });
     },
-    [drawer, mutate, roomId, savedRoleSettings]
+    [drawer, mutate, reset, roomId, savedRoleSettings]
   );
 
   const traditonalRoles = data.filter(
@@ -109,10 +114,15 @@ export const EditRoomRoleSettings = ({
   );
 
   return (
-    <DrawerRootProvider value={drawer} size="full" placement="bottom">
+    <DrawerRootProvider
+      value={drawer}
+      size="full"
+      onExitComplete={() => reset()}
+      placement="bottom"
+    >
       <DrawerBackdrop />
       <DrawerTrigger asChild>
-        <Button size="xs" w="full" variant="subtle" colorPalette="blue">
+        <Button size="sm" w="full" variant="subtle" colorPalette="blue">
           <IconSettings /> {t("Edit Settings")}
         </Button>
       </DrawerTrigger>
@@ -336,6 +346,7 @@ export const EditRoomRoleSettings = ({
                         defaultValue={savedRoleSettings?.showGameSummary}
                         render={({ field }) => (
                           <Switch
+                            size="lg"
                             name={field.name}
                             checked={field.value}
                             onCheckedChange={({ checked }) =>
@@ -369,6 +380,7 @@ export const EditRoomRoleSettings = ({
                         control={control}
                         render={({ field }) => (
                           <Switch
+                            size="lg"
                             disabled
                             name={field.name}
                             checked={field.value}
@@ -390,6 +402,7 @@ export const EditRoomRoleSettings = ({
           </DrawerBody>
           <DrawerFooter>
             <Button
+              disabled={!isFormDirty}
               w="full"
               onClick={handleSubmit(onSubmit)}
               loading={isUpdatingSettings}
@@ -403,3 +416,5 @@ export const EditRoomRoleSettings = ({
     </DrawerRootProvider>
   );
 };
+
+export default EditRoomRoleSettings;

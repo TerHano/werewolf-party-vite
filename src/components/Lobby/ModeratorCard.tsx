@@ -10,7 +10,6 @@ import {
 import { Card } from "@chakra-ui/react/card";
 import { useCallback } from "react";
 import { useRoomId } from "@/hooks/useRoomId";
-import { toaster } from "../ui-addons/toaster";
 import { useTranslation } from "react-i18next";
 import { useModerator } from "@/hooks/useModerator";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
@@ -18,36 +17,44 @@ import { AddEditPlayerModal } from "@/components/Lobby/AddEditPlayerModal";
 import { useUpdateCurrentPlayerDetails } from "@/hooks/useUpdateCurrentPlayerDetails";
 import { PlayerDto } from "@/dto/PlayerDto";
 import { Skeleton, SkeletonCircle } from "../ui-addons/skeleton";
-import { IconSpeakerphone } from "@tabler/icons-react";
+import { IconCrown } from "@tabler/icons-react";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 export interface ModeratorCardProps {
   currentPlayer?: PlayerDto;
 }
 
+const moderatorIcon = <IconCrown />;
+
 export const ModeratorCard = ({ currentPlayer }: ModeratorCardProps) => {
   const { t } = useTranslation();
+  const { showToast } = useToaster();
   const roomId = useRoomId();
   const {
     data: currentModerator,
     isLoading: isModeratorLoading,
     refetch: refetchModerator,
   } = useModerator(roomId);
-  const { mutate: updatePlayerDetailsMutate } = useUpdateCurrentPlayerDetails();
+  const { mutateAsync: updatePlayerDetailsMutateAsync } =
+    useUpdateCurrentPlayerDetails();
   const { getAvatarImageSrcForIndex } = usePlayerAvatar();
 
   const onModeratorUpdated = useCallback(
     (newModerator: PlayerDto) => {
       if (newModerator.id === currentPlayer?.id) {
-        toaster.create({
-          meta: { icon: <IconSpeakerphone /> },
+        showToast({
+          icon: moderatorIcon,
           title: t("You're In Charge!"),
           description: t("You are now the moderator!"),
           duration: 2500,
+          type: "warning",
         });
       } else {
-        toaster.create({
+        showToast({
           title: t("New Moderator In Town!"),
-          meta: { icon: <IconSpeakerphone /> },
+
+          icon: moderatorIcon,
+
           description: (
             <Group gap={1}>
               <Text fontStyle="italic" fontWeight="bold">
@@ -56,12 +63,13 @@ export const ModeratorCard = ({ currentPlayer }: ModeratorCardProps) => {
               <Text>{t("is now moderator")}</Text>
             </Group>
           ),
+          type: "warning",
           duration: 2500,
         });
       }
       refetchModerator();
     },
-    [currentPlayer?.id, refetchModerator, t]
+    [currentPlayer?.id, refetchModerator, showToast, t]
   );
 
   useSocketConnection({
@@ -113,7 +121,7 @@ export const ModeratorCard = ({ currentPlayer }: ModeratorCardProps) => {
             <AddEditPlayerModal
               isEdit
               submitCallback={(playerDetails) => {
-                updatePlayerDetailsMutate(playerDetails);
+                return updatePlayerDetailsMutateAsync(playerDetails);
               }}
             />
           ) : null}
@@ -122,3 +130,4 @@ export const ModeratorCard = ({ currentPlayer }: ModeratorCardProps) => {
     </Card.Root>
   );
 };
+export default ModeratorCard;

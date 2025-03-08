@@ -8,10 +8,9 @@ import {
   StepsRoot,
 } from "../../../ui/steps";
 import { getRoleForRoleId, RoleInfo, useRoles } from "@/hooks/useRoles";
-import { useMemo, useState } from "react";
+import { lazy, useMemo, useState } from "react";
 import { PlayerRoleActionDto } from "@/dto/PlayerRoleActionDto";
 import { useAllPlayerRoles } from "@/hooks/useAllPlayerRoles";
-import { PlayerActionCard } from "./PlayerActionCard/PlayerActionCard";
 import { NightCompletedCard } from "./NightCompletedCard";
 import { useAllQueuedActions } from "@/hooks/useAllQueuedActions";
 import {
@@ -21,8 +20,15 @@ import {
 } from "@tabler/icons-react";
 import { Role } from "@/enum/Role";
 import werewolfImg from "@/assets/icons/roles/werewolf-color.png";
-import { WerewolfPlayersActionCard } from "./PlayerActionCard/WerewolfPlayersActionCard";
 import { useTranslation } from "react-i18next";
+
+const PlayerActionCard = lazy(
+  () => import("./PlayerActionCard/PlayerActionCard")
+);
+
+const WerewolfPlayersActionCard = lazy(
+  () => import("./PlayerActionCard/WerewolfPlayersActionCard")
+);
 
 export interface PlayerRoleWithDetails extends PlayerRoleActionDto {
   roleInfo: RoleInfo;

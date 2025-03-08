@@ -1,13 +1,14 @@
 import { PlayerDto } from "@/dto/PlayerDto";
 import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
 import { Badge, Card, Image, Stack, Text } from "@chakra-ui/react";
-import { CSSProperties } from "react";
+import { CSSProperties, lazy } from "react";
 import { useIsModerator } from "@/hooks/useIsModerator";
 import { useRoomId } from "@/hooks/useRoomId";
 import { useUpdateCurrentPlayerDetails } from "@/hooks/useUpdateCurrentPlayerDetails";
 import { AddEditPlayerModal } from "./AddEditPlayerModal";
 import { useTranslation } from "react-i18next";
-import { ManagePlayersButton } from "./ManagePlayersButton";
+
+const ManagePlayersButton = lazy(() => import("./ManagePlayersButton"));
 
 export const PlayerAvatar = ({
   player,
@@ -21,7 +22,8 @@ export const PlayerAvatar = ({
   const { t } = useTranslation();
   const roomId = useRoomId();
   const { getAvatarImageSrcForIndex } = usePlayerAvatar();
-  const { mutate: updatePlayerDetailsMutate } = useUpdateCurrentPlayerDetails();
+  const { mutateAsync: updatePlayerDetailsMutateAsync } =
+    useUpdateCurrentPlayerDetails();
 
   const isCurrentPlayer = currentPlayer?.id === player.id;
   const { data: isModerator } = useIsModerator(roomId);
@@ -52,7 +54,7 @@ export const PlayerAvatar = ({
             <AddEditPlayerModal
               isEdit
               submitCallback={(playerDetails) => {
-                updatePlayerDetailsMutate(playerDetails);
+                return updatePlayerDetailsMutateAsync(playerDetails);
               }}
             />
           ) : null}

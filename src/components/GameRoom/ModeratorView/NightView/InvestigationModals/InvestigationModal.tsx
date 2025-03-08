@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { lazy, useCallback, useMemo, useState } from "react";
 import {
   DialogBackdrop,
   DialogRoot,
@@ -26,8 +26,11 @@ import { StepsRoot } from "@/components/ui/steps";
 import { useAllPlayerRoles } from "@/hooks/useAllPlayerRoles";
 import { RoleActionDto } from "@/dto/RoleActionDto";
 import { IconSearch } from "@tabler/icons-react";
-import { WerewolfInvestigationResult } from "@/components/GameRoom/ModeratorView/NightView/InvestigationModals/WerewolfInvestigationResult";
 import { useQueryClient } from "@tanstack/react-query";
+
+const WerewolfInvestigationResult = lazy(
+  () => import("./WerewolfInvestigationResult")
+);
 
 export interface InvestigationProps {
   playerRoleId: number;
@@ -177,3 +180,5 @@ export const InvestigationModal = ({
     </DialogRoot>
   );
 };
+
+export default InvestigationModal;

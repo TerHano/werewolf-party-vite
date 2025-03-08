@@ -48,3 +48,5 @@ export const WerewolfInvestigationResult = ({
     );
   }
 };
+
+export default WerewolfInvestigationResult;

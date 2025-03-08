@@ -34,3 +34,5 @@ export const RoleInfoList = ({ roles }: { roles: RoleInfo[] }) => {
     </Stack>
   );
 };
+
+export default RoleInfoList;

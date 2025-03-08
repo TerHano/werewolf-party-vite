@@ -149,3 +149,5 @@ export const SimpleActionModal = ({
     </DialogRootProvider>
   );
 };
+
+export default SimpleActionModal;

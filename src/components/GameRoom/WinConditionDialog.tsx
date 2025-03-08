@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 import {
   DialogBackdrop,
   DialogBody,
@@ -18,8 +18,11 @@ import { useEndGame } from "@/hooks/useEndGame";
 import { useStartGame } from "@/hooks/useStartGame";
 import werewolfImg from "@/assets/icons/roles/werewolf-color.png";
 import villagerImg from "@/assets/icons/roles/villager-color.png";
-import { GameSummaryTimeline } from "@/components/GameRoom/GameSummaryTimeline/GameSummaryTimeline";
 import { useRoomRoleSettings } from "@/hooks/useRoomRoleSettings";
+
+const GameSummaryTimeline = lazy(
+  () => import("./GameSummaryTimeline/GameSummaryTimeline")
+);
 
 export const WinConditionDialog = ({
   isModerator,
@@ -123,3 +126,5 @@ export const WinConditionDialog = ({
     </>
   );
 };
+
+export default WinConditionDialog;

@@ -1,20 +1,28 @@
-import { ModeratorCard } from "./ModeratorCard";
 import { HStack, Stack, Text, SimpleGrid, Card } from "@chakra-ui/react";
 import { useCurrentPlayer } from "@/hooks/useCurrentPlayer";
 import { useTranslation } from "react-i18next";
 import { useRoomId } from "@/hooks/useRoomId";
 import { ClipboardIconButton } from "../ui-addons/clipboard-button";
-import { useCallback } from "react";
-import { toaster } from "../ui-addons/toaster";
+import { lazy, Suspense, useCallback } from "react";
 import { Button } from "../ui/button";
 import { useStartGame } from "@/hooks/useStartGame";
 import { useIsModerator } from "@/hooks/useIsModerator";
-import { PlayersSection } from "./PlayerSection";
 import { LeaveRoomButton } from "./LeaveRoomButton";
-import { RoomRoleSettingsCard } from "./RoomRoleSettings/RoomRoleSettingsCard";
+import { IconCopyCheck } from "@tabler/icons-react";
+import { useToaster } from "@/hooks/ui/useToaster";
+import { Skeleton, SkeletonCircle } from "../ui-addons/skeleton";
+
+const RoomRoleSettingsCard = lazy(
+  () => import("@/components/Lobby/RoomRoleSettings/RoomRoleSettingsCard")
+);
+
+const PlayersSection = lazy(() => import("@/components/Lobby/PlayerSection"));
+
+const ModeratorCard = lazy(() => import("@/components/Lobby/ModeratorCard"));
 
 export const Lobby = () => {
   const roomId = useRoomId();
+  const { showToast } = useToaster();
   const { t } = useTranslation();
   const { data: isModerator } = useIsModerator(roomId);
   const { data: currentPlayer } = useCurrentPlayer(roomId);
@@ -22,7 +30,7 @@ export const Lobby = () => {
   const { mutate: startGameMutate, isPending: isStartGamePending } =
     useStartGame({
       onError: async (e) => {
-        toaster.create({
+        showToast({
           type: "error",
           title: "Can't Start Game",
           description: e.message,
@@ -49,15 +57,44 @@ export const Lobby = () => {
                 size: "sm",
                 variant: "subtle",
               }}
+              onCopy={() =>
+                showToast({
+                  icon: <IconCopyCheck />,
+                  duration: 1000,
+                  type: "success",
+                  title: t("Room ID Copied!"),
+                  // description: t("Send it to your friends!"),
+                })
+              }
             />
           </HStack>
           <LeaveRoomButton />
         </HStack>
-        <ModeratorCard currentPlayer={currentPlayer} />
-        <RoomRoleSettingsCard />
+        <Suspense
+          fallback={
+            <Card.Root size="sm" w="full" variant="elevated">
+              <Card.Body>
+                <HStack justify="start" w="100%" gap={3}>
+                  <SkeletonCircle h="3rem" w="3rem" loading />
+                  <Skeleton height={8} w="100%" loading />
+                </HStack>
+              </Card.Body>
+            </Card.Root>
+          }
+        >
+          <ModeratorCard currentPlayer={currentPlayer} />
+        </Suspense>
+        <Suspense
+          fallback={
+            <Card.Root>
+              <Skeleton loading w="full" height={4} />
+            </Card.Root>
+          }
+        >
+          <RoomRoleSettingsCard />
+        </Suspense>
         {isModerator ? (
           <SimpleGrid gap={2} columns={1}>
-            {/* <ManagePlayersButton /> */}
             <Button
               size="sm"
               width="100%"
@@ -68,8 +105,20 @@ export const Lobby = () => {
             </Button>
           </SimpleGrid>
         ) : null}
-
-        <PlayersSection currentPlayer={currentPlayer} />
+        <Suspense
+          fallback={
+            <Card.Root size="sm" w="full" variant="elevated">
+              <Card.Body>
+                <HStack justify="start" w="100%" gap={3}>
+                  <SkeletonCircle h="3rem" w="3rem" loading />
+                  <Skeleton height={8} w="100%" loading />
+                </HStack>
+              </Card.Body>
+            </Card.Root>
+          }
+        >
+          <PlayersSection currentPlayer={currentPlayer} />
+        </Suspense>
       </Stack>
     </Card.Root>
   );

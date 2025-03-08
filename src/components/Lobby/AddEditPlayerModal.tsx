@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import {
   DialogBackdrop,
   DialogBody,
@@ -14,38 +14,31 @@ import { Button } from "../ui/button";
 import { Field } from "../ui/field";
 import {
   Alert,
-  Avatar,
-  defineStyle,
   DialogRootProvider,
-  Float,
-  HStack,
-  IconButton,
   Input,
-  SimpleGrid,
+  Skeleton,
   Text,
   useDialog,
   VStack,
 } from "@chakra-ui/react";
 import { AddEditPlayerDetailsDto } from "@/dto/AddEditPlayerDetailsDto";
-import { IconPencil, IconUser } from "@tabler/icons-react";
+import { IconPencil } from "@tabler/icons-react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
 import { useCurrentPlayer } from "@/hooks/useCurrentPlayer";
 import { useRoomId } from "@/hooks/useRoomId";
-import {
-  DrawerBackdrop,
-  DrawerBody,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerRoot,
-} from "../ui/drawer";
 import { useGameState } from "@/hooks/useGameState";
 import { GameState } from "@/enum/GameState";
+import { useToaster } from "@/hooks/ui/useToaster";
+import { SkeletonCircle, SkeletonComposed } from "../ui-addons/skeleton";
+
+const AvatarScrollPicker = lazy(
+  () => import("@/components/Lobby/AvatarScrollPicker")
+);
 
 interface AddEditPlayerModalProps {
   isEdit?: boolean;
-  submitCallback: (playerDetails: AddEditPlayerDetailsDto) => void;
+  submitCallback: (playerDetails: AddEditPlayerDetailsDto) => Promise<void>;
 }
 
 type AddEditPlayerModalForm = {
@@ -53,23 +46,26 @@ type AddEditPlayerModalForm = {
   avatarIndex: number;
 };
 
+const alphaNumericalPattern = /^[a-zA-Z0-9]*$/;
+
 export const AddEditPlayerModal = ({
   isEdit = false,
   submitCallback,
 }: AddEditPlayerModalProps) => {
   const roomId = useRoomId();
+  const { showToast } = useToaster();
   const { t } = useTranslation();
-  const { data: currentPlayer } = useCurrentPlayer(roomId, { enabled: isEdit });
+  const { data: currentPlayer, isFetching: isCurrentPlayerLoading } =
+    useCurrentPlayer(roomId, { enabled: isEdit });
   const { data: gameState } = useGameState(roomId);
 
-  const { data: avatarNames, getAvatarImageSrcForIndex } = usePlayerAvatar();
+  const { data: avatarNames } = usePlayerAvatar();
 
-  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [isSubmitLoading, setSubmitLoading] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
     setValue,
   } = useForm<AddEditPlayerModalForm>({
     defaultValues: {
@@ -84,11 +80,20 @@ export const AddEditPlayerModal = ({
     closeOnInteractOutside: false,
     initialFocusEl: () => focusRef.current,
   });
-  const watchAvatarIndex = watch("avatarIndex");
 
   const onSubmit: SubmitHandler<AddEditPlayerModalForm> = (data) => {
-    dialog.setOpen(false);
-    submitCallback({ ...data, roomId });
+    setSubmitLoading(true);
+    submitCallback({ ...data, roomId }).finally(() => {
+      dialog.setOpen(false);
+      setSubmitLoading(false);
+      if (isEdit) {
+        showToast({
+          type: "success",
+          title: t("Player Details Updated"),
+          withDismissButton: true,
+        });
+      }
+    });
   };
   const focusRef = useRef<HTMLInputElement | null>(null);
   const { ref, ...nicknameField } = register("nickname", {
@@ -101,14 +106,11 @@ export const AddEditPlayerModal = ({
       value: 3,
       message: t("Nickname must be 3 - 10 characters"),
     },
-  });
-
-  const ringCss = defineStyle({
-    outlineWidth: "2px",
-    outlineColor: "blue.500",
-    outlineOffset: "2px",
-    outlineStyle: "solid",
-    backgroundColor: "blue.800/50",
+    validate: (val) => {
+      if (!alphaNumericalPattern.test(val)) {
+        return t("Nickname can only contains letters/numbers");
+      }
+    },
   });
 
   useEffect(() => {
@@ -124,9 +126,9 @@ export const AddEditPlayerModal = ({
         <DialogBackdrop />
         {isEdit && (
           <DialogTrigger>
-            <IconButton size="xs" variant="plain" colorScheme="blue">
-              <IconPencil />
-            </IconButton>
+            <Button size="2xs" variant="outline">
+              {t("Edit Name")} <IconPencil />
+            </Button>
           </DialogTrigger>
         )}
         <DialogContent>
@@ -156,118 +158,70 @@ export const AddEditPlayerModal = ({
               </Alert.Root>
             ) : null}
             <form id="player-details-form" onSubmit={handleSubmit(onSubmit)}>
-              <VStack gap={2}>
-                <Avatar.Root
-                  variant="subtle"
-                  size="2xl"
-                  onClick={() => {
-                    setDrawerOpen(true);
-                  }}
-                  style={{ cursor: "pointer" }}
-                  css={{
-                    outlineWidth: "2px",
-                    outlineColor: "white.500",
-                    outlineOffset: "2px",
-                    outlineStyle: "solid",
-                    backgroundColor: "gray.1000",
-                  }}
-                >
-                  <Avatar.Image
-                    marginTop={1}
-                    src={getAvatarImageSrcForIndex(watchAvatarIndex)}
-                  />
-
-                  <Float placement="bottom-center">
-                    <IconButton rounded="full" size="2xs">
-                      <IconPencil />
-                    </IconButton>
-                  </Float>
-                </Avatar.Root>
-
-                <Field
-                  invalid={!!errors.nickname}
-                  errorText={errors.nickname?.message}
-                  helperText={
-                    <Text fontSize="small">
-                      {t("How others will see you!")}
-                    </Text>
+              <Suspense
+                fallback={
+                  <VStack gap={4}>
+                    <SkeletonCircle loading size="3rem" />
+                    <Skeleton height={4} w="full" />
+                  </VStack>
+                }
+              >
+                <SkeletonComposed
+                  skeleton={
+                    <VStack gap={4}>
+                      <SkeletonCircle loading size="3rem" />
+                      <Skeleton height={4} w="full" />
+                    </VStack>
                   }
-                  defaultValue={currentPlayer?.nickname}
-                  label={t("Nickname")}
+                  loading={isCurrentPlayerLoading}
                 >
-                  <Input
-                    {...nicknameField}
-                    ref={(e) => {
-                      ref(e);
-                      focusRef.current = e;
-                    }}
-                  />
-                </Field>
-              </VStack>
+                  <VStack gap={4}>
+                    <Field label={t("Avatar")}>
+                      <AvatarScrollPicker
+                        setAvatarIndex={(index) => {
+                          setValue("avatarIndex", index);
+                        }}
+                        initialAvatarIndex={currentPlayer?.avatarIndex}
+                      />
+                    </Field>
+
+                    <Field
+                      invalid={!!errors.nickname}
+                      errorText={errors.nickname?.message}
+                      helperText={
+                        <Text fontSize="small">
+                          {t("How others will see you!")}
+                        </Text>
+                      }
+                      defaultValue={currentPlayer?.nickname}
+                      label={t("Nickname")}
+                    >
+                      <Input
+                        size="lg"
+                        {...nicknameField}
+                        ref={(e) => {
+                          ref(e);
+                          focusRef.current = e;
+                        }}
+                      />
+                    </Field>
+                  </VStack>
+                </SkeletonComposed>
+              </Suspense>
             </form>
           </DialogBody>
           <DialogFooter>
-            <Button form="player-details-form" type="submit">
+            <Button
+              loading={isSubmitLoading}
+              disabled={isSubmitLoading}
+              form="player-details-form"
+              type="submit"
+            >
               {isEdit ? t("Update Details") : t("Join Room")}
             </Button>
           </DialogFooter>
         </DialogContent>
       </DialogRootProvider>
-      <DrawerRoot
-        size="sm"
-        placement="bottom"
-        open={isDrawerOpen}
-        onOpenChange={(e) => {
-          setDrawerOpen(e.open);
-        }}
-      >
-        <DrawerBackdrop />
-        <DrawerContent mb={3} borderRadius="sm">
-          <DrawerHeader>
-            <HStack gap={1}>
-              <IconUser size={18} />
-              <Text fontWeight={500} fontSize="lg">
-                Pick A Avatar
-              </Text>
-            </HStack>
-          </DrawerHeader>
-          <DrawerBody>
-            <SimpleGrid
-              justifyItems="center"
-              columns={{ base: 2, xs: 3, sm: 4, md: 5 }}
-              gapX={3}
-              gapY={5}
-            >
-              {avatarNames.map((avatarName, index) => {
-                return (
-                  <Avatar.Root
-                    variant="subtle"
-                    css={watchAvatarIndex === index ? ringCss : undefined}
-                    size="2xl"
-                    key={avatarName}
-                    onClick={() => {
-                      setValue("avatarIndex", index);
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <Avatar.Image
-                      marginTop={1}
-                      src={getAvatarImageSrcForIndex(index)}
-                    />
-                    <Avatar.Fallback>SA</Avatar.Fallback>
-                  </Avatar.Root>
-                );
-              })}
-            </SimpleGrid>
-          </DrawerBody>
-          {/* <DrawerCloseTrigger /> */}
-          <DrawerFooter>
-            <Button w="full" onClick={() => setDrawerOpen(false)}>
-              Close
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </DrawerRoot>
     </>
   );
 };

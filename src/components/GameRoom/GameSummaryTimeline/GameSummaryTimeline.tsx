@@ -25,7 +25,7 @@ export const GameSummaryTimeline = () => {
                 night={summary.night}
                 actions={summary.dayActions}
               />
-              <Separator />
+              <Separator flex="1" />
             </Stack>
           </>
         );

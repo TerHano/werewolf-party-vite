@@ -138,11 +138,11 @@ export const MainMenu = () => {
             </Field>
           </form>
           <HStack alignItems="center" w="full">
-            <Separator variant="dashed" />
+            <Separator flex="1" variant="dashed" />
             <Text textStyle="accent" flexShrink="0">
               OR
             </Text>
-            <Separator variant="dashed" />
+            <Separator flex="1" variant="dashed" />
           </HStack>
           <Button
             loading={isCreatingRoomPending || isCreatingRoomSuccess}

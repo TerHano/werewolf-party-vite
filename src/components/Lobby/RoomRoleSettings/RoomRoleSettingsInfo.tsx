@@ -76,7 +76,9 @@ export const RoomRoleSettingsInfo = ({
               numberOfWerewolves={numberOfWerewolves}
               activeRoles={activeRoles}
             />
-            <Separator />
+
+            <Separator flex="1" />
+
             <SegmentedControl
               w="fit-content"
               value={roleControl}

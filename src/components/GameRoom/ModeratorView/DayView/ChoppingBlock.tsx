@@ -22,7 +22,7 @@ export const ChoppingBlock = () => {
   return (
     <Stack direction="column" gap={6}>
       <KilledPlayersBanner />
-      <Separator />
+      <Separator flex="1" />
       <Card.Root
         animationDelay="moderate"
         className="animate-fade-in-from-bottom"

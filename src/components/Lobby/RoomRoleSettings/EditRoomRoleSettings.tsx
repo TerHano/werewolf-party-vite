@@ -181,7 +181,7 @@ export const EditRoomRoleSettings = ({
                     <Image src={werewolfImg} alt="werewolf" w="64px" />
                   </Group>
 
-                  <Separator />
+                  <Separator flex="1" />
                   <Skeleton height="6rem" loading={isRoomRoleSettingsLoading}>
                     <Controller
                       name="traditonalRoles"
@@ -248,7 +248,7 @@ export const EditRoomRoleSettings = ({
                     />
                   </Skeleton>
 
-                  <Separator />
+                  <Separator flex="1" />
                   <Skeleton height="6rem" loading={isRoomRoleSettingsLoading}>
                     <Controller
                       name="specialRoles"

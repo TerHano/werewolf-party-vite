@@ -13,4 +13,7 @@ export default defineConfig({
       "@tabler/icons-react": "@tabler/icons-react/dist/esm/icons/index.mjs",
     },
   },
+  build: {
+    chunkSizeWarningLimit: 1000, // Set to 1000 KB (1MB)
+  },
 });

@@ -54,7 +54,7 @@ export const Toaster = () => {
             {toast.action && (
               <Toast.ActionTrigger>{toast.action.label}</Toast.ActionTrigger>
             )}
-            <Toast.CloseTrigger />
+            {/* <Toast.CloseTrigger /> */}
           </Toast.Root>
         )}
       </ChakraToaster>

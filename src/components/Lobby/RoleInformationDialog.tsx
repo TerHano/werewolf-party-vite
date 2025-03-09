@@ -1,11 +1,14 @@
-import { Button, IconButton } from "@chakra-ui/react";
 import {
-  DialogActionTrigger,
+  Button,
+  DialogRootProvider,
+  IconButton,
+  useDialog,
+} from "@chakra-ui/react";
+import {
   DialogBody,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogRoot,
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
@@ -22,8 +25,9 @@ export const RoleInformationDialog = ({
   roles,
 }: RoleInformationDialogProps) => {
   const { t } = useTranslation();
+  const dialog = useDialog();
   return (
-    <DialogRoot scrollBehavior="inside">
+    <DialogRootProvider value={dialog} size="full" scrollBehavior="inside">
       <DialogTrigger asChild>
         <IconButton borderRadius="full" variant="subtle" size="2xs">
           <IconQuestionMark />
@@ -37,14 +41,16 @@ export const RoleInformationDialog = ({
           <RoleInfoList roles={roles} />
         </DialogBody>
         <DialogFooter>
-          <DialogActionTrigger asChild>
-            <Button w="full" variant="outline">
-              {t("Close")}
-            </Button>
-          </DialogActionTrigger>
+          <Button
+            w="full"
+            variant="outline"
+            onClick={() => dialog.setOpen(false)}
+          >
+            {t("Close")}
+          </Button>
         </DialogFooter>
       </DialogContent>
-    </DialogRoot>
+    </DialogRootProvider>
   );
 };
 export default RoleInformationDialog;

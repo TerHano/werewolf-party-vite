@@ -28,7 +28,7 @@ export const RoleInformationDialog = ({
   const { t } = useTranslation();
   const dialog = useDialog();
   return (
-    <DialogRootProvider value={dialog} size="full" scrollBehavior="inside">
+    <DialogRootProvider value={dialog} size="cover" scrollBehavior="inside">
       <DialogTrigger asChild>
         <IconButton borderRadius="full" variant="subtle" size="2xs">
           <IconQuestionMark />

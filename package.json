@@ -12,7 +12,7 @@
     "dev-host": "vite --host"
   },
   "dependencies": {
-    "@chakra-ui/react": "^3.2.3",
+    "@chakra-ui/react": "^3.11.0",
     "@emotion/react": "^11.14.0",
     "@microsoft/signalr": "^8.0.7",
     "@tabler/icons-react": "^3.24.0",

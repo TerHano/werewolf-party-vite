@@ -6,6 +6,7 @@ import {
 } from "@chakra-ui/react";
 import {
   DialogBody,
+  DialogCloseTrigger,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -49,6 +50,7 @@ export const RoleInformationDialog = ({
             {t("Close")}
           </Button>
         </DialogFooter>
+        <DialogCloseTrigger />
       </DialogContent>
     </DialogRootProvider>
   );

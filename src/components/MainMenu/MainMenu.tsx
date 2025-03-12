@@ -76,7 +76,7 @@ export const MainMenu = () => {
   useDocumentTitle(`Werewolf Party`);
 
   return (
-    <Stack align="center" w="100%">
+    <Stack align="center" w="100%" className="animate-fade-in-from-bottom">
       <Card.Root
         w={{ base: "100%", md: "75%" }}
         padding={3}

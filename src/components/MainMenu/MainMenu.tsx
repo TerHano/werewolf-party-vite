@@ -17,10 +17,10 @@ import campIcon from "../../assets/icons/lobby-icon.png";
 import { useCreateRoom } from "@/hooks/useCreateRoom";
 import { useCheckRoom } from "@/hooks/useCheckRoom";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { toaster } from "../ui-addons/toaster";
 import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useDocumentTitle } from "@uidotdev/usehooks";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 type CheckRoomForm = {
   roomId: string;
@@ -28,6 +28,7 @@ type CheckRoomForm = {
 
 export const MainMenu = () => {
   const { t } = useTranslation();
+  const { showToast } = useToaster();
   const navigate = useNavigate();
   const {
     mutate: createNewRoom,
@@ -45,24 +46,25 @@ export const MainMenu = () => {
   } = useForm<CheckRoomForm>();
   const onSubmit: SubmitHandler<CheckRoomForm> = (data) =>
     checkRoom({
-      roomId: data.roomId,
+      roomId: data.roomId.toUpperCase(),
     });
   const { mutate: checkRoom, isPending: isCheckingRoomPending } = useCheckRoom({
     onSuccess: async (doesExist, { roomId }) => {
       if (!doesExist) {
-        toaster.create({
+        showToast({
           type: "error",
           title: "Room Not Found",
           description: (
             <Text as="span">
               {t("Room with ID:")}{" "}
               <Text as="span" fontWeight="bold">
-                {roomId}
+                {roomId.toUpperCase()}
               </Text>{" "}
               {t("not found. Please try again")}
             </Text>
           ),
-          duration: 2000,
+          duration: 3000,
+          withDismissButton: true,
         });
       } else {
         navigate({

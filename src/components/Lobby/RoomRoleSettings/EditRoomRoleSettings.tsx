@@ -59,7 +59,7 @@ export const EditRoomRoleSettings = ({
   const { t } = useTranslation();
   const { showToast } = useToaster();
   const roomId = useRoomId();
-  const drawer = useDrawer();
+  const drawer = useDrawer({ closeOnInteractOutside: false });
   const { mutate, isPending: isUpdatingSettings } = useUpdateRoomRoleSettings({
     onSuccess: async () => {
       showToast({

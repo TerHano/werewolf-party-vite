@@ -6,7 +6,6 @@ import {
 } from "@chakra-ui/react";
 import {
   DialogBody,
-  DialogCloseTrigger,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -28,7 +27,7 @@ export const RoleInformationDialog = ({
   const { t } = useTranslation();
   const dialog = useDialog();
   return (
-    <DialogRootProvider value={dialog} size="full" scrollBehavior="inside">
+    <DialogRootProvider value={dialog} size="md" scrollBehavior="inside">
       <DialogTrigger asChild>
         <IconButton borderRadius="full" variant="subtle" size="2xs">
           <IconQuestionMark />
@@ -42,15 +41,10 @@ export const RoleInformationDialog = ({
           <RoleInfoList roles={roles} />
         </DialogBody>
         <DialogFooter>
-          <Button
-            w="full"
-            variant="outline"
-            onClick={() => dialog.setOpen(false)}
-          >
+          <Button w="full" onClick={() => dialog.setOpen(false)}>
             {t("Close")}
           </Button>
         </DialogFooter>
-        <DialogCloseTrigger />
       </DialogContent>
     </DialogRootProvider>
   );

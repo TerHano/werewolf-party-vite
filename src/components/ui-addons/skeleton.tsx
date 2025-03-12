@@ -11,7 +11,7 @@ import {
 import { useDebounce } from "@uidotdev/usehooks";
 import React from "react";
 
-const loadingTransitionTimeMs = 300;
+const loadingTransitionTimeMs = 200;
 
 export interface SkeletonComposedProps {
   loading?: boolean;

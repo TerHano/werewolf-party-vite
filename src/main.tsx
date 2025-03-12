@@ -6,7 +6,7 @@ import "./main.css";
 import { routeTree } from "./routeTree.gen";
 
 import { createRouter, RouterProvider } from "@tanstack/react-router";
-import { Provider } from "./components/ui/provider.tsx";
+import { Provider } from "./components/ui-addons/provider.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Create a new router instance

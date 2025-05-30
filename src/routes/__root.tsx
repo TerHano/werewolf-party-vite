@@ -23,7 +23,7 @@ export const Route = createRootRoute({
   },
   component: () => (
     <SocketProvider>
-      <Container justifyItems="center" p={2}>
+      <Container maxWidth={800} justifyItems="center" p={2}>
         <Outlet />
         <Toaster />
       </Container>

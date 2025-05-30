@@ -15,6 +15,7 @@ import { Field } from "../ui/field";
 import {
   Alert,
   DialogRootProvider,
+  IconButton,
   Input,
   Skeleton,
   Text,
@@ -126,9 +127,9 @@ export const AddEditPlayerModal = ({
         <DialogBackdrop />
         {isEdit && (
           <DialogTrigger>
-            <Button size="2xs" variant="outline">
-              {t("Edit Name")} <IconPencil />
-            </Button>
+            <IconButton size="xs" variant="outline">
+              <IconPencil />
+            </IconButton>
           </DialogTrigger>
         )}
         <DialogContent>

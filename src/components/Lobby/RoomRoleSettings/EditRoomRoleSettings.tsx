@@ -42,6 +42,7 @@ import {
 import { IconCards, IconSettings } from "@tabler/icons-react";
 import { Skeleton } from "@/components/ui-addons/skeleton";
 import { useToaster } from "@/hooks/ui/useToaster";
+import { DrawerPlacementForMobileDesktop } from "@/util/drawer";
 
 interface EditRoomRoleSettingsForm {
   numberOfWerewolves: string;
@@ -117,9 +118,9 @@ export const EditRoomRoleSettings = ({
   return (
     <DrawerRootProvider
       value={drawer}
-      size="full"
       onExitComplete={() => reset()}
-      placement="bottom"
+      size={{ base: "full", md: "md" }}
+      placement={DrawerPlacementForMobileDesktop}
     >
       <DrawerBackdrop />
       <DrawerTrigger asChild>
@@ -208,10 +209,7 @@ export const EditRoomRoleSettings = ({
                             <RoleInformationDialog roles={traditonalRoles} />
                           </Group>
 
-                          <SimpleGrid
-                            columns={{ base: 2, sm: 3, md: 5, lg: 8 }}
-                            gap="2"
-                          >
+                          <SimpleGrid columns={{ base: 3, md: 4 }} gap="2">
                             {traditonalRoles.map((role) => (
                               <CheckboxCard
                                 variant="surface"
@@ -279,10 +277,7 @@ export const EditRoomRoleSettings = ({
                               isRoomRoleSettingsLoading ? "100px" : undefined
                             }
                           >
-                            <SimpleGrid
-                              columns={{ base: 2, xs: 3, sm: 4, md: 5, lg: 8 }}
-                              gap="2"
-                            >
+                            <SimpleGrid columns={{ base: 3, md: 4 }} gap="2">
                               {specialRoles.map((role) => (
                                 <CheckboxCard
                                   variant="surface"

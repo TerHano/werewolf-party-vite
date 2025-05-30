@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/drawer";
 import { IconCards, IconUserUp } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
+import { DrawerPlacementForMobileDesktop } from "@/util/drawer";
 
 type ShowRoleControl = "active" | "all";
 
@@ -47,11 +48,11 @@ export const RoomRoleSettingsInfo = ({
 
   return (
     <DrawerRoot
-      size="full"
-      placement="bottom"
       onExitComplete={() => {
         setRoleControl("active");
       }}
+      size={{ base: "full", md: "md" }}
+      placement={DrawerPlacementForMobileDesktop}
     >
       <DrawerBackdrop />
       <DrawerTrigger asChild>

@@ -23,6 +23,7 @@ import { IconKarate, IconSpeakerphone, IconUserCog } from "@tabler/icons-react";
 import { useUpdateModerator } from "@/hooks/useUpdateModerator";
 import { useCallback } from "react";
 import { useKickPlayer } from "@/hooks/useKickPlayer";
+import { DrawerPlacementForMobileDesktop } from "@/util/drawer";
 
 export const ManagePlayersButton = ({ player }: { player: PlayerDto }) => {
   const { t } = useTranslation();
@@ -66,7 +67,8 @@ export const ManagePlayersButton = ({ player }: { player: PlayerDto }) => {
       value={drawer}
       lazyMount
       unmountOnExit
-      placement="bottom"
+      size="sm"
+      placement={DrawerPlacementForMobileDesktop}
     >
       <DrawerBackdrop />
       <DrawerTrigger>

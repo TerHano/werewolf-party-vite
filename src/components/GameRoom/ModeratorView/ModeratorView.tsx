@@ -19,6 +19,7 @@ import {
 import { IconSettings } from "@tabler/icons-react";
 import { Skeleton, SkeletonCircle } from "@/components/ui-addons/skeleton";
 import { lazy, Suspense } from "react";
+import { DrawerPlacementForMobileDesktop } from "@/util/drawer";
 
 const ChoppingBlock = lazy(() => import("./DayView/ChoppingBlock"));
 
@@ -50,7 +51,7 @@ export const ModeratorView = () => {
     <Skeleton width="100%" loading={isDayDetailsLoading}>
       <Stack>
         <Stack direction="row" justifyContent="space-between">
-          <DrawerRoot placement="bottom">
+          <DrawerRoot placement={DrawerPlacementForMobileDesktop}>
             <DrawerBackdrop />
             <DrawerTrigger asChild>
               <Button size="sm" variant="subtle" colorPalette="blue">

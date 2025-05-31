@@ -354,7 +354,7 @@ export const EditRoomRoleSettings = ({
                     </Skeleton>
                     <ChakraField.HelperText>
                       {t(
-                        "Toggles whether or not to show the game summary to players once the game is done"
+                        "If a summary of the games events should be shown once the game ends."
                       )}
                     </ChakraField.HelperText>
                   </ChakraField.Root>

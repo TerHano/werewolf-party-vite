@@ -51,7 +51,7 @@ export const WinConditionPage = ({
     }
     if (isWerewolvesWin) {
       if (assignedRole === Role.WereWolf) {
-        return t("Congratulations! You are a werewolf and have won the game.");
+        return t("Congratulations! The werewolves eliminated all villagers.");
       } else {
         return t(
           "Oh no! You were not able to protect the villagers! The werewolves have won the game."
@@ -59,7 +59,9 @@ export const WinConditionPage = ({
       }
     } else {
       if (assignedRole === Role.Villager) {
-        return t("Congratulations! You are a villager and have won the game.");
+        return t(
+          "Congratulations! The villagers have protected their village."
+        );
       } else {
         return t("Oh no! The villagers have eliminated all werewolves.");
       }

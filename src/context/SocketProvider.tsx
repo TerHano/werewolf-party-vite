@@ -16,12 +16,13 @@ import {
   Button,
   DialogBackdrop,
   DialogBody,
+  Progress,
   Stack,
   Text,
 } from "@chakra-ui/react";
 import { ProgressRoot, ProgressBar } from "@/components/ui/progress";
 import { DialogContent, DialogRoot } from "@/components/ui/dialog";
-import { IconPlugConnectedX } from "@tabler/icons-react";
+import { IconCards, IconPlugConnectedX } from "@tabler/icons-react";
 import { useDebounce, useIsFirstRender } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 import { SocketContext } from "./SocketContext";
@@ -147,7 +148,29 @@ export const SocketProvider = ({ children }: PropsWithChildren) => {
           </DialogBody>
         </DialogContent>
       </DialogRoot>
-      {connectionState === HubConnectionState.Connected ? children : null}
+      {connectionState === HubConnectionState.Connected ? (
+        children
+      ) : (
+        <Stack
+          visibility={connectionState !== undefined ? "hidden" : "visible"}
+          className="animate-fade-in-from-bottom"
+          height="40vh"
+          justify="end"
+          align="center"
+          gap={4}
+          mt={4}
+        >
+          <IconCards size="4rem" />
+          <Progress.Root size="sm" borderRadius="xl" w="200px" value={null}>
+            <Progress.Track>
+              <Progress.Range />
+            </Progress.Track>
+          </Progress.Root>
+          <Text color="dimmed" fontSize="1rem">
+            {t("Loading...")}
+          </Text>
+        </Stack>
+      )}
     </SocketContext.Provider>
   );
 };

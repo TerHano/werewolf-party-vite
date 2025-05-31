@@ -58,7 +58,7 @@ function RouteComponent() {
   const {
     data: isPlayerAlreadyInRoom,
     refetch: refetchIsPlayerInRoom,
-    isFetching: isPlayerInRoomLoading,
+    isLoading: isPlayerInRoomLoading,
   } = useIsPlayerInRoom({
     roomId,
     options: {

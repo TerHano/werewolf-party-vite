@@ -56,7 +56,7 @@ export const AddEditPlayerModal = ({
   const roomId = useRoomId();
   const { showToast } = useToaster();
   const { t } = useTranslation();
-  const { data: currentPlayer, isFetching: isCurrentPlayerLoading } =
+  const { data: currentPlayer, isLoading: isCurrentPlayerLoading } =
     useCurrentPlayer(roomId, { enabled: isEdit });
   const { data: gameState } = useGameState(roomId);
 

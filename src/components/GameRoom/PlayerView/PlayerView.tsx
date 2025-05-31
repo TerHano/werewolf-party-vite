@@ -8,7 +8,7 @@ import { SkeletonCircle, SkeletonText } from "@/components/ui-addons/skeleton";
 
 export const PlayerView = () => {
   const roomId = useRoomId();
-  const { data: assignedRole, isFetching: isAssignedRoleLoading } =
+  const { data: assignedRole, isLoading: isAssignedRoleLoading } =
     useAssignedRole(roomId);
 
   const { data: roleInfo } = useRole(assignedRole);

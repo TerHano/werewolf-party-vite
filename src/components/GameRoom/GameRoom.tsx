@@ -15,10 +15,6 @@ const WinConditionPage = lazy(
 
 export const GameRoom = () => {
   const roomId = useRoomId();
-  // const { data: moderator, isFetching: isModeratorLoading } =
-  //   useModerator(roomId);
-  // const { data: currentPlayer, isFetching: isCurrentPlayerLoading } =
-  //   useCurrentPlayer(roomId);
 
   const {
     data: winCondition,

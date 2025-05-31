@@ -9,7 +9,6 @@ import werewolfImg from "@/assets/icons/roles/werewolf-color.png";
 import villagerImg from "@/assets/icons/roles/villager-color.png";
 import { useRoomRoleSettings } from "@/hooks/useRoomRoleSettings";
 import { lazy, useMemo } from "react";
-import { useRole } from "@/hooks/useRoles";
 import { useAssignedRole } from "@/hooks/useAssignedRole";
 import { Role } from "@/enum/Role";
 
@@ -65,7 +64,7 @@ export const WinConditionPage = ({
         return t("Oh no! The villagers have eliminated all werewolves.");
       }
     }
-  }, [assignedRole, isWerewolvesWin, t]);
+  }, [assignedRole, isModerator, isWerewolvesWin, t]);
 
   return (
     <Card.Root p="1rem" className="animate-fade-in-from-bottom">

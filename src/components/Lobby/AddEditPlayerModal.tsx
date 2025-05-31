@@ -64,6 +64,7 @@ export const AddEditPlayerModal = ({
 
   const [isSubmitLoading, setSubmitLoading] = useState(false);
   const {
+    getValues,
     register,
     handleSubmit,
     formState: { errors },
@@ -182,7 +183,11 @@ export const AddEditPlayerModal = ({
                         setAvatarIndex={(index) => {
                           setValue("avatarIndex", index);
                         }}
-                        initialAvatarIndex={currentPlayer?.avatarIndex}
+                        initialAvatarIndex={
+                          currentPlayer?.avatarIndex ??
+                          getValues("avatarIndex") ??
+                          0
+                        }
                       />
                     </Field>
 

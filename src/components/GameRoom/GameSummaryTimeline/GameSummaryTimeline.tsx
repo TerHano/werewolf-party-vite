@@ -1,6 +1,6 @@
 import { useRoomId } from "@/hooks/useRoomId";
 import { useGameSummary } from "@/hooks/useGameSummary";
-import { Separator, Stack, Text } from "@chakra-ui/react";
+import { Separator, Skeleton, Stack, Text } from "@chakra-ui/react";
 import { NightDaySummary } from "@/components/GameRoom/GameSummaryTimeline/NightDaySummary";
 import { useTranslation } from "react-i18next";
 
@@ -8,7 +8,24 @@ export const GameSummaryTimeline = () => {
   const { t } = useTranslation();
   const roomId = useRoomId();
 
-  const { data: gameSummary } = useGameSummary(roomId);
+  const { data: gameSummary, isLoading: isGameSummaryLoading } =
+    useGameSummary(roomId);
+
+  if (isGameSummaryLoading) {
+    return <Skeleton width="100%" height={100} />;
+  }
+
+  if (!gameSummary || gameSummary.length === 0) {
+    return (
+      <Stack mt={4} gap={3} justify="start" w="full">
+        <Text fontSize="md">{t("No Events")}</Text>
+        <Text fontSize="sm" color="gray.500">
+          {t("No events have occurred in this game.")}
+        </Text>
+      </Stack>
+    );
+  }
+
   return (
     <Stack mt={4} gap={3} justify="start" w="full">
       <Text fontSize="md">{t("Game History")}</Text>

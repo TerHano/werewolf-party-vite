@@ -36,12 +36,12 @@ export const KilledPlayersBanner = () => {
           <Group gap={1} align="center">
             <IconGrave2 size={20} />
             <Text fontSize="xl" textStyle="accent">
-              {t("Deaths")}
+              {t("Oh No! Dead Villagers Found!")}
             </Text>
           </Group>
         </Card.Title>
         <Card.Description>
-          {t("These are the players killed the previous night...")}
+          {t("Once the sun had risen, the villagers found the following dead:")}
         </Card.Description>
         <Group mt="1rem">
           {latestPlayerDeaths.map((death) => (

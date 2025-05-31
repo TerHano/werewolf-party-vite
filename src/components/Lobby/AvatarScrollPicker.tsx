@@ -14,7 +14,7 @@ export const AvatarScrollPicker = ({
   initialAvatarIndex,
   setAvatarIndex,
 }: {
-  initialAvatarIndex?: number;
+  initialAvatarIndex: number;
   setAvatarIndex: (avatarIndex: number) => void;
 }) => {
   const swipeRef = useRef<SwiperClass | null>(null);
@@ -22,7 +22,6 @@ export const AvatarScrollPicker = ({
 
   useEffect(() => {
     if (swipeRef.current && initialAvatarIndex !== undefined) {
-      console.log(initialAvatarIndex);
       swipeRef.current.slideTo(initialAvatarIndex + 2);
     }
   }, [initialAvatarIndex]);
@@ -44,7 +43,7 @@ export const AvatarScrollPicker = ({
       >
         {avatarNames.map((avatarName, index) => {
           return (
-            <SwiperSlide className={styles.swiper_slide}>
+            <SwiperSlide key={avatarName} className={styles.swiper_slide}>
               {({ isActive }) => (
                 <Avatar.Root
                   className={

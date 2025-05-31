@@ -3,9 +3,17 @@ import { useRoomId } from "@/hooks/useRoomId";
 import { useAllPlayerRoles } from "@/hooks/useAllPlayerRoles";
 import { useVotePlayerOut } from "@/hooks/useVotePlayerOut";
 import { useTranslation } from "react-i18next";
-import { Card, Separator, SimpleGrid, Stack, Text } from "@chakra-ui/react";
+import {
+  Card,
+  Group,
+  Separator,
+  SimpleGrid,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { lazy, useState } from "react";
 import { PlayerList } from "@/components/GameRoom/ModeratorView/NightView/ActionModals/PlayerList";
+import { InfoTip } from "@/components/ui/toggle-tip";
 
 const KilledPlayersBanner = lazy(() => import("./KilledPlayersBanner"));
 
@@ -17,7 +25,8 @@ export const ChoppingBlock = () => {
   const { data: allPlayerRoles } = useAllPlayerRoles(roomId);
   const alivePlayers = allPlayerRoles?.filter((player) => player.isAlive);
   const [selectedPlayer, setSelectedPlayer] = useState<number | undefined>();
-  const { mutate: votePlayerOutMutate } = useVotePlayerOut();
+  const { mutate: votePlayerOutMutate, isPending: isVotePending } =
+    useVotePlayerOut();
 
   return (
     <Stack direction="column" gap={6}>
@@ -29,26 +38,23 @@ export const ChoppingBlock = () => {
       >
         <Card.Body>
           <Card.Title>
-            <Text textStyle="accent" fontSize="xl">
-              {t("Villagers, who do you think it is?")}
-            </Text>
-            {/* <InfoTip
-              content={
-                <Text truncate>
-                  {t(
-                    "All the players should now be discussing who they think is the werewolf. Once an agreement is reached, the players will vote to lynch the player. If the players are unable to reach an agreement, the players can abstain from voting for the night."
-                  )}
-                </Text>
-              }
-            /> */}
+            <Group>
+              <Text textStyle="accent" fontSize="xl">
+                {t("Villagers, who do you think it is?")}
+              </Text>
+              <InfoTip
+                size="lg"
+                modal
+                content={
+                  <Text fontSize="1em" lineHeight={1.4} width={300}>
+                    {t(
+                      "All the players should now be discussing who they think is the werewolf. Once an agreement is reached, the players will vote to lynch the player. If the players are unable to reach an agreement, the players can abstain from voting for the night."
+                    )}
+                  </Text>
+                }
+              />
+            </Group>
           </Card.Title>
-          <Card.Description>
-            <Text fontSize="xs">
-              {t(
-                "All the players should now be discussing who they think is the werewolf. Once an agreement is reached, the players will vote to lynch the player. If the players are unable to reach an agreement, the players can abstain from voting for the night."
-              )}
-            </Text>
-          </Card.Description>
           <Stack mt={4} gap={3}>
             <PlayerList
               selectedPlayer={selectedPlayer}
@@ -72,6 +78,7 @@ export const ChoppingBlock = () => {
               <Button
                 w="100%"
                 disabled={!selectedPlayer}
+                loading={isVotePending}
                 onClick={() => {
                   votePlayerOutMutate({
                     roomId,

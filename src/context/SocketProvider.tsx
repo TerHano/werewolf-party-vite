@@ -52,7 +52,7 @@ export const SocketProvider = ({ children }: PropsWithChildren) => {
           return token;
         },
       })
-      .configureLogging(LogLevel.Information)
+      .configureLogging(LogLevel.Error)
       .withAutomaticReconnect()
       .build();
   }, []);

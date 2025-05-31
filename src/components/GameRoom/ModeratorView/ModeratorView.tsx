@@ -37,7 +37,7 @@ export const ModeratorView = () => {
     isLoading: isDayDetailsLoading,
   } = useDayDetails(roomId);
 
-  const { mutate: endGameMutation } = useEndGame();
+  const { mutate: endGameMutation, isPending: isEndingGame } = useEndGame();
 
   useSocketConnection({
     onDayOrTimeUpdated: () => {
@@ -67,6 +67,7 @@ export const ModeratorView = () => {
                 <Button
                   w="full"
                   colorPalette="red"
+                  loading={isEndingGame}
                   onClick={() => {
                     endGameMutation({ roomId });
                   }}

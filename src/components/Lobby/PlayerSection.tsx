@@ -10,7 +10,6 @@ import {
   Text,
   Separator,
   HStack,
-  Stack,
 } from "@chakra-ui/react";
 import { useNavigate } from "@tanstack/react-router";
 import { useCallback } from "react";
@@ -144,11 +143,11 @@ export const PlayersSection = ({
 
 const PlayerListSkeleton = () => {
   return (
-    <Stack>
+    <SimpleGrid justifyItems="center" gap={2} columns={{ base: 1, md: 3 }}>
       <PlayerSkeleton />
       <PlayerSkeleton />
       <PlayerSkeleton />
-    </Stack>
+    </SimpleGrid>
   );
 };
 

@@ -34,7 +34,8 @@ export const Lobby = () => {
           type: "error",
           title: "Can't Start Game",
           description: e.message,
-          duration: 1500,
+          duration: 2500,
+          withDismissButton: true,
         });
       },
     });

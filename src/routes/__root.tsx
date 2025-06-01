@@ -22,11 +22,13 @@ export const Route = createRootRoute({
     <Skeleton h={200} w={200} loading />;
   },
   component: () => (
-    <SocketProvider>
-      <Container maxWidth={800} justifyItems="center" p={2}>
-        <Outlet />
-        <Toaster />
-      </Container>
-    </SocketProvider>
+    <>
+      <SocketProvider>
+        <Container maxWidth={800} justifyItems="center" p={2}>
+          <Outlet />
+        </Container>
+      </SocketProvider>
+      <Toaster />
+    </>
   ),
 });

@@ -12,24 +12,16 @@ import {
   useMemo,
   useState,
 } from "react";
-import {
-  Button,
-  DialogBackdrop,
-  DialogBody,
-  Progress,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
-import { ProgressRoot, ProgressBar } from "@/components/ui/progress";
-import { DialogContent, DialogRoot } from "@/components/ui/dialog";
+import { Button, Progress, Stack, Text } from "@chakra-ui/react";
 import { IconCards, IconPlugConnectedX } from "@tabler/icons-react";
 import { useDebounce, useIsFirstRender } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 import { SocketContext } from "./SocketContext";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 export const SocketProvider = ({ children }: PropsWithChildren) => {
   const { t } = useTranslation();
-  const [isReconnectDisabled, setReconnectDisabled] = useState(false);
+  const { showToast } = useToaster();
   const isFirstRender = useIsFirstRender();
   const [_connectionState, setConnectionState] = useState<
     HubConnectionState | undefined
@@ -74,11 +66,22 @@ export const SocketProvider = ({ children }: PropsWithChildren) => {
         .start()
         .then(() => {
           setConnectionState(connection.state);
+          console.log("Connection started");
         })
         .catch(() => {
           setConnectionState(connection.state);
+          console.log("Connection failed");
+          showToast({
+            title: t("Connection Error"),
+            description: t(
+              "Failed to connect to the server. Please try again later."
+            ),
+            type: "error",
+            icon: <IconPlugConnectedX size={12} />,
+            duration: 5000,
+          });
         }),
-    [connection]
+    [connection, showToast, t]
   );
   useEffect(() => {
     connection.onreconnected(() => {
@@ -99,76 +102,51 @@ export const SocketProvider = ({ children }: PropsWithChildren) => {
     }
   }, [connection, connection.state, isFirstRender, startConnection]);
 
-  //const isConnected =
-
   return (
     <SocketContext.Provider value={connection}>
-      <DialogRoot
-        //  size=""
-        open={
-          connectionState !== undefined &&
-          connectionState !== HubConnectionState.Connected
-        }
-        motionPreset="slide-in-bottom"
-      >
-        <DialogBackdrop />
-        <DialogContent>
-          <DialogBody>
-            <Stack gap={4}>
-              <Stack alignItems="center">
-                <IconPlugConnectedX size="8rem" />
-                <Text fontSize="1rem">{dialogMessage}</Text>
-                {connectionState === HubConnectionState.Disconnected ||
-                connectionState == HubConnectionState.Connecting ? (
-                  <Button
-                    disabled={
-                      isReconnectDisabled ||
-                      connectionState === HubConnectionState.Connecting
-                    }
-                    onClick={() => {
-                      setConnectionState(HubConnectionState.Connecting);
-                      setReconnectDisabled(true);
-                      setTimeout(() => {
-                        setReconnectDisabled(false);
-                      }, 2000);
-                      startConnection();
-                    }}
-                  >
-                    {t("Reconnect")}
-                  </Button>
-                ) : null}
-              </Stack>
-              {isReconnectDisabled ||
-              connectionState !== HubConnectionState.Disconnected ? (
-                <ProgressRoot size="lg" value={null}>
-                  <ProgressBar />
-                </ProgressRoot>
-              ) : null}
-            </Stack>
-          </DialogBody>
-        </DialogContent>
-      </DialogRoot>
       {connectionState === HubConnectionState.Connected ? (
         children
       ) : (
         <Stack
-          visibility={connectionState !== undefined ? "hidden" : "visible"}
+          //   visibility={!isConnecting ? "hidden" : "visible"}
           className="animate-fade-in-from-bottom"
-          height="40vh"
-          justify="end"
+          paddingTop="20%"
+          //  position="absolute"
+          // left="20%"
+          //top="50%"
+          justify="center"
           align="center"
           gap={4}
           mt={4}
         >
-          <IconCards size="4rem" />
-          <Progress.Root size="sm" borderRadius="xl" w="200px" value={null}>
-            <Progress.Track>
-              <Progress.Range />
-            </Progress.Track>
-          </Progress.Root>
-          <Text color="dimmed" fontSize="1rem">
-            {t("Loading...")}
-          </Text>
+          {connectionState === HubConnectionState.Disconnected ? (
+            <>
+              <IconPlugConnectedX size="4rem" />
+              <Text color="dimmed" fontSize="1rem">
+                {dialogMessage}
+              </Text>
+              <Button
+                size="sm"
+                onClick={() => {
+                  startConnection();
+                }}
+              >
+                {t("Reconnect")}
+              </Button>
+            </>
+          ) : (
+            <>
+              <IconCards size="4rem" />
+              <Progress.Root size="sm" borderRadius="xl" w="200px" value={null}>
+                <Progress.Track>
+                  <Progress.Range />
+                </Progress.Track>
+              </Progress.Root>
+              <Text textStyle="accent" color="dimmed" fontSize="1em">
+                {t("Connecting to server...")}
+              </Text>
+            </>
+          )}
         </Stack>
       )}
     </SocketContext.Provider>

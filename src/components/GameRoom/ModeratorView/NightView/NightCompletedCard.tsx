@@ -19,9 +19,9 @@ export const NightCompletedCard = () => {
         <Image width="10rem" src={nightToDayImg} />
       </Card.Body>
       <Card.Footer>
-        <Stack direction="column" gap={0}>
+        <Stack direction="column" align="center" gap={0}>
           <Text fontSize="xl" textStyle="accent">
-            {t(`Ready to sleep until day?`)}
+            {t(`It is now nightfall. Ready to go to the next day?`)}
           </Text>
           <Button
             disabled={isLoading}

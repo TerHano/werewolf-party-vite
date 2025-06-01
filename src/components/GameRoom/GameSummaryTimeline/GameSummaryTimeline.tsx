@@ -18,7 +18,7 @@ export const GameSummaryTimeline = () => {
   if (!gameSummary || gameSummary.length === 0) {
     return (
       <Stack mt={4} gap={3} justify="start" w="full">
-        <Text fontSize="md">{t("Game History")}</Text>
+        <Text fontSize="md">{t("Game Summary")}</Text>
         <Text fontSize="sm" color="gray.500">
           {t("No events have occurred in this game.")}
         </Text>
@@ -28,7 +28,7 @@ export const GameSummaryTimeline = () => {
 
   return (
     <Stack mt={4} gap={3} justify="start" w="full">
-      <Text fontSize="md">{t("Game History")}</Text>
+      <Text fontSize="md">{t("Game Summary")}</Text>
       {gameSummary?.map((summary) => {
         return (
           <>

@@ -115,7 +115,7 @@ export const GameSummaryTimelineItem = ({
       >
         <Image src={timelineLabels.iconSrc} width="24px" />
       </TimelineConnector>
-      <TimelineContent>
+      <TimelineContent gap="1px">
         <TimelineTitle>{timelineLabels.title}</TimelineTitle>
         <TimelineDescription>{timelineLabels.description}</TimelineDescription>
         {/* <Text textStyle="sm">

@@ -54,10 +54,5 @@ const NightNoActionsTaken = () => {
     <Text my={1} fontStyle="italic" fontSize="lg" textStyle="accent">
       {t("No actions were taken this night")}
     </Text>
-    // <Card.Root bgColor="purple.900">
-    //   <Card.Body>
-    //     <Text color="purple.fg">{t("No actions were taken")}</Text>
-    //   </Card.Body>
-    // </Card.Root>
   );
 };

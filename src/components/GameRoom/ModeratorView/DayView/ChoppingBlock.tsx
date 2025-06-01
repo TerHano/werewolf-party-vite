@@ -40,7 +40,7 @@ export const ChoppingBlock = () => {
           <Card.Title>
             <Group>
               <Text textStyle="accent" fontSize="xl">
-                {t("Villagers, who do you think it is?")}
+                {t("Villagers, who do you think is a Werewolf?")}
               </Text>
               <InfoTip
                 size="lg"

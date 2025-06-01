@@ -27,6 +27,11 @@ import { useAllPlayerRoles } from "@/hooks/useAllPlayerRoles";
 import { RoleActionDto } from "@/dto/RoleActionDto";
 import { IconSearch } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
+import {
+  InvestigatePlayerResponse,
+  useInvestigatePlayer,
+} from "@/hooks/useInvestigatePlayer";
+import { InvestigationType } from "@/enum/InvestigationType";
 
 const WerewolfInvestigationResult = lazy(
   () => import("./WerewolfInvestigationResult")
@@ -51,10 +56,19 @@ export const InvestigationModal = ({
   const { data: allPlayers } = useAllPlayerRoles(roomId);
   const [step, setStep] = useState(0);
   const queryClient = useQueryClient();
-
   const [selectedPlayerRoleId, setSelectedPlayerRoleId] = useState<number>();
+  const [investigationResult, setInvestigationResult] =
+    useState<InvestigatePlayerResponse | null>(null);
+
+  const { mutateAsync: investigatePlayerAsync } = useInvestigatePlayer();
   const { mutate: createUpdateQueuedAction } = useCreateUpdateQueuedAction({
-    onSuccess: async () => {
+    onSuccess: async (_, request) => {
+      const investigation = await investigatePlayerAsync({
+        roomId,
+        playerRoleId: request.affectedPlayerRoleId,
+        investigationType: InvestigationType.Werewolf,
+      });
+      setInvestigationResult(investigation);
       setStep(1);
     },
     skipInvalidatingQueries: true,
@@ -100,13 +114,12 @@ export const InvestigationModal = ({
           title: t("Who do we think is the Werewolf?"),
           resultNode: (
             <WerewolfInvestigationResult
-              allPlayers={allPlayers ?? []}
-              playerRoleId={selectedPlayerRoleId}
+              investigationResult={investigationResult}
             />
           ),
         };
     }
-  }, [action.type, allPlayers, selectedPlayerRoleId, t]);
+  }, [action.type, investigationResult, t]);
 
   return (
     <DialogRoot placement="center" onExitComplete={onModalExit}>

@@ -1,22 +1,17 @@
-import { PlayerRoleActionDto } from "@/dto/PlayerRoleActionDto";
-import { Role } from "@/enum/Role";
-
 import werewolfImg from "@/assets/icons/roles/werewolf-color.png";
 import villagerImg from "@/assets/icons/roles/villager-color.png";
 import { VStack, Image, Text, Highlight } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+import { InvestigatePlayerResponse } from "@/hooks/useInvestigatePlayer";
 
 export const WerewolfInvestigationResult = ({
-  playerRoleId,
-  allPlayers,
+  investigationResult,
 }: {
-  playerRoleId: number | undefined;
-  allPlayers: PlayerRoleActionDto[];
+  investigationResult: InvestigatePlayerResponse | null;
 }) => {
   const { t } = useTranslation();
-  const suspect = allPlayers.find((player) => player.id === playerRoleId);
-  const isWerewolf =
-    suspect?.role == Role.WereWolf || suspect?.role == Role.Cursed;
+  const suspect = investigationResult?.playerRole;
+  const isWerewolf = investigationResult?.isInvestigationSuccessful;
 
   if (isWerewolf) {
     return (
@@ -27,7 +22,7 @@ export const WerewolfInvestigationResult = ({
             styles={{ bg: "green.subtle", color: "green.fg" }}
             query={t("IS")}
           >
-            {t(`YIKES! ${suspect.nickname} IS a Werewolf!`)}
+            {t(`YIKES! ${suspect?.nickname} IS a Werewolf!`)}
           </Highlight>
         </Text>
       </VStack>

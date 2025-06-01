@@ -370,6 +370,7 @@ export const EditRoomRoleSettings = ({
                       loading={isRoomRoleSettingsLoading}
                     >
                       <Controller
+                        defaultValue={savedRoleSettings?.allowMultipleSelfHeals}
                         name="allowMultipleSelfHeals"
                         control={control}
                         render={({ field }) => (

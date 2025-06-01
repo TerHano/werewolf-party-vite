@@ -11,7 +11,6 @@ import {
   Text,
   DrawerFooter,
   HStack,
-  Badge,
   useDrawer,
   DrawerRootProvider,
 } from "@chakra-ui/react";
@@ -354,16 +353,16 @@ export const EditRoomRoleSettings = ({
                     </Skeleton>
                     <ChakraField.HelperText>
                       {t(
-                        "If a summary of the games events should be shown once the game ends."
+                        "This controls whether a summary of the games events should be shown once the game ends. Turn this setting off to allow player roles to remain anonymous"
                       )}
                     </ChakraField.HelperText>
                   </ChakraField.Root>
                   <ChakraField.Root>
                     <ChakraField.Label>
                       <Text>{t("Allow Continuous Self Heals")} </Text>
-                      <Badge size="xs" colorPalette="yellow" variant="subtle">
+                      {/* <Badge size="xs" colorPalette="yellow" variant="subtle">
                         {t("Coming Soon")}
-                      </Badge>
+                      </Badge> */}
                     </ChakraField.Label>
                     <Skeleton
                       height={6}
@@ -376,7 +375,6 @@ export const EditRoomRoleSettings = ({
                         render={({ field }) => (
                           <Switch
                             size="lg"
-                            disabled
                             name={field.name}
                             checked={field.value}
                             onCheckedChange={({ checked }) =>
@@ -388,7 +386,9 @@ export const EditRoomRoleSettings = ({
                       />
                     </Skeleton>
                     <ChakraField.HelperText>
-                      {t("Restricts how often a healer can heal themselves")}
+                      {t(
+                        "When off, this restricts healers from healing themselves multiple times in a row. "
+                      )}
                     </ChakraField.HelperText>
                   </ChakraField.Root>
                 </Stack>

@@ -8,7 +8,6 @@ import {
   Spinner,
   Stack,
   Toast,
-  createToaster,
 } from "@chakra-ui/react";
 import {
   IconAlertTriangle,
@@ -16,6 +15,7 @@ import {
   IconInfoCircle,
 } from "@tabler/icons-react";
 import React, { useMemo } from "react";
+import { toaster } from "./createToaster";
 
 type WerewolfToastType =
   | "success"
@@ -24,11 +24,6 @@ type WerewolfToastType =
   | "info"
   | "warning"
   | (string & {});
-
-export const toaster = createToaster({
-  placement: "bottom-end",
-  pauseOnPageIdle: true,
-});
 
 export const Toaster = () => {
   return (

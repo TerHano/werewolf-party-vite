@@ -1,7 +1,7 @@
 {
   "name": "werewolf-party-vite",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,8 @@
     "typegen": "npx chakra typegen ./src/theme.ts",
     "lint": "eslint .",
     "preview": "vite preview",
-    "dev-host": "vite --host"
+    "dev-host": "vite --host",
+    "generate-types": "npx openapi-typescript http://localhost:5049/swagger/v1/swagger.json -o ./src/types/api.d.ts"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.19.1",

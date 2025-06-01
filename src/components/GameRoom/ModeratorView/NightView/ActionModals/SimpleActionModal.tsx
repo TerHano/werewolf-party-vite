@@ -14,7 +14,6 @@ import { PlayerList } from "./PlayerList";
 import { DialogRootProvider, Text, useDialog } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { useCreateUpdateQueuedAction } from "@/hooks/useCreateUpdateQueuedAction";
-import { Role } from "@/enum/Role";
 import { Button, ButtonProps } from "@/components/ui/button";
 import { useRoomId } from "@/hooks/useRoomId";
 import { PlayerRoleActionDto } from "@/dto/PlayerRoleActionDto";
@@ -76,6 +75,9 @@ export const SimpleActionModal = ({
   ]);
 
   const modalContent = useMemo<ModalContentProps>(() => {
+    const playerList = allPlayers?.filter((x) =>
+      action.validPlayerIds.includes(x.id)
+    );
     switch (action.type) {
       case ActionType.WerewolfKill:
         return {
@@ -85,9 +87,7 @@ export const SimpleActionModal = ({
             children: t("Attack"),
             colorPalette: "red",
           },
-          playerList: allPlayers?.filter(
-            (player) => player.role !== Role.WereWolf && player.isAlive
-          ),
+          playerList,
         };
       case ActionType.Revive:
         return {
@@ -97,7 +97,7 @@ export const SimpleActionModal = ({
             children: t("Heal"),
             colorPalette: "green",
           },
-          playerList: allPlayers?.filter((player) => player.isAlive),
+          playerList,
         };
 
       default:
@@ -108,12 +108,10 @@ export const SimpleActionModal = ({
             children: t("Attack"),
             colorPalette: "red",
           },
-          playerList: allPlayers?.filter(
-            (player) => player.id != playerRoleId && player.isAlive
-          ),
+          playerList,
         };
     }
-  }, [action.type, allPlayers, playerRoleId, t]);
+  }, [action, allPlayers, t]);
 
   return (
     <DialogRootProvider placement="center" value={dialog}>

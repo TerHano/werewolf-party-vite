@@ -1,10 +1,11 @@
-import { toaster } from "@/components/ui-addons/toaster";
+import { toaster } from "@/components/ui-addons/createToaster";
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 type WerewolfToastType = "success" | "error" | "loading" | "info" | "warning";
 
 interface ToastOptions {
+  id?: string;
   title?: React.ReactNode;
   description?: React.ReactNode;
   type?: WerewolfToastType;

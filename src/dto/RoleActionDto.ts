@@ -5,4 +5,5 @@ export interface RoleActionDto {
   type: ActionType;
   enabled: boolean;
   disabledReason?: string;
+  validPlayerIds: number[];
 }

@@ -48,7 +48,6 @@ export const PlayersSection = ({
         showToast({
           title: t("You Were Kicked!"),
           description: t("Next time be nice!"),
-          duration: 1500,
         });
         navigate({ to: "/" });
       } else {
@@ -106,11 +105,11 @@ export const PlayersSection = ({
               <ClipboardButton
                 onCopy={() => {
                   showToast({
+                    id: "roomIdCopy",
                     icon: <IconCopyCheck />,
                     type: "success",
                     title: t("Room ID Copied!"),
                     withDismissButton: true,
-                    // description: t("Send it to your friends!"),
                   });
                 }}
                 value={window.location.href}

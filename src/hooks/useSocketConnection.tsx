@@ -120,12 +120,16 @@ export const useSocketConnection = ({
     }
   }, [connection]);
 
-  // if (connection.state === signalR.HubConnectionState.Disconnected) {
-  //   connection.start();
-  // }
+  const getConnectionId = useCallback(() => {
+    if (connection.state === HubConnectionState.Connected) {
+      return connection.connectionId!;
+    } else {
+      throw new Error("Connection is not established");
+    }
+  }, [connection]);
 
   return {
-    //onConnected: connection.invoke,
+    getConnectionId,
     joinRoom,
     attemptReconnection,
     connectionState: connection.state,

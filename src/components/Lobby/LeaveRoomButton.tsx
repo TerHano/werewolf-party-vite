@@ -16,11 +16,14 @@ import { IconLogout2 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { Alert, Stack, Text } from "@chakra-ui/react";
 import { useIsModerator } from "@/hooks/useIsModerator";
+import { useSocketConnection } from "@/hooks/useSocketConnection";
 
 export const LeaveRoomButton = () => {
   const { t } = useTranslation();
   const roomId = useRoomId();
   const navigate = useNavigate();
+  const { getConnectionId } = useSocketConnection({});
+
   const { mutate: leaveRoomMutate, isPending: isLeavingRoom } = useLeaveRoom({
     onSuccess: async () => {
       await navigate({ to: "/" });
@@ -72,7 +75,7 @@ export const LeaveRoomButton = () => {
             loading={isLeavingRoom}
             disabled={isLeavingRoom}
             onClick={() => {
-              leaveRoomMutate({ roomId });
+              leaveRoomMutate({ roomId, connectionId: getConnectionId() });
             }}
             colorPalette="red"
           >

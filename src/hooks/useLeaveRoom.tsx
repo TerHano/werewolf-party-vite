@@ -1,10 +1,10 @@
-import { RoomRequestDto } from "@/dto/RoomRequestDto";
 import { mutationOptions, useApiMutation } from "./useApiMutation";
+import { LeaveRoomRequestDto } from "@/dto/LeaveRoomRequestDto";
 
 export const useLeaveRoom = (
-  options: mutationOptions<void, RoomRequestDto> = {}
+  options: mutationOptions<void, LeaveRoomRequestDto> = {}
 ) => {
-  return useApiMutation<void, RoomRequestDto>({
+  return useApiMutation<void, LeaveRoomRequestDto>({
     mutation: {
       endpoint: "room/leave-room",
       method: "POST",

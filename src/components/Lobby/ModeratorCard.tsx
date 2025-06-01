@@ -46,15 +46,14 @@ export const ModeratorCard = ({ currentPlayer }: ModeratorCardProps) => {
           icon: moderatorIcon,
           title: t("You're In Charge!"),
           description: t("You are now the moderator!"),
-          duration: 2500,
+          withDismissButton: true,
           type: "warning",
         });
       } else {
         showToast({
           title: t("New Moderator In Town!"),
-
           icon: moderatorIcon,
-
+          withDismissButton: true,
           description: (
             <Group gap={1}>
               <Text fontStyle="italic" fontWeight="bold">
@@ -64,7 +63,6 @@ export const ModeratorCard = ({ currentPlayer }: ModeratorCardProps) => {
             </Group>
           ),
           type: "warning",
-          duration: 2500,
         });
       }
       refetchModerator();

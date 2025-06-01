@@ -353,7 +353,7 @@ export const EditRoomRoleSettings = ({
                     </Skeleton>
                     <ChakraField.HelperText>
                       {t(
-                        "This controls whether a summary of the games events should be shown once the game ends. Turn this setting off to allow player roles to remain anonymous"
+                        "This controls whether a summary of the games events should be shown once the game ends."
                       )}
                     </ChakraField.HelperText>
                   </ChakraField.Root>

@@ -55,7 +55,7 @@ export const RoomRoleSettingsCard = () => {
             <HStack gap={1}>
               <IconCards size={16} />
               <Text fontWeight="semibold" fontSize="sm">
-                {t("Role Settings")}
+                {t("common.roleSettings")}
               </Text>
             </HStack>
 

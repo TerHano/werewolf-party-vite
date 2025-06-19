@@ -49,7 +49,7 @@ export const ClipboardIconButton = ({
           copied={
             <IconButton {...iconButton} colorPalette="green">
               <HStack p={3}>
-                <Text>{t("Copied!")}</Text>
+                <Text>{t("button.copied")}</Text>
                 <IconClipboardCheck />
               </HStack>
             </IconButton>
@@ -91,7 +91,7 @@ export const ClipboardButton = ({
           copied={
             <Button {...button} colorPalette="green">
               <HStack p={3}>
-                <Text>{t("Copied!")}</Text>
+                <Text>{t("button.copied")}</Text>
                 <IconClipboardCheck />
               </HStack>
             </Button>

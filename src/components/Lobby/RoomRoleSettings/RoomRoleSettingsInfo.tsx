@@ -66,7 +66,7 @@ export const RoomRoleSettingsInfo = ({
           <HStack gap={1}>
             <IconCards size={18} />
             <Text fontWeight={500} fontSize="lg">
-              {t("Role Settings")}
+              {t("common.roleSettings")}
             </Text>
           </HStack>
         </DrawerHeader>
@@ -85,8 +85,11 @@ export const RoomRoleSettingsInfo = ({
               value={roleControl}
               onValueChange={(e) => setRoleControl(e.value as ShowRoleControl)}
               items={[
-                { label: t("Active"), value: "active" },
-                { label: t("All"), value: "all" },
+                {
+                  label: t("roleSettings.viewSettings.active"),
+                  value: "active",
+                },
+                { label: t("roleSettings.viewSettings.all"), value: "all" },
               ]}
             />
             <RoleInfoList roles={roleList} />

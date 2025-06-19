@@ -1,4 +1,3 @@
-/* eslint-disable i18next/no-literal-string */
 import {
   Card,
   Group,
@@ -86,21 +85,23 @@ export const MainMenu = () => {
             <Text textStyle="accent" fontSize="2.5rem" fontWeight="bold">
               {t("Werewolf Party")}
             </Text>
-            <Text textStyle="accent" fontSize="medium" color="gray.300">
-              {t("Cards for a party game full of lies, deceit, & accusations")}
-            </Text>
-            <Text textStyle="accent" fontSize="medium" color="gray.300">
-              {t("Are you devious enough?")}
+            <Text
+              textAlign="center"
+              textStyle="accent"
+              fontSize="medium"
+              color="gray.300"
+            >
+              {t("mainMenu.subTitle")}
             </Text>
           </Stack>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Field
               invalid={!!errors.roomId}
               maxWidth={250}
-              label="Join Room"
+              label={t("mainMenu.joinRoomInput.label")}
               helperText={
                 <Text fontSize="x-small">
-                  {t("Enter your 5 character Room ID")}
+                  {t("mainMenu.joinRoomInput.helper")}
                 </Text>
               }
               errorText={
@@ -113,11 +114,11 @@ export const MainMenu = () => {
                   {...register("roomId", {
                     required: {
                       value: true,
-                      message: t("Please enter a Room ID"),
+                      message: t("mainMenu.joinRoomInput.required"),
                     },
                     minLength: {
                       value: 5,
-                      message: t("Room ID must be 5 characters"),
+                      message: t("mainMenu.joinRoomInput.minLength"),
                     },
                     maxLength: 5,
                   })}
@@ -138,7 +139,7 @@ export const MainMenu = () => {
           <HStack alignItems="center" w="full">
             <Separator flex="1" variant="dashed" />
             <Text textStyle="accent" flexShrink="0">
-              OR
+              {t("or")}
             </Text>
             <Separator flex="1" variant="dashed" />
           </HStack>
@@ -160,6 +161,7 @@ export const MainMenu = () => {
               <Link
                 target="_blank"
                 href="https://icons8.com/icon/WlXKRWqXdjfz/werewolf"
+                // eslint-disable-next-line i18next/no-literal-string
               >
                 Icons8
               </Link>{" "}
@@ -167,6 +169,7 @@ export const MainMenu = () => {
               <Link
                 target="_blank"
                 href="https://www.flaticon.com/authors/graphiqa"
+                // eslint-disable-next-line i18next/no-literal-string
               >
                 Graphiqa
               </Link>

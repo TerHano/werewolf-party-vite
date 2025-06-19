@@ -11,7 +11,7 @@ import {
 import { useDebounce } from "@uidotdev/usehooks";
 import React from "react";
 
-const loadingTransitionTimeMs = 500;
+const loadingTransitionTimeMs = 250;
 
 export interface SkeletonComposedProps {
   loading?: boolean;
@@ -41,7 +41,7 @@ export const SkeletonComposed = React.forwardRef<
       w="inherit"
       height="inherit"
       _open={{
-        animation: `fade-in-from-bottom ${loadingTransitionTimeMs}ms ease-out`,
+        animation: `fade-in ${loadingTransitionTimeMs}ms ease-out`,
       }}
       data-state={loading ? "closed" : "open"}
     >

@@ -103,7 +103,7 @@ export const WinConditionPage = ({
                 startGameMutate({ roomId });
               }}
             >
-              {t("Play Again")}
+              {t("winCondition.button.playAgain")}
             </Button>
             <Button
               w="full"
@@ -114,7 +114,7 @@ export const WinConditionPage = ({
                 endGameMutate({ roomId });
               }}
             >
-              {t("End Game")}
+              {t("winCondition.button.endGame")}
             </Button>
           </Stack>
         ) : null}

@@ -52,11 +52,11 @@ export const SocketProvider = ({ children }: PropsWithChildren) => {
   const dialogMessage = useMemo(() => {
     switch (connectionState) {
       case HubConnectionState.Connecting:
-        return t("Connecting to Server");
+        return t("socket.status.connecting");
       case HubConnectionState.Reconnecting:
-        return t("Reconnecting to Server");
+        return t("socket.status.reconnecting");
       case HubConnectionState.Disconnected:
-        return t("Disconnected from Server");
+        return t("socket.status.disconnected");
     }
   }, [connectionState, t]);
 

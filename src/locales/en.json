@@ -1,0 +1,94 @@
+{
+  "global_error": {
+    "title": "Oops!",
+    "description": "An error occurred while processing your request. Please try again later."
+  },
+  "mainMenu": {
+    "title": "Werewolf Party",
+    "subTitle": "Cards for a party game full of lies, deceit, & accusations. Are you devious enough?",
+    "joinRoomInput": {
+      "label": "Join Room",
+      "helper": "Enter your 5 character Room ID",
+      "required": "Room ID is required",
+      "minLength": "Room ID must be at least 5 characters",
+      "roomIdError": "Invalid Room ID. Please enter a valid ID."
+    },
+    "or": "OR",
+    "createNewRoom": "Create New Room"
+  },
+  "roleSettings": {
+    "numberOfWerewolves": "Number of Werewolves",
+    "traditionalRoles": "Traditional Roles",
+    "specialRoles": "Special Roles",
+    "updated": {
+      "title": "Role Settings Updated",
+      "description": "The role settings have been successfully updated."
+    },
+    "error": {
+      "title": "Error Updating Role Settings",
+      "description": "There was an error updating the role settings. Please try again."
+    },
+    "viewSettings": {
+      "active": "Active",
+      "all": "All"
+    }
+  },
+  "winCondition": {
+    "moderator": {
+      "werewolvesWin": "The werewolves have won the game. You can start a new game or end it.",
+      "villagersWin": "The villagers have won the game. You can start a new game or end it."
+    },
+    "isWerewolf": {
+      "werewolvesWin": "Congratulations! The werewolves eliminated all villagers.",
+      "villagersWin": "Oh no! You were not able to protect the villagers! The werewolves have won the game."
+    },
+    "isVillager": {
+      "werewolvesWin": "Oh no! The villagers have eliminated all werewolves.",
+      "villagersWin": "Congratulations! The villagers have protected their village."
+    },
+    "button": {
+      "playAgain": "Play Again",
+      "endGame": "End Game"
+    }
+  },
+  "addEditPlayerModal": {
+    "updateDetails": "Update Player Details",
+    "addDetails": "Who are you?",
+    "avatar": "Avatar",
+    "nickname": "Nickname",
+    "nicknameHelper": "How others will see you"
+  },
+  "common": {
+    "leave": "Leave",
+    "roomId": "Room ID",
+    "moderator": "Moderator",
+    "you": "You",
+    "roleSettings": "Role Settings"
+  },
+  "button": {
+    "reload": "Reload",
+    "cancel": "Cancel",
+    "joinRoom": "Join Room",
+    "leaveRoom": "Leave Room",
+    "startGame": "Start Game",
+    "endGame": "End Game",
+    "editSettings": "Edit Settings",
+    "viewSettings": "View Settings",
+    "copyRoomUrl": "Copy Room URL",
+    "copied": "Copied!"
+  },
+  "socket": {
+    "status": {
+      "connecting": "Connecting to Server",
+      "reconnecting": "Reconnecting to Server",
+      "disconnected": "Disconnected from Server",
+      "error": "Error Connecting to Server"
+    },
+    "buttion": {
+      "reconnect": "Reconnect"
+    }
+  },
+  "toast": {
+    "ok": "OK"
+  }
+}

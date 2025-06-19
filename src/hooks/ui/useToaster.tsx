@@ -28,7 +28,7 @@ export const useToaster = () => {
         },
         action: withDismissButton
           ? {
-              label: t("OK"),
+              label: t("toast.ok"),
               onClick: () => {},
             }
           : undefined,

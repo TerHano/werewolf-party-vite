@@ -114,7 +114,7 @@ export const PlayersSection = ({
                 }}
                 value={window.location.href}
               >
-                {t("Copy Room URL")}
+                {t("button.copyRoomUrl")}
               </ClipboardButton>
             </VStack>
           ) : null}

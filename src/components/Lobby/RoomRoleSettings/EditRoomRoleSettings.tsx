@@ -63,7 +63,7 @@ export const EditRoomRoleSettings = ({
   const { mutate, isPending: isUpdatingSettings } = useUpdateRoomRoleSettings({
     onSuccess: async () => {
       showToast({
-        title: t("Role Settings Updated"),
+        title: t("roleSettings.updated.title"),
         // description: t("Your new roles and game settings have been saved!"),
         type: "success",
         duration: 2500,
@@ -82,7 +82,12 @@ export const EditRoomRoleSettings = ({
   const onSubmit: SubmitHandler<EditRoomRoleSettingsForm> = useCallback(
     (data) => {
       if (!savedRoleSettings) {
-        throw new Error("error");
+        showToast({
+          title: t("roleSettings.error.title"),
+          description: t("roleSettings.error.description"),
+          type: "error",
+        });
+        return;
       }
       console.log(data);
       const request: RoomRoleSettingsDto = {
@@ -103,7 +108,7 @@ export const EditRoomRoleSettings = ({
         },
       });
     },
-    [drawer, mutate, reset, roomId, savedRoleSettings]
+    [drawer, mutate, reset, roomId, savedRoleSettings, showToast, t]
   );
 
   const traditonalRoles = data.filter(
@@ -123,7 +128,7 @@ export const EditRoomRoleSettings = ({
       <DrawerBackdrop />
       <DrawerTrigger asChild>
         <Button size="sm" w="full" variant="subtle" colorPalette="blue">
-          <IconSettings /> {t("Edit Settings")}
+          <IconSettings /> {t("button.editSettings")}
         </Button>
       </DrawerTrigger>
       <form>
@@ -134,7 +139,7 @@ export const EditRoomRoleSettings = ({
             <HStack gap={1}>
               <IconCards size={18} />
               <Text fontWeight={500} fontSize="lg">
-                {t("Role Settings")}
+                {t("common.roleSettings")}
               </Text>
             </HStack>
           </DrawerHeader>
@@ -156,7 +161,7 @@ export const EditRoomRoleSettings = ({
                     <Field
                       label={
                         <Text textStyle="accent" fontWeight={600} fontSize="lg">
-                          {t("Number of Werewolves")}
+                          {t("roleSettings.numberOfWerewolves")}
                         </Text>
                       }
                     >
@@ -202,7 +207,7 @@ export const EditRoomRoleSettings = ({
                               fontWeight={600}
                               fontSize="lg"
                             >
-                              {t("Traditional Roles")}
+                              {t("roleSettings.traditionalRoles")}
                             </Text>
                             <RoleInformationDialog roles={traditonalRoles} />
                           </Group>
@@ -264,7 +269,7 @@ export const EditRoomRoleSettings = ({
                               fontWeight={600}
                               fontSize="lg"
                             >
-                              {t("Special Roles")}
+                              {t("roleSettings.specialRoles")}
                             </Text>
                             <RoleInformationDialog roles={specialRoles} />
                           </Group>

@@ -223,7 +223,7 @@ export const AddEditPlayerModal = ({
               form="player-details-form"
               type="submit"
             >
-              {isEdit ? t("Update Details") : t("Join Room")}
+              {isEdit ? t("Update Details") : t("button.joinRoom")}
             </Button>
           </DialogFooter>
         </DialogContent>

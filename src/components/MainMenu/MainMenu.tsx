@@ -52,14 +52,12 @@ export const MainMenu = () => {
       if (!doesExist) {
         showToast({
           type: "error",
-          title: "Room Not Found",
+          title: t("mainMenu.joinRoomToast.roomNotFound.title"),
           description: (
             <Text as="span">
-              {t("Room with ID:")}{" "}
-              <Text as="span" fontWeight="bold">
-                {roomId.toUpperCase()}
-              </Text>{" "}
-              {t("not found. Please try again")}
+              {t("mainMenu.joinRoomToast.roomNotFound.description", {
+                roomId: roomId.toUpperCase(),
+              })}
             </Text>
           ),
           duration: 3000,
@@ -83,7 +81,7 @@ export const MainMenu = () => {
           <Stack alignItems="center" gap={0}>
             <Image width={150} src={campIcon} />
             <Text textStyle="accent" fontSize="2.5rem" fontWeight="bold">
-              {t("Werewolf Party")}
+              {t("mainMenu.title")}
             </Text>
             <Text
               textAlign="center"
@@ -139,7 +137,7 @@ export const MainMenu = () => {
           <HStack alignItems="center" w="full">
             <Separator flex="1" variant="dashed" />
             <Text textStyle="accent" flexShrink="0">
-              {t("or")}
+              {t("mainMenu.or")}
             </Text>
             <Separator flex="1" variant="dashed" />
           </HStack>
@@ -150,14 +148,14 @@ export const MainMenu = () => {
             }}
             size="md"
           >
-            {t("Create New Room")} <IconUsersGroup />
+            {t("mainMenu.createNewRoom")} <IconUsersGroup />
           </Button>
           <Stack align="center" gap={0} direction="column">
             <Text color="gray.500" textStyle="accent">
-              {t("Developed By Terry Hanoman")}
+              {t("mainMenu.developedBy")}
             </Text>
             <Text color="gray.500" textStyle="accent">
-              {t("Icons by ")}{" "}
+              {t("mainMenu.iconsBy")}{" "}
               <Link
                 target="_blank"
                 href="https://icons8.com/icon/WlXKRWqXdjfz/werewolf"
@@ -165,7 +163,7 @@ export const MainMenu = () => {
               >
                 Icons8
               </Link>{" "}
-              {t("and")}{" "}
+              {t("mainMenu.and")}{" "}
               <Link
                 target="_blank"
                 href="https://www.flaticon.com/authors/graphiqa"

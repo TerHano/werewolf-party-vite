@@ -1,5 +1,4 @@
-import { Role } from "@/enum/Role";
-import { useRole, useRoles } from "@/hooks/useRoles";
+import { useRoles } from "@/hooks/useRoles";
 import { HStack, Separator, Stack, Text } from "@chakra-ui/react";
 import { ActiveRolesList } from "./ActiveRolesList";
 import { useMeasure } from "@uidotdev/usehooks";
@@ -19,6 +18,7 @@ import {
 import { IconCards, IconUserUp } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { DrawerPlacementForMobileDesktop } from "@/util/drawer";
+import { Role } from "@/enum/Role";
 
 type ShowRoleControl = "active" | "all";
 
@@ -30,8 +30,8 @@ export const RoomRoleSettingsInfo = ({
   activeRoles: number[];
 }) => {
   const { t } = useTranslation();
-  const { data: werewolfRole } = useRole(Role.WereWolf);
-  const { data: allRoles } = useRoles();
+  const { data: allRoles, getRole } = useRoles();
+  const werewolfRole = getRole(Role.WereWolf); // Assuming 1 is the Werewolf role ID
   const activeRolesData = allRoles?.filter((role) =>
     activeRoles.includes(role.roleName)
   );
@@ -57,7 +57,7 @@ export const RoomRoleSettingsInfo = ({
       <DrawerBackdrop />
       <DrawerTrigger asChild>
         <Button size="sm" w="full" variant="subtle" colorPalette="blue">
-          <IconUserUp /> {t("View Settings")}
+          <IconUserUp /> {t("button.viewSettings")}
         </Button>
       </DrawerTrigger>
       <DrawerContent>

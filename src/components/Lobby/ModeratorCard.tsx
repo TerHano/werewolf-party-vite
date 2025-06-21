@@ -100,11 +100,11 @@ export const ModeratorCard = ({ currentPlayer }: ModeratorCardProps) => {
             <Stack direction="column" align="start" gap={0}>
               <Group>
                 <Badge colorPalette="yellow" size="sm">
-                  <Text fontSize="sm">{t("Moderator")}</Text>
+                  <Text fontSize="sm">{t("common.moderator")}</Text>
                 </Badge>
                 {isModeratorCurrentPlayer ? (
                   <Badge colorPalette="blue" size="sm">
-                    <Text fontSize="sm">{t("You")}</Text>
+                    <Text fontSize="sm">{t("common.you")}</Text>
                   </Badge>
                 ) : null}
               </Group>

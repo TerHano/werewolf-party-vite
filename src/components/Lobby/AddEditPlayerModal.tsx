@@ -91,7 +91,7 @@ export const AddEditPlayerModal = ({
       if (isEdit) {
         showToast({
           type: "success",
-          title: t("Player Details Updated"),
+          title: t("addEditPlayerModal.playerDetailsUpdated"),
           withDismissButton: true,
         });
       }
@@ -99,18 +99,21 @@ export const AddEditPlayerModal = ({
   };
   const focusRef = useRef<HTMLInputElement | null>(null);
   const { ref, ...nicknameField } = register("nickname", {
-    required: { value: true, message: t("Nickname is required") },
+    required: {
+      value: true,
+      message: t("addEditPlayerModal.nicknameRequired"),
+    },
     maxLength: {
       value: 10,
-      message: t("Nickname must be 3 - 10 characters"),
+      message: t("addEditPlayerModal.nicknameLength"),
     },
     minLength: {
       value: 3,
-      message: t("Nickname must be 3 - 10 characters"),
+      message: t("addEditPlayerModal.nicknameLength"),
     },
     validate: (val) => {
       if (!alphaNumericalPattern.test(val)) {
-        return t("Nickname can only contains letters/numbers");
+        return t("addEditPlayerModal.nicknamePattern");
       }
     },
   });
@@ -138,7 +141,9 @@ export const AddEditPlayerModal = ({
           <DialogHeader>
             <DialogTitle>
               <Text textStyle="accent">
-                {isEdit ? t("Update Details") : t("Who are you?")}
+                {isEdit
+                  ? t("addEditPlayerModal.updateDetails")
+                  : t("addEditPlayerModal.addDetails")}
               </Text>
             </DialogTitle>
           </DialogHeader>
@@ -150,11 +155,9 @@ export const AddEditPlayerModal = ({
               <Alert.Root mb={4} size="sm" status="info">
                 <Alert.Indicator />
                 <Alert.Content>
-                  <Alert.Title>{t("Game In Progress")}</Alert.Title>
+                  <Alert.Title>{t("lobby.gameInProgress")}</Alert.Title>
                   <Alert.Description>
-                    {t(
-                      "You will join the game in the waiting room until the current game ends. "
-                    )}
+                    {t("lobby.waitingRoomMsg")}
                   </Alert.Description>
                 </Alert.Content>
               </Alert.Root>
@@ -178,7 +181,7 @@ export const AddEditPlayerModal = ({
                   loading={isCurrentPlayerLoading}
                 >
                   <VStack gap={4}>
-                    <Field label={t("Avatar")}>
+                    <Field label={t("addEditPlayerModal.avatar")}>
                       <AvatarScrollPicker
                         setAvatarIndex={(index) => {
                           setValue("avatarIndex", index);
@@ -196,11 +199,11 @@ export const AddEditPlayerModal = ({
                       errorText={errors.nickname?.message}
                       helperText={
                         <Text fontSize="small">
-                          {t("How others will see you!")}
+                          {t("addEditPlayerModal.nicknameHelper")}
                         </Text>
                       }
                       defaultValue={currentPlayer?.nickname}
-                      label={t("Nickname")}
+                      label={t("addEditPlayerModal.nickname")}
                     >
                       <Input
                         size="lg"
@@ -223,7 +226,9 @@ export const AddEditPlayerModal = ({
               form="player-details-form"
               type="submit"
             >
-              {isEdit ? t("Update Details") : t("button.joinRoom")}
+              {isEdit
+                ? t("addEditPlayerModal.updateDetails")
+                : t("button.joinRoom")}
             </Button>
           </DialogFooter>
         </DialogContent>

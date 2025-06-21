@@ -121,7 +121,7 @@ export const SocketProvider = ({ children }: PropsWithChildren) => {
         >
           {connectionState === HubConnectionState.Disconnected ? (
             <>
-              <IconPlugConnectedX size="4rem" />
+              <IconPlugConnectedX size="128px" />
               <Text color="dimmed" fontSize="1rem">
                 {dialogMessage}
               </Text>
@@ -136,7 +136,7 @@ export const SocketProvider = ({ children }: PropsWithChildren) => {
             </>
           ) : (
             <>
-              <IconCards size="4rem" />
+              <IconCards size="128px" />
               <Progress.Root size="sm" borderRadius="xl" w="200px" value={null}>
                 <Progress.Track>
                   <Progress.Range />

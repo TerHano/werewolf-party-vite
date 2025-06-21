@@ -7,7 +7,7 @@ import {
   StepsList,
   StepsRoot,
 } from "../../../ui/steps";
-import { getRoleForRoleId, RoleInfo, useRoles } from "@/hooks/useRoles";
+import { RoleInfo, useRoles } from "@/hooks/useRoles";
 import { lazy, useMemo, useState } from "react";
 import { PlayerRoleActionDto } from "@/dto/PlayerRoleActionDto";
 import { useAllPlayerRoles } from "@/hooks/useAllPlayerRoles";
@@ -41,26 +41,28 @@ export const NightCall = () => {
 
   const { data: allPlayerRoles } = useAllPlayerRoles(roomId);
   const roles = allPlayerRoles?.map((playerRole) => playerRole.role);
-  const { data: roleDetails } = useRoles({ roles: roles });
+  const { getRole, getRoles } = useRoles();
+  const roleDetails = getRoles(roles ?? []);
   const { data: allQueuedActions } = useAllQueuedActions(roomId);
   const playerRolesWithDetails = useMemo<PlayerRoleWithDetails[]>(() => {
     if (!allPlayerRoles || !roleDetails) {
       return [];
     }
-    return (
-      allPlayerRoles
-        .map<PlayerRoleWithDetails>((assignedRole) => {
-          return {
-            ...assignedRole,
-            roleInfo: getRoleForRoleId(assignedRole.role),
-          };
-        })
-        //.filter((assignedRole) => assignedRole.roleInfo.showInModeratorRoleCall)
-        .sort(
-          (a, b) => a.roleInfo.roleCallPriority - b.roleInfo.roleCallPriority
-        )
-    );
-  }, [allPlayerRoles, roleDetails]);
+    return allPlayerRoles
+      .map<PlayerRoleWithDetails>((assignedRole) => {
+        const roleInfo = getRole(assignedRole.role);
+        if (!roleInfo) {
+          throw new Error(`Role info not found for role: ${assignedRole.role}`);
+        }
+        return {
+          ...assignedRole,
+          roleInfo,
+        };
+      })
+      .sort(
+        (a, b) => a.roleInfo.roleCallPriority - b.roleInfo.roleCallPriority
+      );
+  }, [allPlayerRoles, getRole, roleDetails]);
 
   const rolesToCallExcludingWerewolves = playerRolesWithDetails.filter(
     (assignedRole) =>

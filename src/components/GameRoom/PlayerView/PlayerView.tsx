@@ -1,17 +1,18 @@
 import { useAssignedRole } from "@/hooks/useAssignedRole";
-import { useRole } from "@/hooks/useRoles";
 import { useRoomId } from "@/hooks/useRoomId";
 import { Card, VStack } from "@chakra-ui/react";
 import { WaitingPlayerCard } from "@/components/GameRoom/PlayerView/WaitingPlayerCard";
 import { PlayerRoleCard } from "@/components/GameRoom/PlayerView/PlayerRoleCard";
 import { SkeletonCircle, SkeletonText } from "@/components/ui-addons/skeleton";
+import { useRoles } from "@/hooks/useRoles";
 
 export const PlayerView = () => {
   const roomId = useRoomId();
   const { data: assignedRole, isLoading: isAssignedRoleLoading } =
     useAssignedRole(roomId);
 
-  const { data: roleInfo } = useRole(assignedRole);
+  const { getRole } = useRoles();
+  const roleInfo = getRole(assignedRole);
 
   const isPlayerInWaitingRoom = !roleInfo;
 

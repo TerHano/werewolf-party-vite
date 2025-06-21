@@ -64,7 +64,7 @@ export const EditRoomRoleSettings = ({
     onSuccess: async () => {
       showToast({
         title: t("roleSettings.updated.title"),
-        // description: t("Your new roles and game settings have been saved!"),
+        // description: t("roleSettings.updated.description"),
         type: "success",
         duration: 2500,
       });
@@ -146,8 +146,12 @@ export const EditRoomRoleSettings = ({
           <DrawerBody>
             <Tabs.Root fitted defaultValue="roles">
               <Tabs.List>
-                <Tabs.Trigger value="roles">{t("Roles")}</Tabs.Trigger>
-                <Tabs.Trigger value="settings">{t("Settings")}</Tabs.Trigger>
+                <Tabs.Trigger value="roles">
+                  {t("roleSettings.roles")}
+                </Tabs.Trigger>
+                <Tabs.Trigger value="settings">
+                  {t("roleSettings.settings")}
+                </Tabs.Trigger>
               </Tabs.List>
               <Tabs.Content
                 _open={{
@@ -332,7 +336,7 @@ export const EditRoomRoleSettings = ({
                 <Stack gap={4}>
                   <ChakraField.Root>
                     <ChakraField.Label>
-                      <Text>{t("Show Game Summary")}</Text>
+                      <Text>{t("roleSettings.gameSummarySwitch.label")}</Text>
                     </ChakraField.Label>
                     <Skeleton
                       height={6}
@@ -357,14 +361,14 @@ export const EditRoomRoleSettings = ({
                       />
                     </Skeleton>
                     <ChakraField.HelperText>
-                      {t(
-                        "This controls whether a summary of the games events should be shown once the game ends."
-                      )}
+                      {t("roleSettings.gameSummarySwitch.description")}
                     </ChakraField.HelperText>
                   </ChakraField.Root>
                   <ChakraField.Root>
                     <ChakraField.Label>
-                      <Text>{t("Allow Continuous Self Heals")} </Text>
+                      <Text>
+                        {t("roleSettings.allowSelfHealsSwitch.label")}{" "}
+                      </Text>
                       {/* <Badge size="xs" colorPalette="yellow" variant="subtle">
                         {t("Coming Soon")}
                       </Badge> */}
@@ -392,9 +396,7 @@ export const EditRoomRoleSettings = ({
                       />
                     </Skeleton>
                     <ChakraField.HelperText>
-                      {t(
-                        "When off, this restricts healers from healing themselves multiple times in a row. "
-                      )}
+                      {t("roleSettings.allowSelfHealsSwitch.description")}{" "}
                     </ChakraField.HelperText>
                   </ChakraField.Root>
                 </Stack>
@@ -409,7 +411,7 @@ export const EditRoomRoleSettings = ({
               loading={isUpdatingSettings}
               type="submit"
             >
-              {t("Update Settings")}
+              {t("roleSettings.button.updateSettings")}
             </Button>
           </DrawerFooter>
         </DrawerContent>

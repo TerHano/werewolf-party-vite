@@ -41,7 +41,7 @@ export const PlayerAvatar = ({
             <Stack direction="column" align="start" gap={0}>
               {isCurrentPlayer ? (
                 <Badge colorPalette="blue" size="sm">
-                  <Text fontSize="sm">{t("You")}</Text>
+                  <Text fontSize="sm">{t("common.you")}</Text>
                 </Badge>
               ) : null}
               <Text fontSize="lg" textStyle="accent">

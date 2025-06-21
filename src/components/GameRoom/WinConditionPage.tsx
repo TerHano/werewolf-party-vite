@@ -51,7 +51,7 @@ export const WinConditionPage = ({
     }
     if (isWerewolvesWin) {
       if (assignedRole === Role.WereWolf) {
-        return t("Congratulations! The werewolves eliminated all villagers.");
+        return t("winCondition.isWerewolf.werewolvesWin");
       } else {
         return t(
           "Oh no! You were not able to protect the villagers! The werewolves have won the game."
@@ -59,11 +59,9 @@ export const WinConditionPage = ({
       }
     } else {
       if (assignedRole === Role.Villager) {
-        return t(
-          "Congratulations! The villagers have protected their village."
-        );
+        return t("winCondition.isVillager.villagersWin");
       } else {
-        return t("Oh no! The villagers have eliminated all werewolves.");
+        return t("winCondition.isVillager.werewolvesWin");
       }
     }
   }, [assignedRole, isModerator, isWerewolvesWin, t]);
@@ -82,7 +80,9 @@ export const WinConditionPage = ({
             colorPalette={isWerewolvesWin ? "red" : "green"}
           >
             <Text textStyle="accent" fontSize="2xl">
-              {isWerewolvesWin ? t("Werewolves Win") : t("Villagers Win")}
+              {isWerewolvesWin
+                ? t("winCondition.title.werewolvesWin")
+                : t("winCondition.title.villagersWin")}
             </Text>
           </Badge>
           <Skeleton loading={isAssignedRoleLoading} width="100%">

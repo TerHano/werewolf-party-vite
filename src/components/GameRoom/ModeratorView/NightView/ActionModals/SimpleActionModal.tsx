@@ -55,8 +55,6 @@ export const SimpleActionModal = ({
     },
   });
 
-  // const { data: roleInfo } = useRole(roleOfPlayerMakingAction);
-
   const onSubmit = useCallback(() => {
     if (selectedPlayerId) {
       createUpdateQueuedAction({
@@ -116,7 +114,7 @@ export const SimpleActionModal = ({
   return (
     <DialogRootProvider placement="center" value={dialog}>
       <DialogBackdrop />
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button
           {...modalContent.dialogTriggerBtn}
           disabled={!action.enabled}

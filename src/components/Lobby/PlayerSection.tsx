@@ -46,8 +46,8 @@ export const PlayersSection = ({
     (kickedPlayerId: number) => {
       if (currentPlayer?.id === kickedPlayerId) {
         showToast({
-          title: t("You Were Kicked!"),
-          description: t("Next time be nice!"),
+          title: t("lobby.kickedToast.title"),
+          description: t("lobby.kickedToast.description"),
         });
         navigate({ to: "/" });
       } else {
@@ -75,7 +75,7 @@ export const PlayersSection = ({
         <Separator flex="1" />
         <Text fontSize="xl" textStyle="accent" flexShrink="0">
           {noPlayersInLobby
-            ? t("Invite Some Friends")
+            ? t("lobby.inviteFriends")
             : t(`${players?.length ?? 0} Player(s) Waiting`)}
         </Text>
         <Separator flex="1" />
@@ -90,7 +90,7 @@ export const PlayersSection = ({
               <VStack gap={0}>
                 <Image src={emptyLobby} height={32} width={32} />
                 <Text lineHeight="shorter" fontSize="xl" textStyle="accent">
-                  {t("Invite Some Friends")}
+                  {t("lobby.inviteFriends")}
                 </Text>
                 <Text
                   textAlign="center"
@@ -99,7 +99,7 @@ export const PlayersSection = ({
                   fontSize="lg"
                   textStyle="accent"
                 >
-                  {t("Copy and send the room code to your friends!")}
+                  {t("lobby.copyRoomCode")}
                 </Text>
               </VStack>
               <ClipboardButton
@@ -108,7 +108,7 @@ export const PlayersSection = ({
                     id: "roomIdCopy",
                     icon: <IconCopyCheck />,
                     type: "success",
-                    title: t("Room ID Copied!"),
+                    title: t("lobby.roomIdCopied"),
                     withDismissButton: true,
                   });
                 }}

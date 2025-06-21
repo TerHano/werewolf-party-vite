@@ -103,7 +103,7 @@ export const Lobby = () => {
               loading={isStartGamePending}
               onClick={onStartGame}
             >
-              <Text fontSize="sm"> {t("Start Game")}</Text>
+              <Text fontSize="sm"> {t("lobby.button.startGame")}</Text>
             </Button>
           </SimpleGrid>
         ) : null}

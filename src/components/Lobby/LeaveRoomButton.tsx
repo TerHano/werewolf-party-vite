@@ -34,14 +34,14 @@ export const LeaveRoomButton = () => {
     <DialogRoot role="alertdialog">
       <DialogTrigger asChild>
         <Button size="sm" variant="subtle" colorPalette="red">
-          <IconLogout2 /> {t("Leave")}
+          <IconLogout2 /> {t("lobby.button.leaveRoom")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
             <Text textStyle="accent" fontSize="xl">
-              {t("Are you sure you want to leave?")}
+              {t("lobby.leaveRoomModal.title")}
             </Text>
           </DialogTitle>
         </DialogHeader>
@@ -51,25 +51,23 @@ export const LeaveRoomButton = () => {
               <Alert.Root size="sm" status="warning">
                 <Alert.Indicator />
                 <Alert.Content>
-                  <Alert.Title>{t("You Are The Moderator")}</Alert.Title>
+                  <Alert.Title>
+                    {t("lobby.leaveRoomModal.moderatorWarning.title")}
+                  </Alert.Title>
                   <Alert.Description>
-                    {t(
-                      "Another player will be assigned as the moderator if you leave."
-                    )}
+                    {t("lobby.leaveRoomModal.moderatorWarning.description")}
                   </Alert.Description>
                 </Alert.Content>
               </Alert.Root>
             ) : null}
-            <Text fontSize="xs">
-              {t(
-                "You will not be able to participate if you join the room again while a game is in progress."
-              )}
-            </Text>
+            <Text fontSize="xs">{t("lobby.leaveRoomModal.description")}</Text>
           </Stack>
         </DialogBody>
         <DialogFooter>
           <DialogActionTrigger asChild>
-            <Button variant="outline">{t("Stay")}</Button>
+            <Button variant="outline">
+              {t("lobby.leaveRoomModal.button.cancel")}
+            </Button>
           </DialogActionTrigger>
           <Button
             loading={isLeavingRoom}
@@ -79,7 +77,7 @@ export const LeaveRoomButton = () => {
             }}
             colorPalette="red"
           >
-            {t("Leave Room")}
+            {t("lobby.leaveRoomModal.button.leaveRoom")}
           </Button>
         </DialogFooter>
       </DialogContent>

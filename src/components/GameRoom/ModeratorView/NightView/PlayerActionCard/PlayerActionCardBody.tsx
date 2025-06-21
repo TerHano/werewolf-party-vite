@@ -23,11 +23,15 @@ export const PlayerActionCardBody = ({
       <Stack direction="row" gap={1}>
         {playerDetails.map((playerDetail) =>
           !playerDetail.isAlive ? (
-            <Tag startElement={<IconSkull size={12} />} colorPalette="red">
+            <Tag
+              key={playerDetail.id}
+              startElement={<IconSkull size={12} />}
+              colorPalette="red"
+            >
               {playerDetail.nickname}
             </Tag>
           ) : (
-            <Tag startElement={<IconUser size={12} />}>
+            <Tag key={playerDetail.id} startElement={<IconUser size={12} />}>
               {playerDetail.nickname}
             </Tag>
           )

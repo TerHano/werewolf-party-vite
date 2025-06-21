@@ -23,7 +23,7 @@ export const ActionButtonList = ({
     >
       <Group>
         <Text fontSize="lg" textStyle="accent">
-          {t("Choose a player to...")}
+          {t("game.chooseAPlayerTo")}
         </Text>
         <DisabledActionsTooltip actions={actions} />
       </Group>
@@ -31,6 +31,7 @@ export const ActionButtonList = ({
         {actions?.map((action) => {
           return (
             <ActionModalBtnTrigger
+              key={action.label}
               action={action}
               playerRoleId={playerRoleId}
             />

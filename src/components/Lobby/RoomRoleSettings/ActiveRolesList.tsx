@@ -17,7 +17,8 @@ export const ActiveRolesList = ({
   numberOfWerewolves?: number;
   activeRoles?: Role[];
 }) => {
-  const { data } = useRoles({ roles: activeRoles });
+  const { getRoles } = useRoles();
+  const data = getRoles(activeRoles);
   const rolesToShow = useMemo<RolesToShow>(() => {
     if (!widthOfContainer) {
       return { roles: data, remaining: 0 };

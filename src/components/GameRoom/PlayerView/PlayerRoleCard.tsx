@@ -10,7 +10,7 @@ export const PlayerRoleCard = ({ roleInfo }: { roleInfo: RoleInfo }) => {
         {t("Your Role Is...")}
       </Text>
       <VStack gap={1}>
-        <Image height="8rem" width="8rem" src={roleInfo?.imgSrc} />
+        <Image height="128px" width="128px" src={roleInfo?.imgSrc} />
 
         <Badge
           variant="subtle"

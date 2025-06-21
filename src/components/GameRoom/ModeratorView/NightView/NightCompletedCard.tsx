@@ -12,7 +12,7 @@ export const NightCompletedCard = () => {
     <Card.Root alignItems="center" width="100%" borderBottomRadius={0}>
       <Card.Header>
         <Text fontSize="xl" textStyle="accent">
-          {t(`Everyone, Close Your Eyes!`)}
+          {t(`game.everyoneCloseEyes`)}
         </Text>
       </Card.Header>
       <Card.Body className="animate-fade-in-from-bottom">
@@ -21,7 +21,7 @@ export const NightCompletedCard = () => {
       <Card.Footer>
         <Stack direction="column" align="center" gap={0}>
           <Text fontSize="xl" textStyle="accent">
-            {t(`It is now nightfall. Ready to go to the next day?`)}
+            {t(`game.readyForNextDay`)}
           </Text>
           <Button
             disabled={isLoading}
@@ -30,7 +30,7 @@ export const NightCompletedCard = () => {
             }}
             size="sm"
           >
-            {t("Wake Up")}
+            {t("game.button.wakeUp")}
           </Button>
         </Stack>
       </Card.Footer>

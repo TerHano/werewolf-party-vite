@@ -59,7 +59,6 @@ export const AddEditPlayerModal = ({
   const { data: currentPlayer, isLoading: isCurrentPlayerLoading } =
     useCurrentPlayer(roomId, { enabled: isEdit });
   const { data: gameState } = useGameState(roomId);
-
   const { data: avatarNames } = usePlayerAvatar();
 
   const [isSubmitLoading, setSubmitLoading] = useState(false);

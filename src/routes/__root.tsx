@@ -4,9 +4,10 @@ import { Toaster } from "@/components/ui-addons/toaster";
 import { SocketProvider } from "@/context/SocketProvider";
 import { getApi } from "@/util/api";
 import { getSessionCookie, setSessionCookie } from "@/util/cookie";
-import { Container } from "@chakra-ui/react";
+import { Box, Container } from "@chakra-ui/react";
 import { CatchBoundary, createRootRoute, Outlet } from "@tanstack/react-router";
 import "@/i18n";
+import { LanguageSelect } from "@/components/language-select";
 
 export const Route = createRootRoute({
   wrapInSuspense: true,
@@ -31,6 +32,13 @@ export const Route = createRootRoute({
       <SocketProvider>
         <Container maxWidth={800} justifyItems="center" p={2}>
           <Outlet />
+          <Box
+            mt={3}
+            className="animate-fade-in-from-bottom"
+            alignItems="center"
+          >
+            <LanguageSelect />
+          </Box>
         </Container>
       </SocketProvider>
       <Toaster />

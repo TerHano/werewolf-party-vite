@@ -131,7 +131,7 @@ export const SocketProvider = ({ children }: PropsWithChildren) => {
                   startConnection();
                 }}
               >
-                {t("Reconnect")}
+                {t("socket.button.reconnect")}
               </Button>
             </>
           ) : (
@@ -143,7 +143,7 @@ export const SocketProvider = ({ children }: PropsWithChildren) => {
                 </Progress.Track>
               </Progress.Root>
               <Text textStyle="accent" color="dimmed" fontSize="1em">
-                {t("Connecting to server...")}
+                {t("socket.status.connecting")}
               </Text>
             </>
           )}

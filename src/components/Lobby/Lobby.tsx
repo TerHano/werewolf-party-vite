@@ -49,7 +49,7 @@ export const Lobby = () => {
       <Stack w="full" gap={2}>
         <HStack justify="space-between">
           <HStack justifyContent="center">
-            <Text>{t("Room ID")}:</Text>
+            <Text>{t("common.roomId")}:</Text>
             <ClipboardIconButton
               value={window.location.href}
               label={roomId}

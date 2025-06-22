@@ -296,5 +296,8 @@
 
       "shortDescription": "Prove Your Innocence!"
     }
+  },
+  "languageSelect": {
+    "placeholder": "Select language"
   }
 }

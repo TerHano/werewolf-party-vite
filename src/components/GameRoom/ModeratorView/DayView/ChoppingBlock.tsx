@@ -40,16 +40,14 @@ export const ChoppingBlock = () => {
           <Card.Title>
             <Group>
               <Text textStyle="accent" fontSize="xl">
-                {t("Villagers, who do you think is a Werewolf?")}
+                {t("game.choppingBlock.vote.title")}
               </Text>
               <InfoTip
                 size="lg"
                 modal
                 content={
                   <Text fontSize="1em" lineHeight={1.4} width={300}>
-                    {t(
-                      "All the players should now be discussing who they think is the werewolf. Once an agreement is reached, the players will vote to lynch the player. If the players are unable to reach an agreement, the players can abstain from voting for the night."
-                    )}
+                    {t("game.choppingBlock.vote.helper")}
                   </Text>
                 }
               />
@@ -73,7 +71,7 @@ export const ChoppingBlock = () => {
                   });
                 }}
               >
-                {t("Abstain Vote")}
+                {t("game.choppingBlock.vote.abstain")}
               </Button>
               <Button
                 w="100%"
@@ -86,7 +84,7 @@ export const ChoppingBlock = () => {
                   });
                 }}
               >
-                {t("Lynch Player")}
+                {t("game.choppingBlock.vote.lynch")}
               </Button>
             </SimpleGrid>
           </Stack>

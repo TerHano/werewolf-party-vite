@@ -84,7 +84,7 @@ export const ManagePlayersButton = ({ player }: { player: PlayerDto }) => {
       <DrawerContent borderRadius="sm">
         <DrawerHeader>
           <Stack align="center" direction="row" gap={1}>
-            <Text>{t("Manage")}</Text>
+            <Text>{t("lobby.managePlayer.manage")}</Text>
             <Text fontWeight="semibold">{player.nickname}</Text>
             <Image
               src={getAvatarImageSrcForIndex(player.avatarIndex)}
@@ -102,7 +102,7 @@ export const ManagePlayersButton = ({ player }: { player: PlayerDto }) => {
               colorPalette="red"
             >
               <IconKarate />
-              <Text fontSize="xs">{t("Kick Player")}</Text>
+              <Text fontSize="xs">{t("lobby.managePlayer.button.kick")}</Text>
             </Button>
             <Button
               onClick={() => {
@@ -112,7 +112,10 @@ export const ManagePlayersButton = ({ player }: { player: PlayerDto }) => {
               variant="subtle"
             >
               <IconSpeakerphone />
-              <Text fontSize="xs"> {t("Make Moderator")}</Text>
+              <Text fontSize="xs">
+                {" "}
+                {t("lobby.managePlayer.button.makeModerator")}
+              </Text>
             </Button>
           </Stack>
         </DrawerBody>

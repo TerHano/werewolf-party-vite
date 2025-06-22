@@ -35,7 +35,7 @@ export const RoleInformationDialog = ({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t("Role Information")}</DialogTitle>
+          <DialogTitle>{t("common.roleInformation")}</DialogTitle>
         </DialogHeader>
         <DialogBody>
           <RoleInfoList roles={roles} />

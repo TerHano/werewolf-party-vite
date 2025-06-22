@@ -13,11 +13,13 @@ export const NightDaySummary = ({
   isDay?: boolean;
 }) => {
   const { t } = useTranslation();
-  const dayNightLabel = isDay ? t("Day") : t("Night");
+  const dayNightLabel = isDay ? t("game.time.day") : t("game.time.night");
   const timelineHeader =
     night === 0
-      ? t(`First ${dayNightLabel}`)
-      : t(`${dayNightLabel} ${night + 1}`);
+      ? t(`game.time.firstDayOrNight`, {
+          time: dayNightLabel,
+        })
+      : `${dayNightLabel} ${night + 1}`;
   return (
     <Stack gap={3}>
       <Badge w="fit-content" colorPalette={isDay ? "blue" : "purple"}>
@@ -43,7 +45,7 @@ const DayNoActionsTaken = () => {
 
   return (
     <Text my={1} fontStyle="italic" fontSize="lg" textStyle="accent">
-      {t("No actions were taken this day")}
+      {t("gameSummary.noEventsForDay")}
     </Text>
   );
 };
@@ -52,7 +54,7 @@ const NightNoActionsTaken = () => {
   const { t } = useTranslation();
   return (
     <Text my={1} fontStyle="italic" fontSize="lg" textStyle="accent">
-      {t("No actions were taken this night")}
+      {t("gameSummary.noEventsForNight")}
     </Text>
   );
 };

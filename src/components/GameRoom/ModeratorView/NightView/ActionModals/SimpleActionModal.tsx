@@ -79,20 +79,20 @@ export const SimpleActionModal = ({
     switch (action.type) {
       case ActionType.WerewolfKill:
         return {
-          title: t("Werewolves, who do we attack?"),
-          btnLabel: t("Attack"),
+          title: t("game.roleAction.werewolfKill.title"),
+          btnLabel: t("game.roleAction.werewolfKill.label"),
           dialogTriggerBtn: {
-            children: t("Attack"),
+            children: t("game.roleAction.werewolfKill.label"),
             colorPalette: "red",
           },
           playerList,
         };
       case ActionType.Revive:
         return {
-          title: t("Who to heal?"),
-          btnLabel: t("Heal"),
+          title: t("game.roleAction.heal.title"),
+          btnLabel: t("game.roleAction.heal.label"),
           dialogTriggerBtn: {
-            children: t("Heal"),
+            children: t("game.roleAction.heal.label"),
             colorPalette: "green",
           },
           playerList,
@@ -100,10 +100,10 @@ export const SimpleActionModal = ({
 
       default:
         return {
-          title: t("Who to kill?"),
-          btnLabel: t("Attack"),
+          title: t("game.roleAction.kill.title"),
+          btnLabel: t("game.roleAction.kill.label"),
           dialogTriggerBtn: {
-            children: t("Attack"),
+            children: t("game.roleAction.kill.label"),
             colorPalette: "red",
           },
           playerList,

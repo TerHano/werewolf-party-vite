@@ -111,7 +111,7 @@ export const InvestigationModal = ({
     switch (action.type) {
       default:
         return {
-          title: t("Who do we think is the Werewolf?"),
+          title: t("game.roleAction.investigate.werewolf.title"),
           resultNode: (
             <WerewolfInvestigationResult
               investigationResult={investigationResult}
@@ -172,7 +172,7 @@ export const InvestigationModal = ({
                     onClick={onSubmit}
                     size="sm"
                   >
-                    {t("Investigate")}
+                    {t("game.roleAction.investigate.label")}
                   </Button>
                 )}
                 {step === 1 && (

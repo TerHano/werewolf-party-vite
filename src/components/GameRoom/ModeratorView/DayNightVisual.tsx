@@ -25,13 +25,17 @@ export const DayNightVisual = () => {
 
   const timeText = useMemo(() => {
     if (!dayDetails) {
-      return "Unknown";
+      return t("game.actions.unknown");
     }
     if (dayDetails.currentNight === 0) {
       if (dayDetails.isDay) {
-        return t("First Day");
+        return t("game.time.firstDayOrNight", {
+          time: t("game.time.day"),
+        });
       } else {
-        return t("First Night");
+        return t("game.time.firstDayOrNight", {
+          time: t("game.time.night"),
+        });
       }
     } else {
       if (dayDetails.isDay) {

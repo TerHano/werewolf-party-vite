@@ -18,11 +18,13 @@ export const KilledPlayersBanner = () => {
           <Card.Title>
             <Group gap={1} align="center">
               <IconGrave2 size={16} />
-              <Text textStyle="accent">{t("Deaths")}</Text>
+              <Text textStyle="accent">
+                {t("game.choppingBlock.previousNightDeaths.title")}
+              </Text>
             </Group>
           </Card.Title>
           <Card.Description>
-            {t("No players were killed last night...")}
+            {t("game.choppingBlock.previousNightDeaths.noDeathsDescription")}
           </Card.Description>
         </Card.Body>
       </Card.Root>
@@ -36,12 +38,13 @@ export const KilledPlayersBanner = () => {
           <Group gap={1} align="center">
             <IconGrave2 size={20} />
             <Text fontSize="xl" textStyle="accent">
-              {t("Oh No! Dead Villagers Found!")}
+              {t("game.choppingBlock.previousNightDeaths.title")}
             </Text>
           </Group>
         </Card.Title>
         <Card.Description>
-          {t("Once the sun had risen, the villagers found the following dead:")}
+          {t("game.choppingBlock.previousNightDeaths.description")}
+          {/* {t("Once the sun had risen, the villagers found the following dead:")} */}
         </Card.Description>
         <Group mt="1rem">
           {latestPlayerDeaths.map((death) => (

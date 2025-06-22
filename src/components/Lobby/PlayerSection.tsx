@@ -76,7 +76,7 @@ export const PlayersSection = ({
         <Text fontSize="xl" textStyle="accent" flexShrink="0">
           {noPlayersInLobby
             ? t("lobby.inviteFriends")
-            : t(`${players?.length ?? 0} Player(s) Waiting`)}
+            : t(`lobby.playersWaiting`, { count: players?.length ?? 0 })}
         </Text>
         <Separator flex="1" />
       </HStack>

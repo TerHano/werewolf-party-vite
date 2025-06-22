@@ -5,7 +5,8 @@ import { initReactI18next } from "react-i18next";
 
 i18next.use(initReactI18next).init({
   debug: true,
-  lng: "es",
+  lng: "en",
+  fallbackLng: "en",
   resources: {
     en: { translation: enTranslation },
     es: { translation: esTranslation },

@@ -55,13 +55,13 @@ export const ModeratorView = () => {
             <DrawerBackdrop />
             <DrawerTrigger asChild>
               <Button size="sm" variant="subtle" colorPalette="blue">
-                <IconSettings /> {t("Settings")}
+                <IconSettings /> {t("game.settings.buttonLabel")}
               </Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerCloseTrigger />
               <DrawerHeader>
-                <DrawerTitle>{t("Game Settings")}</DrawerTitle>
+                <DrawerTitle>{t("game.settings.title")}</DrawerTitle>
               </DrawerHeader>
               <DrawerBody mb={8}>
                 <Button
@@ -72,7 +72,7 @@ export const ModeratorView = () => {
                     endGameMutation({ roomId });
                   }}
                 >
-                  {t("End Game")}
+                  {t("game.settings.endGame")}
                 </Button>
               </DrawerBody>
             </DrawerContent>

@@ -41,13 +41,9 @@ export const WinConditionPage = ({
   const description = useMemo(() => {
     if (isModerator) {
       if (isWerewolvesWin) {
-        return t(
-          "The werewolves have won the game. You can start a new game or end it."
-        );
+        return t("winCondition.moderator.werewolvesWin");
       }
-      return t(
-        "The villagers have won the game. You can start a new game or end it."
-      );
+      return t("winCondition.moderator.villagersWin");
     }
     if (isWerewolvesWin) {
       if (assignedRole === Role.WereWolf) {

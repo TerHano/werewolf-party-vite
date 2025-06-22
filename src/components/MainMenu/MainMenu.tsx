@@ -81,7 +81,7 @@ export const MainMenu = () => {
           <Stack alignItems="center" gap={0}>
             <Image width={150} src={campIcon} />
             <Text textStyle="accent" fontSize="2.5rem" fontWeight="bold">
-              {t("mainMenu.title")}
+              {t("common.name")}
             </Text>
             <Text
               textAlign="center"

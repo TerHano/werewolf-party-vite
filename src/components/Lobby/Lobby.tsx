@@ -64,7 +64,7 @@ export const Lobby = () => {
                   icon: <IconCopyCheck />,
                   duration: 1000,
                   type: "success",
-                  title: t("Room ID Copied!"),
+                  title: t("lobby.roomIdCopied"),
                   withDismissButton: true,
                 })
               }

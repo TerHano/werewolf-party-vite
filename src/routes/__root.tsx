@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui-addons/toaster";
 import { SocketProvider } from "@/context/SocketProvider";
 import { getApi } from "@/util/api";
 import { getSessionCookie, setSessionCookie } from "@/util/cookie";
-import { Box, Container, Flex } from "@chakra-ui/react";
+import { Container, Flex } from "@chakra-ui/react";
 import { CatchBoundary, createRootRoute, Outlet } from "@tanstack/react-router";
 import "@/i18n";
 import { LanguageSelect } from "@/components/language-select";

@@ -80,7 +80,13 @@ export const MainMenu = () => {
         <Stack alignItems="center" gap={3}>
           <Stack alignItems="center" gap={0}>
             <Image width={150} src={campIcon} />
-            <Text textStyle="accent" fontSize="2.5rem" fontWeight="bold">
+            <Text
+              textStyle="accent"
+              fontSize="2.5rem"
+              textAlign="center"
+              lineHeight={1}
+              fontWeight="bold"
+            >
               {t("common.name")}
             </Text>
             <Text
